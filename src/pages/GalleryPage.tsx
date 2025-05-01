@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-// St. Louis specific images with direct links
+// St. Louis specific images with direct links (using reliable image sources)
 const GALLERY_IMAGES = [
   {
     url: "https://images.unsplash.com/photo-1501658907296-1b0aeda12b38?auto=format&fit=crop&w=800&q=80",
@@ -55,15 +55,19 @@ const GALLERY_IMAGES = [
 
 const GalleryPage = () => {
   return (
-    <div className="h-full overflow-auto p-2">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+    <div className="h-full overflow-auto p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {GALLERY_IMAGES.map((image, index) => (
-          <div key={index} className="aspect-square overflow-hidden rounded-lg">
+          <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow">
             <img 
               src={image.url} 
               alt={image.alt} 
               className="w-full h-full object-cover"
               loading="lazy"
+              onError={(e) => {
+                console.error(`Failed to load image: ${image.url}`);
+                e.currentTarget.src = "https://via.placeholder.com/400x400?text=St.+Louis";
+              }}
             />
           </div>
         ))}

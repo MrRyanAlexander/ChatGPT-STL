@@ -13,12 +13,22 @@ const Layout = () => {
 
   // Ensure the UI reflects the correct state when navigating directly to a page
   useEffect(() => {
-    // If on gallery page, ensure we handle exploration view correctly
-    if (location.pathname === '/gallery') {
+    // Handle navigation based on current route
+    const isGalleryPage = location.pathname === '/gallery';
+    
+    // Update header tabs based on current page
+    if (isGalleryPage) {
       const headerTabs = document.querySelectorAll('[data-tab="Explore"]');
       headerTabs.forEach(tab => {
         if (tab instanceof HTMLElement) {
-          tab.click();
+          tab.setAttribute('data-active', 'true');
+        }
+      });
+    } else {
+      const headerTabs = document.querySelectorAll('[data-tab="Chat"]');
+      headerTabs.forEach(tab => {
+        if (tab instanceof HTMLElement) {
+          tab.setAttribute('data-active', 'true');
         }
       });
     }

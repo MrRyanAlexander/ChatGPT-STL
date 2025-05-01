@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Settings, User, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +18,15 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Update activeTab based on current location
+  useEffect(() => {
+    if (location.pathname === '/gallery') {
+      setActiveTab("Explore");
+    } else {
+      setActiveTab("Chat");
+    }
+  }, [location.pathname]);
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -47,6 +56,8 @@ const Header = () => {
               variant={activeTab === tab ? "default" : "ghost"} 
               onClick={() => handleTabChange(tab)}
               className="text-large"
+              data-tab={tab}
+              data-active={activeTab === tab ? "true" : "false"}
             >
               {tab}
             </Button>
