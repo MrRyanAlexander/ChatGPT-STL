@@ -6,7 +6,7 @@ const PublicChatPage = () => {
   return (
     <div className="flex flex-col h-full items-center justify-center p-4 md:p-8">
       <div className="max-w-md w-full text-center space-y-6">
-        <h1 className="text-3xl font-bold">Join our community</h1>
+        <h1 className="text-3xl font-bold">Join the Discord</h1>
         <p className="text-lg text-muted-foreground">
           Group chatting is possible here, but not currently enabled.
         </p>
