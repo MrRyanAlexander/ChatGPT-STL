@@ -6,7 +6,7 @@ const TermsPage = () => {
       
       <div className="prose prose-lg max-w-none">
         <p className="text-large mb-4">
-          Welcome to ChatGPTSTL. By accessing and using this website, you agree to be bound by these Terms of Service.
+          Welcome to ChatGPTSTL. ChatGPTSTL and ChatGPTSTL.com are not affiliated with OpenAi or ChatGPT.com. By accessing and using this website, you agree to be bound by these Terms of Service.
         </p>
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">1. Acceptance of Terms</h2>
@@ -21,7 +21,7 @@ const TermsPage = () => {
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">3. Disclaimer</h2>
         <p className="text-large mb-4">
-          The information provided on ChatGPTSTL is for general informational purposes only. We make no representations or warranties about the accuracy or completeness of the information.
+          The information provided on ChatGPTSTL is for general educational purposes only. While we do our best to ensure data accuracy, we make no representations or warranties about the accuracy or completeness of the information.
         </p>
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">4. Limitations</h2>
