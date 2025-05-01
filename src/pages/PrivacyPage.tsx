@@ -6,12 +6,12 @@ const PrivacyPage = () => {
       
       <div className="prose prose-lg max-w-none">
         <p className="text-large mb-4">
-          Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use ChatGPT-STL.
+          Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use ChatGPTSTL.
         </p>
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">1. Information We Collect</h2>
         <p className="text-large mb-4">
-          We may collect personal information such as your name, email address, and chat history when you use our service. We also collect cookies and usage data to improve your experience.
+          We may collect personal information such as your name, email address, and allowed chat history when you use our service. We also collect cookies and usage data to improve your experience.
         </p>
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">2. How We Use Your Information</h2>
@@ -21,7 +21,7 @@ const PrivacyPage = () => {
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">3. Data Storage and Security</h2>
         <p className="text-large mb-4">
-          Your data is stored securely using industry-standard encryption and security practices. We use Supabase for user authentication and data storage.
+          All data is stored securely using industry-standard encryption and security practices.
         </p>
         
         <h2 className="text-2xl font-semibold mt-6 mb-4">4. Cookies</h2>
