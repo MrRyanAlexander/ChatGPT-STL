@@ -33,7 +33,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --user-message: 221.2 83.2% 95%;
     --ai-message: 0 0% 97%;
@@ -78,7 +78,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased overflow-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-size: 16px;
   }
@@ -116,11 +116,11 @@
 }
 
 .chat-bubble-user {
-  @apply bg-[hsl(var(--user-message))] text-foreground p-4 rounded-lg max-w-3xl ml-auto;
+  @apply bg-[hsl(var(--user-message))] text-foreground p-4 rounded-2xl max-w-3xl ml-auto;
 }
 
 .chat-bubble-ai {
-  @apply bg-[hsl(var(--ai-message))] text-foreground p-4 rounded-lg max-w-3xl mr-auto;
+  @apply bg-[hsl(var(--ai-message))] text-foreground p-4 rounded-2xl max-w-3xl mr-auto;
 }
 
 /* Accessibility improvements */
@@ -133,9 +133,36 @@
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 rounded-md px-3 py-2 text-base hover:bg-secondary transition-all;
+  @apply flex items-center gap-3 rounded-xl px-3 py-2 text-base hover:bg-secondary transition-all;
 }
 
 .sidebar-item-active {
   @apply bg-secondary;
+}
+
+/* ChatGPT-like input styling */
+input.rounded-2xl,
+textarea.rounded-2xl {
+  border-radius: 1rem;
+}
+
+/* Improve button styling */
+.btn-round {
+  @apply rounded-full aspect-square;
+}
+
+/* Override Shadcn UI components to match ChatGPT */
+.dark {
+  --background: 0 0% 10%;
+  --foreground: 0 0% 95%;
+  --card: 0 0% 15%;
+  --card-foreground: 0 0% 95%;
+  --popover: 0 0% 15%;
+  --popover-foreground: 0 0% 95%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 95%;
+  --muted: 0 0% 20%;
+  --muted-foreground: 0 0% 70%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
 }

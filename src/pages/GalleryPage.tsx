@@ -1,66 +1,70 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
+// St. Louis specific images
 const GALLERY_IMAGES = [
   {
-    url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-    alt: "Technology workspace"
+    url: "https://images.unsplash.com/photo-1501658907296-1b0aeda12b38",
+    alt: "Gateway Arch St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-    alt: "Gray laptop computer"
+    url: "https://images.unsplash.com/photo-1539300172007-671e2bcc85e7",
+    alt: "St. Louis Skyline at Night"
   },
   {
-    url: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-    alt: "Circuit board macro"
+    url: "https://images.unsplash.com/photo-1535051179334-8d1493b5056d",
+    alt: "St. Louis Cardinals Stadium"
   },
   {
-    url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-    alt: "Programming monitor"
+    url: "https://images.unsplash.com/photo-1599243759044-bb0dea176a9f",
+    alt: "St. Louis Botanical Garden"
   },
   {
-    url: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-    alt: "Person using MacBook"
+    url: "https://images.unsplash.com/photo-1531253183135-fa03e4c3f61c",
+    alt: "Forest Park St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-    alt: "Woman using laptop"
+    url: "https://images.unsplash.com/photo-1595987169259-0bddcc6d025a",
+    alt: "St. Louis Union Station"
   },
   {
-    url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
-    alt: "White robot"
+    url: "https://images.unsplash.com/photo-1597090656147-0ef9da860d47",
+    alt: "St. Louis Art Museum"
   },
   {
-    url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-    alt: "Digital code"
+    url: "https://images.unsplash.com/photo-1599395373130-c38c0d16ef5c",
+    alt: "Mississippi River St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-    alt: "Laptop on surface"
+    url: "https://images.unsplash.com/photo-1587653089489-9a247c53731f",
+    alt: "St. Louis Science Center"
   },
   {
-    url: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
-    alt: "Colorful code"
+    url: "https://images.unsplash.com/photo-1602444444369-fd291e007799",
+    alt: "St. Louis Colorful Buildings"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1540333088855-f6ae878a2a0f",
+    alt: "St. Louis City Streets"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1599243780629-503c5a616821",
+    alt: "Missouri Botanical Garden"
   },
 ];
 
 const GalleryPage = () => {
   return (
-    <div className="h-full overflow-auto p-4 md:p-6">
-      <h1 className="text-3xl font-bold mb-4 text-center">St. Louis Gallery</h1>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="h-full overflow-auto p-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {GALLERY_IMAGES.map((image, index) => (
-          <div key={index} className="relative aspect-square overflow-hidden rounded-lg group">
+          <div key={index} className="aspect-square overflow-hidden rounded-lg">
             <img 
               src={image.url} 
               alt={image.alt} 
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover"
+              loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <p className="text-white text-sm font-medium">{image.alt}</p>
-            </div>
           </div>
         ))}
       </div>
