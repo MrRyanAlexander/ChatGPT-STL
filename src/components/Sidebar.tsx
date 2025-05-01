@@ -15,9 +15,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useNavigate } from "react-router-dom";
 
 type AgentCategory = {
   name: string;
@@ -57,7 +56,15 @@ const AGENT_CATEGORIES: AgentCategory[] = [
 
 const DEFAULT_PROMPTS: Record<string, string> = {
   "water": "How do I pay my water bill in St. Louis?",
-  "boeing": "Tell me about Boeing's presence in St. Louis"
+  "boeing": "Tell me about Boeing's presence in St. Louis",
+  "county": "How do I pay my property taxes in St. Louis County?",
+  "city": "How do I get a business license in St. Louis City?",
+  "trash": "What day is trash collection in my area?",
+  "sewer": "Who do I call for sewer backup issues?",
+  "monsanto": "What is Monsanto's history in St. Louis?",
+  "amazon": "Where are Amazon fulfillment centers in the St. Louis area?",
+  "handyman": "How do I find a reliable handyman in St. Louis?",
+  "dierbergs": "What are Dierbergs' store hours?"
 };
 
 const Sidebar = () => {
@@ -70,7 +77,7 @@ const Sidebar = () => {
     setActiveItem(slug);
     navigate(`/chat/${slug}`, { 
       state: { 
-        defaultPrompt: DEFAULT_PROMPTS[slug] 
+        defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
       } 
     });
   };

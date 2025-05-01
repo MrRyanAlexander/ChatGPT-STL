@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,9 +9,25 @@ import { Label } from "@/components/ui/label";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const SettingsPage = () => {
-  const { theme, setTheme } = useTheme();
-  const [fontSize, setFontSize] = useState("medium");
+  const { theme, setTheme, fontSize, setFontSize } = useTheme();
   const [notifications, setNotifications] = useState(true);
+  const { toast } = useToast();
+  
+  const handleFontSizeChange = (size: "small" | "medium" | "large") => {
+    setFontSize(size);
+    toast({
+      title: "Font size updated",
+      description: `Text size has been set to ${size}`,
+    });
+  };
+  
+  const handleThemeChange = (newTheme: "light" | "dark") => {
+    setTheme(newTheme);
+    toast({
+      title: "Theme updated",
+      description: `Theme has been set to ${newTheme} mode`,
+    });
+  };
   
   return (
     <div className="p-6 md:p-10 max-w-4xl mx-auto">
@@ -36,14 +53,14 @@ const SettingsPage = () => {
                 <Label htmlFor="theme" className="text-large">Theme</Label>
                 <div className="flex space-x-4">
                   <Button 
-                    onClick={() => setTheme("light")} 
+                    onClick={() => handleThemeChange("light")} 
                     variant={theme === "light" ? "default" : "outline"}
                     className="flex-1 text-large"
                   >
                     Light
                   </Button>
                   <Button 
-                    onClick={() => setTheme("dark")} 
+                    onClick={() => handleThemeChange("dark")} 
                     variant={theme === "dark" ? "default" : "outline"}
                     className="flex-1 text-large"
                   >
@@ -68,21 +85,21 @@ const SettingsPage = () => {
                 <Label htmlFor="fontSize" className="text-large">Text Size</Label>
                 <div className="flex space-x-4">
                   <Button 
-                    onClick={() => setFontSize("small")} 
+                    onClick={() => handleFontSizeChange("small")} 
                     variant={fontSize === "small" ? "default" : "outline"}
                     className="flex-1 text-large"
                   >
                     Small
                   </Button>
                   <Button 
-                    onClick={() => setFontSize("medium")} 
+                    onClick={() => handleFontSizeChange("medium")} 
                     variant={fontSize === "medium" ? "default" : "outline"}
                     className="flex-1 text-large"
                   >
                     Medium
                   </Button>
                   <Button 
-                    onClick={() => setFontSize("large")} 
+                    onClick={() => handleFontSizeChange("large")} 
                     variant={fontSize === "large" ? "default" : "outline"}
                     className="flex-1 text-large"
                   >
