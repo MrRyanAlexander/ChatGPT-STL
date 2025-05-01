@@ -1,76 +1,107 @@
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
-// St. Louis specific images with direct links (using reliable image sources)
+// More reliable St. Louis images with placeholder fallbacks
 const GALLERY_IMAGES = [
   {
-    url: "https://images.unsplash.com/photo-1501658907296-1b0aeda12b38?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/2194407/pexels-photo-2194407.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "Gateway Arch St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1539300172007-671e2bcc85e7?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/3052361/pexels-photo-3052361.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Skyline at Night"
   },
   {
-    url: "https://images.unsplash.com/photo-1535051179334-8d1493b5056d?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/39698/busch-stadium-st-louis-baseball-stadium-baseball-39698.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Cardinals Stadium"
   },
   {
-    url: "https://images.unsplash.com/photo-1599243759044-bb0dea176a9f?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/158063/bellingrath-gardens-alabama-landscape-scenic-158063.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Botanical Garden"
   },
   {
-    url: "https://images.unsplash.com/photo-1531253183135-fa03e4c3f61c?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/414122/pexels-photo-414122.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "Forest Park St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1595987169259-0bddcc6d025a?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/1134166/pexels-photo-1134166.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Union Station"
   },
   {
-    url: "https://images.unsplash.com/photo-1597090656147-0ef9da860d47?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/1674049/pexels-photo-1674049.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Art Museum"
   },
   {
-    url: "https://images.unsplash.com/photo-1599395373130-c38c0d16ef5c?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/358457/pexels-photo-358457.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "Mississippi River St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1587653089489-9a247c53731f?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Science Center"
   },
   {
-    url: "https://images.unsplash.com/photo-1602444444369-fd291e007799?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/210617/pexels-photo-210617.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Colorful Buildings"
   },
   {
-    url: "https://images.unsplash.com/photo-1540333088855-f6ae878a2a0f?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/208745/pexels-photo-208745.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis City Streets"
   },
   {
-    url: "https://images.unsplash.com/photo-1599243780629-503c5a616821?auto=format&fit=crop&w=800&q=80",
+    url: "https://images.pexels.com/photos/55826/pexels-photo-55826.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "Missouri Botanical Garden"
   }
 ];
 
 const GalleryPage = () => {
+  const [loadingImages, setLoadingImages] = useState<Record<number, boolean>>({});
+  const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
+  
+  const handleImageLoad = (index: number) => {
+    setLoadingImages(prev => ({ ...prev, [index]: false }));
+  };
+
+  const handleImageLoadStart = (index: number) => {
+    setLoadingImages(prev => ({ ...prev, [index]: true }));
+  };
+  
+  const handleImageError = (index: number, image: { url: string, alt: string }) => {
+    console.error(`Failed to load image: ${image.url}`);
+    setFailedImages(prev => ({ ...prev, [index]: true }));
+    setLoadingImages(prev => ({ ...prev, [index]: false }));
+  };
+
   return (
-    <div className="h-full overflow-auto p-4">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {GALLERY_IMAGES.map((image, index) => (
-          <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <img 
-              src={image.url} 
-              alt={image.alt} 
-              className="w-full h-full object-cover"
-              loading="lazy"
-              onError={(e) => {
-                console.error(`Failed to load image: ${image.url}`);
-                e.currentTarget.src = "https://via.placeholder.com/400x400?text=St.+Louis";
-              }}
-            />
-          </div>
-        ))}
+    <div className="h-full overflow-auto p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl font-bold mb-6">Explore St. Louis</h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {GALLERY_IMAGES.map((image, index) => (
+            <div key={index} className="relative aspect-square overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow bg-muted/30">
+              {loadingImages[index] && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+              )}
+              
+              <img 
+                src={failedImages[index] ? `https://via.placeholder.com/800x800?text=${encodeURIComponent(image.alt)}` : image.url} 
+                alt={image.alt} 
+                className={`w-full h-full object-cover transition-opacity duration-300 ${loadingImages[index] ? 'opacity-0' : 'opacity-100'}`}
+                loading="lazy"
+                onLoad={() => handleImageLoad(index)}
+                onLoadStart={() => handleImageLoadStart(index)}
+                onError={() => handleImageError(index, image)}
+              />
+              
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                <p className="text-white text-sm font-medium">{image.alt}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
