@@ -160,7 +160,7 @@ const ChatArea = () => {
     
     // Set default prompt from location state if available and only if it's a new chat
     if (location.state?.defaultPrompt && (!chatHistories[chatKey] || chatHistories[chatKey].length === 0)) {
-      setInputValue(location.state.defaultPrompt);
+      setInputValue("");
       // Clear the location state to prevent it from persisting
       window.history.replaceState({}, document.title);
     }
