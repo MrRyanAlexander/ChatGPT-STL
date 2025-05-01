@@ -8,7 +8,7 @@ const PublicChatPage = () => {
       <div className="max-w-md w-full text-center space-y-6">
         <h1 className="text-3xl font-bold">Join the Discord</h1>
         <p className="text-lg text-muted-foreground">
-          Group chatting is possible here, but not currently enabled.
+          Let us know if we should add anything else here.
         </p>
         
         <div className="bg-secondary/50 rounded-xl p-6">
