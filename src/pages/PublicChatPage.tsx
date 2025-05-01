@@ -12,8 +12,7 @@ const PublicChatPage = () => {
         </p>
         
         <div className="bg-secondary/50 rounded-xl p-6">
-          <h2 className="text-xl font-medium mb-4">Join our Discord community</h2>
-          <p className="mb-4">Connect with other St. Louis residents and get help in real-time.</p>
+          <p className="mb-4">Click the invite link below.</p>
           <a 
             href="https://discord.gg/stlouis" 
             target="_blank" 
