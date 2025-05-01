@@ -23,12 +23,6 @@ const PublicChatPage = () => {
             discord.gg/stlouis
           </a>
         </div>
-        
-        <Button asChild className="mt-6">
-          <Link to="/">
-            Start a new conversation
-          </Link>
-        </Button>
       </div>
     </div>
   );
