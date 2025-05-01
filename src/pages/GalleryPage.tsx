@@ -11,13 +11,13 @@ const GALLERY_IMAGES = [
   {
     url: "https://images.pexels.com/photos/3052361/pexels-photo-3052361.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Skyline at Night"
-  },
-  {
-    url: "https://images.pexels.com/photos/39698/busch-stadium-st-louis-baseball-stadium-baseball-39698.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },       
+  {      
+    url: "https://images.pexels.com/photos/8043400/pexels-photo-8043400.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Cardinals Stadium"
   },
   {
-    url: "https://images.pexels.com/photos/158063/bellingrath-gardens-alabama-landscape-scenic-158063.jpeg?auto=compress&cs=tinysrgb&w=800",
+    url: "https://images.pexels.com/photos/1055400/pexels-photo-1055400.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "St. Louis Botanical Garden"
   },
   {
