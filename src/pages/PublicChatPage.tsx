@@ -14,7 +14,7 @@ const PublicChatPage = () => {
         <div className="bg-secondary/50 rounded-xl p-6">
           <p className="mb-4">Click the invite link below.</p>
           <a 
-            href="https://discord.gg/stlouis" 
+            href="https://discord.gg/HMePTMcB" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-primary hover:underline text-lg font-medium"
