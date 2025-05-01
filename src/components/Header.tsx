@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Settings, User, Sun, Moon } from "lucide-react";
@@ -32,10 +31,8 @@ const Header = () => {
     setActiveTab(tab);
     
     if (tab === "Chat") {
-      // If current location is not a chat page, navigate to home
-      if (!["/", "/chat"].some(path => location.pathname.startsWith(path))) {
-        navigate("/");
-      }
+      // Always navigate to home page when Chat is clicked
+      navigate("/");
     } else if (tab === "Explore") {
       // Navigate to gallery page for exploration
       navigate("/gallery");
