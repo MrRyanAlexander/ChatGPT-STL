@@ -5,7 +5,7 @@ import OnboardingWalkthrough from "@/components/OnboardingWalkthrough";
 const HomePage = () => {
   return (
     <>
-      <ChatArea />
+      <ChatArea key="home" />
       <OnboardingWalkthrough />
     </>
   );

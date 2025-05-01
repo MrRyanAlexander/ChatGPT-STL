@@ -6,7 +6,7 @@ const ChatPage = () => {
   const { agentId } = useParams<{ agentId: string }>();
   
   return (
-    <ChatArea />
+    <ChatArea key={agentId} />
   );
 };
 
