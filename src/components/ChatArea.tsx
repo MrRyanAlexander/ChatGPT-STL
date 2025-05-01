@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,9 @@ type Message = {
   content: string;
   timestamp: Date;
 };
+
+// Global chat history storage
+const chatHistories: Record<string, Message[]> = {};
 
 const formatTimeStamp = (date: Date) => {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -121,17 +125,36 @@ const ChatArea = () => {
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
   const { toast } = useToast();
-
-  // Set agent-specific prompts or default prompts
+  
+  // Get a unique key for this chat
+  const chatKey = agentId || 'home';
+  
+  // Load chat history from global storage when component mounts or key changes
   useEffect(() => {
-    if (agentId && AGENT_PROMPTS[agentId]) {
-      setPromptCards(AGENT_PROMPTS[agentId]);
+    if (chatHistories[chatKey]) {
+      setMessages(chatHistories[chatKey]);
+      // Hide prompt cards if we have existing messages
+      if (chatHistories[chatKey].length > 0) {
+        setPromptCards([]);
+      } else {
+        // Set agent-specific prompts or default prompts
+        if (agentId && AGENT_PROMPTS[agentId]) {
+          setPromptCards(AGENT_PROMPTS[agentId]);
+        } else {
+          setPromptCards(DEFAULT_PROMPTS);
+        }
+      }
     } else {
-      setPromptCards(DEFAULT_PROMPTS);
+      // Reset messages for new chat
+      setMessages([]);
+      
+      // Set agent-specific prompts or default prompts
+      if (agentId && AGENT_PROMPTS[agentId]) {
+        setPromptCards(AGENT_PROMPTS[agentId]);
+      } else {
+        setPromptCards(DEFAULT_PROMPTS);
+      }
     }
-    
-    // Clear messages when changing agents/routes
-    setMessages([]);
     
     // Set default prompt from location state if available
     if (location.state?.defaultPrompt) {
@@ -139,7 +162,14 @@ const ChatArea = () => {
     } else {
       setInputValue("");
     }
-  }, [agentId, location.state]);
+  }, [agentId, location.state, chatKey]);
+
+  // Save chat history to global storage when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      chatHistories[chatKey] = messages;
+    }
+  }, [messages, chatKey]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -180,7 +210,7 @@ const ChatArea = () => {
     }, 1000);
     
     // Hide prompt cards once conversation starts
-    if (messages.length === 0) {
+    if (promptCards.length > 0) {
       setPromptCards([]);
     }
   };
