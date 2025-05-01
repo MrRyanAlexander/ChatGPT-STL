@@ -19,7 +19,7 @@ const PublicChatPage = () => {
             rel="noopener noreferrer"
             className="text-primary hover:underline text-lg font-medium"
           >
-            discord.gg/stlouis
+            discord.gg/inviteURL
           </a>
         </div>
       </div>
