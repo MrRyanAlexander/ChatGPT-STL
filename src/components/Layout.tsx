@@ -10,25 +10,42 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-
+  
   // Ensure the UI reflects the correct state when navigating directly to a page
   useEffect(() => {
     // Handle navigation based on current route
+    const isExplorePage = location.pathname === '/explore';
     const isGalleryPage = location.pathname === '/gallery';
     
     // Update header tabs based on current page
-    if (isGalleryPage) {
+    if (isExplorePage) {
       const headerTabs = document.querySelectorAll('[data-tab="Explore"]');
       headerTabs.forEach(tab => {
         if (tab instanceof HTMLElement) {
           tab.setAttribute('data-active', 'true');
         }
       });
+      
+      const chatTabs = document.querySelectorAll('[data-tab="Chat"]');
+      chatTabs.forEach(tab => {
+        if (tab instanceof HTMLElement) {
+          tab.setAttribute('data-active', 'false');
+        }
+      });
+    } else if (isGalleryPage) {
+      // Do nothing for gallery as it's handled separately
     } else {
       const headerTabs = document.querySelectorAll('[data-tab="Chat"]');
       headerTabs.forEach(tab => {
         if (tab instanceof HTMLElement) {
           tab.setAttribute('data-active', 'true');
+        }
+      });
+      
+      const exploreTabs = document.querySelectorAll('[data-tab="Explore"]');
+      exploreTabs.forEach(tab => {
+        if (tab instanceof HTMLElement) {
+          tab.setAttribute('data-active', 'false');
         }
       });
     }

@@ -22,8 +22,10 @@ const Header = () => {
   
   // Update activeTab based on current location and store chat route
   useEffect(() => {
-    if (location.pathname === '/gallery') {
+    if (location.pathname === '/explore') {
       setActiveTab("Explore");
+    } else if (location.pathname === '/gallery') {
+      setActiveTab("Gallery");
     } else {
       setActiveTab("Chat");
       
@@ -41,7 +43,10 @@ const Header = () => {
       // Navigate to the previous chat page if available, otherwise to home
       navigate(previousChatRef.current || "/");
     } else if (tab === "Explore") {
-      // Navigate to gallery page for exploration
+      // Navigate to the new explore page
+      navigate("/explore");
+    } else if (tab === "Gallery") {
+      // Navigate to gallery page
       navigate("/gallery");
     }
   };

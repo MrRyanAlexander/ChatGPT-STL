@@ -12,6 +12,7 @@ import HomePage from "@/pages/HomePage";
 import ChatPage from "@/pages/ChatPage";
 import PublicChatPage from "@/pages/PublicChatPage";
 import GalleryPage from "@/pages/GalleryPage";
+import ExploreFeeds from "@/pages/ExploreFeeds";
 import SettingsPage from "@/pages/SettingsPage";
 import TermsPage from "@/pages/TermsPage";
 import PrivacyPage from "@/pages/PrivacyPage";
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="chat/:agentId" element={<ChatPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
+                <Route path="explore" element={<ExploreFeeds />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="terms" element={<TermsPage />} />
                 <Route path="privacy" element={<PrivacyPage />} />
