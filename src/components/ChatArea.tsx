@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,11 +155,14 @@ const ChatArea = () => {
       }
     }
     
-    // Set default prompt from location state if available
-    if (location.state?.defaultPrompt) {
+    // Clear input field when changing chats
+    setInputValue("");
+    
+    // Set default prompt from location state if available and only if it's a new chat
+    if (location.state?.defaultPrompt && (!chatHistories[chatKey] || chatHistories[chatKey].length === 0)) {
       setInputValue(location.state.defaultPrompt);
-    } else {
-      setInputValue("");
+      // Clear the location state to prevent it from persisting
+      window.history.replaceState({}, document.title);
     }
   }, [agentId, location.state, chatKey]);
 
@@ -216,31 +218,27 @@ const ChatArea = () => {
   };
 
   const handlePromptClick = (text: string) => {
-    setInputValue(text);
+    const userMessage: Message = {
+      role: "user",
+      content: text,
+      timestamp: new Date(),
+    };
     
-    // Auto-submit the form after setting the input value
+    setMessages([userMessage]);
+    setInputValue(""); // Clear input immediately after using a prompt card
+    
+    // Simulate response after a short delay
     setTimeout(() => {
-      const userMessage: Message = {
-        role: "user",
-        content: text,
+      const aiResponse: Message = {
+        role: "assistant",
+        content: getSimulatedResponse(text),
         timestamp: new Date(),
       };
-      
-      setMessages([userMessage]);
-      
-      // Simulate response after a short delay
-      setTimeout(() => {
-        const aiResponse: Message = {
-          role: "assistant",
-          content: getSimulatedResponse(text),
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, aiResponse]);
-      }, 1000);
-      
-      // Hide prompt cards after selection
-      setPromptCards([]);
-    }, 100);
+      setMessages((prev) => [...prev, aiResponse]);
+    }, 1000);
+    
+    // Hide prompt cards after selection
+    setPromptCards([]);
   };
 
   const isPublicChat = location.pathname === "/public-chat";
