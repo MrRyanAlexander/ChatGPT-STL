@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Settings, User, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,13 +18,19 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const previousChatRef = useRef<string | null>(null);
   
-  // Update activeTab based on current location
+  // Update activeTab based on current location and store chat route
   useEffect(() => {
     if (location.pathname === '/gallery') {
       setActiveTab("Explore");
     } else {
       setActiveTab("Chat");
+      
+      // Store the current path if it's a chat page
+      if (location.pathname === '/' || location.pathname.startsWith('/chat')) {
+        previousChatRef.current = location.pathname;
+      }
     }
   }, [location.pathname]);
   
@@ -31,8 +38,8 @@ const Header = () => {
     setActiveTab(tab);
     
     if (tab === "Chat") {
-      // Always navigate to home page when Chat is clicked
-      navigate("/");
+      // Navigate to the previous chat page if available, otherwise to home
+      navigate(previousChatRef.current || "/");
     } else if (tab === "Explore") {
       // Navigate to gallery page for exploration
       navigate("/gallery");
