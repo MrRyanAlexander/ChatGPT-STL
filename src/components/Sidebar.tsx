@@ -48,7 +48,7 @@ const AGENT_CATEGORIES: AgentCategory[] = [
       { name: "Boeing", slug: "boeing" },
       { name: "Monsanto", slug: "monsanto" },
       { name: "Amazon", slug: "amazon" },
-      { name: "Handyman", slug: "handyman" },
+      { name: "Handyman Hardware", slug: "handyman" },
       { name: "Dierbergs", slug: "dierbergs" }
     ]
   }
@@ -63,7 +63,7 @@ const DEFAULT_PROMPTS: Record<string, string> = {
   "sewer": "Who do I call for sewer backup issues?",
   "monsanto": "What is Monsanto's history in St. Louis?",
   "amazon": "Where are Amazon fulfillment centers in the St. Louis area?",
-  "handyman": "How do I find a reliable handyman in St. Louis?",
+  "handyman": "How do I find Handyman Hardware True Value in St. Louis?",
   "dierbergs": "What are Dierbergs' store hours?"
 };
 

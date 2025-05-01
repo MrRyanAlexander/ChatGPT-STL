@@ -1,56 +1,56 @@
 
 import { useState } from "react";
 
-// St. Louis specific images
+// St. Louis specific images with direct links
 const GALLERY_IMAGES = [
   {
-    url: "https://images.unsplash.com/photo-1501658907296-1b0aeda12b38",
+    url: "https://images.unsplash.com/photo-1501658907296-1b0aeda12b38?auto=format&fit=crop&w=800&q=80",
     alt: "Gateway Arch St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1539300172007-671e2bcc85e7",
+    url: "https://images.unsplash.com/photo-1539300172007-671e2bcc85e7?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Skyline at Night"
   },
   {
-    url: "https://images.unsplash.com/photo-1535051179334-8d1493b5056d",
+    url: "https://images.unsplash.com/photo-1535051179334-8d1493b5056d?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Cardinals Stadium"
   },
   {
-    url: "https://images.unsplash.com/photo-1599243759044-bb0dea176a9f",
+    url: "https://images.unsplash.com/photo-1599243759044-bb0dea176a9f?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Botanical Garden"
   },
   {
-    url: "https://images.unsplash.com/photo-1531253183135-fa03e4c3f61c",
+    url: "https://images.unsplash.com/photo-1531253183135-fa03e4c3f61c?auto=format&fit=crop&w=800&q=80",
     alt: "Forest Park St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1595987169259-0bddcc6d025a",
+    url: "https://images.unsplash.com/photo-1595987169259-0bddcc6d025a?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Union Station"
   },
   {
-    url: "https://images.unsplash.com/photo-1597090656147-0ef9da860d47",
+    url: "https://images.unsplash.com/photo-1597090656147-0ef9da860d47?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Art Museum"
   },
   {
-    url: "https://images.unsplash.com/photo-1599395373130-c38c0d16ef5c",
+    url: "https://images.unsplash.com/photo-1599395373130-c38c0d16ef5c?auto=format&fit=crop&w=800&q=80",
     alt: "Mississippi River St. Louis"
   },
   {
-    url: "https://images.unsplash.com/photo-1587653089489-9a247c53731f",
+    url: "https://images.unsplash.com/photo-1587653089489-9a247c53731f?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Science Center"
   },
   {
-    url: "https://images.unsplash.com/photo-1602444444369-fd291e007799",
+    url: "https://images.unsplash.com/photo-1602444444369-fd291e007799?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis Colorful Buildings"
   },
   {
-    url: "https://images.unsplash.com/photo-1540333088855-f6ae878a2a0f",
+    url: "https://images.unsplash.com/photo-1540333088855-f6ae878a2a0f?auto=format&fit=crop&w=800&q=80",
     alt: "St. Louis City Streets"
   },
   {
-    url: "https://images.unsplash.com/photo-1599243780629-503c5a616821",
+    url: "https://images.unsplash.com/photo-1599243780629-503c5a616821?auto=format&fit=crop&w=800&q=80",
     alt: "Missouri Botanical Garden"
-  },
+  }
 ];
 
 const GalleryPage = () => {

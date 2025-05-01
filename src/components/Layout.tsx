@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,21 @@ import { Menu, X } from "lucide-react";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Ensure the UI reflects the correct state when navigating directly to a page
+  useEffect(() => {
+    // If on gallery page, ensure we handle exploration view correctly
+    if (location.pathname === '/gallery') {
+      const headerTabs = document.querySelectorAll('[data-tab="Explore"]');
+      headerTabs.forEach(tab => {
+        if (tab instanceof HTMLElement) {
+          tab.click();
+        }
+      });
+    }
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col h-screen bg-background">

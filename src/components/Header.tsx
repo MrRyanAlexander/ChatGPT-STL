@@ -9,13 +9,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const Header = () => {
   const { user, profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("Chat");
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    
+    if (tab === "Chat") {
+      // If current location is not a chat page, navigate to home
+      if (!["/", "/chat"].some(path => location.pathname.startsWith(path))) {
+        navigate("/");
+      }
+    } else if (tab === "Explore") {
+      // Navigate to gallery page for exploration
+      navigate("/gallery");
+    }
+  };
   
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
@@ -29,7 +45,7 @@ const Header = () => {
             <Button 
               key={tab}
               variant={activeTab === tab ? "default" : "ghost"} 
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className="text-large"
             >
               {tab}
