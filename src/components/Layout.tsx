@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -13,7 +14,40 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Ensure the UI reflects the correct state when navigating directly to a page
+  // Determine if we're on a chat-related page
+  const isChatPage = !location.pathname.startsWith('/explore') && 
+                     !location.pathname.startsWith('/gallery') &&
+                     !location.pathname.startsWith('/settings') &&
+                     !location.pathname.startsWith('/terms') &&
+                     !location.pathname.startsWith('/privacy');
+
+  return (
+    <SidebarProvider defaultOpen={false}>
+      <div className="flex flex-col h-screen bg-background w-full max-w-full">
+        <Header />
+        <div className="flex flex-1 overflow-hidden w-full">
+          <CustomSidebar />         
+          <main className="flex-1 overflow-hidden">
+            <div className="h-full relative">
+              <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
+                <Outlet />
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      <InnerLayout />
+    </SidebarProvider>
+  );
+};
+
+// New component: can hook into sidebar context
+const InnerLayout = () => {
+  const { isOpen, toggleSidebar } = useSidebar();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Moved useEffect logic from main Layout component
   useEffect(() => {
     // Handle navigation based on current route
     const isExplorePage = location.pathname === '/explore';
@@ -53,41 +87,6 @@ const Layout = () => {
     }
   }, [location.pathname]);
 
-  // Determine if we're on a chat-related page
-  const isChatPage = !location.pathname.startsWith('/explore') && 
-                     !location.pathname.startsWith('/gallery') &&
-                     !location.pathname.startsWith('/settings') &&
-                     !location.pathname.startsWith('/terms') &&
-                     !location.pathname.startsWith('/privacy');
-
-  return (
-    <SidebarProvider defaultOpen={false}>
-      <div className="flex flex-col h-screen bg-background w-full max-w-full">
-        <Header />
-        <div className="flex flex-1 overflow-hidden w-full">
-          <CustomSidebar />         
-          <main className="flex-1 overflow-hidden">
-            <div className="h-full relative">
-              <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
-                <Outlet />
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-      <InnerLayout />
-    </SidebarProvider>
-  );
-};
-
-// New component: can hook into sidebar context
-const InnerLayout = () => {
-  const { isOpen, toggleSidebar } = useSidebar();   /* hook after provider */
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // (keep your existing useEffect logic here…)
-
   return (
     <div
       className={`
@@ -96,7 +95,7 @@ const InnerLayout = () => {
         ${isOpen ? "translate-x-[85vw]" : "translate-x-0"}
       `}
     >
-      <Header onMenuClick={toggleSidebar} /> /* pass toggle down */
+      <Header onMenuClick={toggleSidebar} />
       <div className="flex flex-1 overflow-hidden w-full">
         <CustomSidebar />
         <main className="flex-1 overflow-auto">
@@ -110,4 +109,5 @@ const InnerLayout = () => {
     </div>
   );
 };
+
 export default Layout;
