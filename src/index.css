@@ -95,24 +95,15 @@
   }
 }
 
-.sidebar-item {
-  @apply text-sm px-2 py-1.5 rounded-xl hover:bg-accent flex items-center;
+/* Sidebar specific styles */
+.sidebar-toggle {
+  @apply fixed z-20 transition-all duration-200 ease-in-out;
+  @apply md:left-[260px] md:top-4;
+  @apply left-4 top-4;
 }
 
-.sidebar-item-active {
-  @apply bg-accent font-medium;
-}
-
-.chat-message {
-  @apply p-4;
-}
-
-.chat-message-user {
-  @apply bg-muted;
-}
-
-.chat-message-assistant {
-  @apply bg-card;
+.sidebar-toggle-collapsed {
+  @apply md:left-4;
 }
 
 /* Updated chat bubble styles with more rounded corners */
@@ -125,4 +116,3 @@
   @apply bg-card rounded-2xl p-3.5 text-foreground shadow-sm;
   @apply dark:bg-accent/50 dark:text-foreground;
 }
-
