@@ -62,25 +62,22 @@ const Layout = () => {
                      !location.pathname.startsWith('/privacy');
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <SidebarProvider defaultOpen={false}>
-        <Header />
-        <div className="flex flex-grow overflow-hidden w-full">
+    <div className="flex flex-col h-screen bg-background w-full max-w-full">
+      <Header />
+      <div className="flex flex-1 overflow-hidden w-full">
+        <SidebarProvider defaultOpen={false}>
           <CustomSidebar />
-          
-          <SidebarInset className="flex flex-col h-full">
-            <main className="flex-grow overflow-hidden relative">
-              {isChatPage ? (
-                // Show the chat interface for chat-related pages
-                <ChatArea key="main-chat" />
-              ) : (
-                // Show other content for non-chat pages using Outlet
-                <Outlet />
-              )}
-            </main>
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
+          <div className="flex-1 flex flex-col w-full overflow-hidden">
+            {isChatPage ? (
+              // Show the chat interface for chat-related pages
+              <ChatArea key="main-chat" />
+            ) : (
+              // Show other content for non-chat pages using Outlet
+              <Outlet />
+            )}
+          </div>
+        </SidebarProvider>
+      </div>
     </div>
   );
 };
