@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Sidebar, 
   SidebarContent,
@@ -11,7 +11,8 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
-  SidebarSeparator
+  SidebarSeparator,
+  useSidebar
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { 
@@ -23,13 +24,13 @@ import {
   Moon, 
   Sun, 
   LogOut,
-  Clock
+  Clock,
+  X
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { Separator } from "@/components/ui/separator";
 
 type AgentCategory = {
   name: string;
@@ -88,6 +89,8 @@ const CustomSidebar = () => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const { getAllChats } = useChatHistory();
+  const { isMobile, openMobile, setOpenMobile, toggleSidebar } = useSidebar();
+  
   const recentChats = getAllChats().slice(0, 6); // Get up to 6 most recent chats
   
   // Set active states based on current URL
@@ -108,6 +111,9 @@ const CustomSidebar = () => {
   const handleAgentClick = (slug: string) => {
     setActiveItem(slug);
     setActiveChatId(null);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
     navigate(`/chat/${slug}`, { 
       state: { 
         defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
@@ -118,18 +124,36 @@ const CustomSidebar = () => {
   const handleNewChat = () => {
     setActiveItem(null);
     setActiveChatId(null);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
     navigate("/", { replace: true });
   };
 
   const handleChatHistoryClick = (chatId: string) => {
     setActiveItem(null);
     setActiveChatId(chatId);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
     navigate(`/chat/history/${chatId}`);
   };
 
   return (
     <Sidebar variant="inset" className="bg-sidebar border-sidebar-border text-sidebar-foreground">
-      <SidebarHeader className="pb-0">
+      <SidebarHeader className="pb-0 relative">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-2 right-2 z-10"
+            onClick={() => setOpenMobile(false)}
+            aria-label="Close sidebar"
+          >
+            <X className="h-5 w-5 text-sidebar-foreground" />
+          </Button>
+        )}
+      
         <Button
           variant="outline"
           className="w-full justify-start gap-2 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -143,7 +167,10 @@ const CustomSidebar = () => {
           <Button
             variant="secondary"
             className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
-            onClick={() => navigate("/gallery")}
+            onClick={() => {
+              if (isMobile) setOpenMobile(false);
+              navigate("/gallery");
+            }}
           >
             <ImageIcon className="h-4 w-4" />
             Gallery
@@ -152,7 +179,10 @@ const CustomSidebar = () => {
           <Button
             variant="secondary"
             className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
-            onClick={() => navigate("/public-chat")}
+            onClick={() => {
+              if (isMobile) setOpenMobile(false);
+              navigate("/public-chat");
+            }}
           >
             <Users className="h-4 w-4" />
             Public Chat

@@ -106,6 +106,21 @@
   @apply md:left-4;
 }
 
+/* Mobile landscape mode optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  .sidebar-header {
+    @apply py-1;
+  }
+  
+  .sidebar-content {
+    @apply py-1;
+  }
+  
+  .sidebar-footer {
+    @apply py-1;
+  }
+}
+
 /* Updated chat bubble styles with more rounded corners */
 .chat-bubble-user {
   @apply bg-muted rounded-2xl p-3.5 text-foreground;
@@ -115,4 +130,16 @@
 .chat-bubble-ai {
   @apply bg-card rounded-2xl p-3.5 text-foreground shadow-sm;
   @apply dark:bg-accent/50 dark:text-foreground;
+}
+
+/* Improved sheet styles for mobile sidebar */
+.sheet-content-sidebar {
+  @apply p-0 border-r-0 max-w-full sm:max-w-full;
+}
+
+@media (max-width: 640px) {
+  [data-sidebar="sidebar"] {
+    width: 85vw !important;
+    max-width: 320px !important;
+  }
 }

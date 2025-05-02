@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { Settings, User, Sun, Moon } from "lucide-react";
+import { Settings, User, Sun, Moon, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useSidebar } from '@/components/ui/sidebar';
 
 const Header = () => {
   const { user, profile, signOut } = useAuth();
@@ -19,6 +20,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const previousChatRef = useRef<string | null>(null);
+  const { isMobile, toggleSidebar } = useSidebar();
   
   // Update activeTab based on current location and store chat route
   useEffect(() => {
@@ -59,7 +61,18 @@ const Header = () => {
   
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
+        {isMobile && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="mr-1 md:hidden"
+            onClick={toggleSidebar}
+            aria-label="Toggle sidebar"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
         <h1 className="text-xl md:text-2xl font-semibold">ChatGPT-STL</h1>
       </div>
       
@@ -84,7 +97,7 @@ const Header = () => {
         <Button 
           variant="ghost" 
           onClick={handleNewChat}
-          className="text-large focus-visible-ring"
+          className="text-large focus-visible-ring hidden sm:flex"
           aria-label="New chat"
         >
           New Chat
