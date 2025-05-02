@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,23 +130,35 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const { chatHistories, addChat, updateChat, getChatById } = useChatHistory();
+  const { chatHistories, updateChat, getChatById } = useChatHistory();
   
   // Get a unique key for this chat
   const chatKey = chatId || (location.pathname.startsWith('/chat/history/') 
     ? location.pathname.split('/').pop() || 'home'
     : agentId || 'home');
   
-  // Load chat history when component mounts or key changes
+  // Load chat history when component mounts or when key changes
   useEffect(() => {
-    const chatData = getChatById(chatKey);
-    
-    if (chatData?.messages) {
-      setMessages(chatData.messages);
-      // Hide prompt cards if we have existing messages
-      if (chatData.messages.length > 0) {
-        setPromptCards([]);
+    const loadChatData = () => {
+      const chatData = getChatById(chatKey);
+      
+      if (chatData?.messages) {
+        setMessages(chatData.messages);
+        // Hide prompt cards if we have existing messages
+        if (chatData.messages.length > 0) {
+          setPromptCards([]);
+        } else {
+          // Set agent-specific prompts or default prompts
+          if (agentId && AGENT_PROMPTS[agentId]) {
+            setPromptCards(AGENT_PROMPTS[agentId]);
+          } else {
+            setPromptCards(DEFAULT_PROMPTS);
+          }
+        }
       } else {
+        // Reset messages for new chat
+        setMessages([]);
+        
         // Set agent-specific prompts or default prompts
         if (agentId && AGENT_PROMPTS[agentId]) {
           setPromptCards(AGENT_PROMPTS[agentId]);
@@ -153,43 +166,40 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
           setPromptCards(DEFAULT_PROMPTS);
         }
       }
-    } else {
-      // Reset messages for new chat
-      setMessages([]);
       
-      // Set agent-specific prompts or default prompts
-      if (agentId && AGENT_PROMPTS[agentId]) {
-        setPromptCards(AGENT_PROMPTS[agentId]);
-      } else {
-        setPromptCards(DEFAULT_PROMPTS);
-      }
-    }
+      // Clear input field when changing chats
+      setInputValue("");
+    };
     
-    // Clear input field when changing chats
-    setInputValue("");
+    loadChatData();
     
     // Set default prompt from location state if available and only if it's a new chat
-    if (location.state?.defaultPrompt && (!chatData?.messages || chatData.messages.length === 0)) {
-      setInputValue("");
+    if (location.state?.defaultPrompt) {
+      setInputValue(location.state.defaultPrompt);
       // Clear the location state to prevent it from persisting
       window.history.replaceState({}, document.title);
     }
   }, [agentId, location.pathname, location.state, chatKey, getChatById]);
 
-  // Save chat history when messages change
+  // Save chat history when messages change - with a check to avoid infinite updates
   useEffect(() => {
     if (messages.length > 0) {
       const title = messages[0].content.substring(0, 30) + (messages[0].content.length > 30 ? "..." : "");
-      updateChat(chatKey, {
-        id: chatKey,
-        title: title,
-        messages: messages,
-        createdAt: messages[0].timestamp,
-        updatedAt: new Date(),
-        agentId: agentId || null
-      });
+      const existingChat = getChatById(chatKey);
+      
+      // Only update if there's an actual change in messages or if the chat doesn't exist
+      if (!existingChat || existingChat.messages.length !== messages.length) {
+        updateChat(chatKey, {
+          id: chatKey,
+          title: title,
+          messages: messages,
+          createdAt: existingChat?.createdAt || messages[0].timestamp,
+          updatedAt: new Date(),
+          agentId: agentId || null
+        });
+      }
     }
-  }, [messages, chatKey, agentId, updateChat]);
+  }, [messages, chatKey, agentId, updateChat, getChatById]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

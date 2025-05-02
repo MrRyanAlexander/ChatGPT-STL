@@ -5,8 +5,9 @@ import ChatArea from "@/components/ChatArea";
 const ChatPage = () => {
   const { agentId } = useParams<{ agentId: string }>();
   
+  // Adding a key to force component remounting when agentId changes
   return (
-    <ChatArea key={agentId} />
+    <ChatArea key={`agent-${agentId}`} />
   );
 };
 
