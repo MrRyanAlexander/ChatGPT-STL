@@ -34,14 +34,14 @@ const SettingsPage = () => {
       <h1 className="text-3xl font-bold mb-6">Settings</h1>
       
       <Tabs defaultValue="appearance" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 mb-6 rounded-xl">
+          <TabsTrigger value="appearance" className="rounded-xl">Appearance</TabsTrigger>
+          <TabsTrigger value="accessibility" className="rounded-xl">Accessibility</TabsTrigger>
+          <TabsTrigger value="notifications" className="rounded-xl">Notifications</TabsTrigger>
         </TabsList>
         
         <TabsContent value="appearance">
-          <Card>
+          <Card className="rounded-xl">
             <CardHeader>
               <CardTitle>Appearance Settings</CardTitle>
               <CardDescription>
@@ -55,14 +55,14 @@ const SettingsPage = () => {
                   <Button 
                     onClick={() => handleThemeChange("light")} 
                     variant={theme === "light" ? "default" : "outline"}
-                    className="flex-1"
+                    className="flex-1 rounded-xl"
                   >
                     Light
                   </Button>
                   <Button 
                     onClick={() => handleThemeChange("dark")} 
                     variant={theme === "dark" ? "default" : "outline"}
-                    className="flex-1"
+                    className="flex-1 rounded-xl"
                   >
                     Dark
                   </Button>
@@ -73,7 +73,7 @@ const SettingsPage = () => {
         </TabsContent>
         
         <TabsContent value="accessibility">
-          <Card>
+          <Card className="rounded-xl">
             <CardHeader>
               <CardTitle>Accessibility Settings</CardTitle>
               <CardDescription>
@@ -87,21 +87,21 @@ const SettingsPage = () => {
                   <Button 
                     onClick={() => handleFontSizeChange("small")} 
                     variant={fontSize === "small" ? "default" : "outline"}
-                    className="flex-1"
+                    className="flex-1 rounded-xl"
                   >
                     Small
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("medium")} 
                     variant={fontSize === "medium" ? "default" : "outline"}
-                    className="flex-1"
+                    className="flex-1 rounded-xl"
                   >
                     Medium
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("large")} 
                     variant={fontSize === "large" ? "default" : "outline"}
-                    className="flex-1"
+                    className="flex-1 rounded-xl"
                   >
                     Large
                   </Button>
@@ -112,7 +112,7 @@ const SettingsPage = () => {
         </TabsContent>
         
         <TabsContent value="notifications">
-          <Card>
+          <Card className="rounded-xl">
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
               <CardDescription>
