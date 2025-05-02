@@ -69,8 +69,8 @@ const Layout = () => {
           <CustomSidebar />
           
           <SidebarInset>
-            <div className="relative h-full">
-              <main className="h-full px-2 pt-4 md:pt-4 md:pl-6">
+            <div className="flex flex-col h-full w-full">
+              <main className="flex-1 overflow-hidden px-2 pt-4 md:pt-4 md:pl-6">
                 {isChatPage ? (
                   // Show the chat interface for chat-related pages
                   <ChatArea key="main-chat" />

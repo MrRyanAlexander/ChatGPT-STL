@@ -79,6 +79,8 @@
     max-width: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
   }
   
   /* Add CSS for font size classes */
@@ -104,6 +106,13 @@
 
 .sidebar-toggle-collapsed {
   @apply md:left-4;
+}
+
+/* Fix for layout issues */
+[data-sidebar="sidebar-inset"] {
+  @apply w-full overflow-hidden flex-1;
+  display: flex !important;
+  flex-direction: column;
 }
 
 /* Mobile landscape mode optimizations */
@@ -150,4 +159,9 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
+}
+
+/* Fix for layout overflow issues */
+.overflow-hidden {
+  overflow: hidden !important;
 }
