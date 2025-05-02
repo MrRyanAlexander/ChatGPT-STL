@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useSidebar } from '@/components/ui/sidebar';
+import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
 const Header = () => {
   const { user, profile, signOut } = useAuth();
@@ -52,27 +52,11 @@ const Header = () => {
       navigate("/gallery");
     }
   };
-
-  const handleNewChat = () => {
-    // Always navigate to a fresh chat when clicking New Chat
-    navigate("/", { replace: true });
-    setActiveTab("Chat");
-  };
   
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
       <div className="flex items-center gap-2">
-        {isMobile && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="mr-1 md:hidden"
-            onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        )}
+        <SidebarTrigger className="h-9 w-9 rounded-full shadow-sm bg-background" />
         <h1 className="text-xl md:text-2xl font-semibold">ChatGPT-STL</h1>
       </div>
       
@@ -94,15 +78,6 @@ const Header = () => {
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="ghost" 
-          onClick={handleNewChat}
-          className="text-large focus-visible-ring hidden sm:flex"
-          aria-label="New chat"
-        >
-          New Chat
-        </Button>
-        
         <Button 
           variant="ghost" 
           size="icon" 

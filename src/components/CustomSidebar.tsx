@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { 
-  Plus, 
+  MessageSquare, 
   ImageIcon, 
   Users, 
   Settings, 
@@ -140,7 +140,7 @@ const CustomSidebar = () => {
   };
 
   return (
-    <Sidebar variant="inset" className="bg-sidebar border-sidebar-border text-sidebar-foreground">
+    <Sidebar className="bg-sidebar border-sidebar-border text-sidebar-foreground">
       <SidebarHeader className="pb-0 relative">
         {isMobile && (
           <Button
@@ -156,11 +156,12 @@ const CustomSidebar = () => {
       
         <Button
           variant="outline"
-          className="w-full justify-start gap-2 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          className="w-full justify-center gap-2 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           onClick={handleNewChat}
+          aria-label="New Chat"
         >
-          <Plus className="h-4 w-4" />
-          New Chat
+          <MessageSquare className="h-5 w-5" />
+          <span className="md:inline-block">New Chat</span>
         </Button>
         
         <div className="flex gap-2 mt-2">

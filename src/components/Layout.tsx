@@ -5,18 +5,14 @@ import Header from "@/components/Header";
 import ChatArea from "@/components/ChatArea";
 import { 
   SidebarProvider, 
-  SidebarTrigger,
   Sidebar,
   SidebarInset
 } from "@/components/ui/sidebar";
 import CustomSidebar from "@/components/CustomSidebar";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [openMobile, setOpenMobile] = useState(false);
   
   // Ensure the UI reflects the correct state when navigating directly to a page
   useEffect(() => {
@@ -71,29 +67,13 @@ const Layout = () => {
         <Header />
         <div className="flex flex-1 overflow-hidden w-full">
           <CustomSidebar />         
-          <SidebarInset>
-            <div className="relative h-full">
-              <div className="absolute top-4 left-4 md:hidden z-10">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full shadow-sm"
-                  onClick={() => setOpenMobile(!openMobile)}
-                >
-                  <Menu size={18} />
-                </Button>
-              </div>
-              
-              {/* Desktop sidebar trigger */}
-              <div className="hidden md:block absolute top-4 left-4 z-10">
-                <SidebarTrigger className="rounded-full shadow-sm bg-background" />
-              </div>
-              
-              <main className="h-full px-2 pt-14 md:pt-14 md:pl-6">
+          <main className="flex-1 overflow-hidden">
+            <div className="h-full relative">
+              <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
                 <Outlet />
-              </main>
+              </div>
             </div>
-          </SidebarInset>
+          </main>
         </div>
       </div>
     </SidebarProvider>
