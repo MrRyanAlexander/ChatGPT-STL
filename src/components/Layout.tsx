@@ -65,21 +65,19 @@ const Layout = () => {
     <div className="flex flex-col h-screen bg-background">
       <SidebarProvider defaultOpen={false}>
         <Header />
-        <div className="flex flex-1 overflow-hidden w-full">
+        <div className="flex flex-grow overflow-hidden w-full">
           <CustomSidebar />
           
-          <SidebarInset>
-            <div className="flex flex-col h-full w-full">
-              <main className="flex-1 overflow-hidden px-2 pt-4 md:pt-4 md:pl-6">
-                {isChatPage ? (
-                  // Show the chat interface for chat-related pages
-                  <ChatArea key="main-chat" />
-                ) : (
-                  // Show other content for non-chat pages using Outlet
-                  <Outlet />
-                )}
-              </main>
-            </div>
+          <SidebarInset className="flex flex-col h-full">
+            <main className="flex-grow overflow-hidden relative">
+              {isChatPage ? (
+                // Show the chat interface for chat-related pages
+                <ChatArea key="main-chat" />
+              ) : (
+                // Show other content for non-chat pages using Outlet
+                <Outlet />
+              )}
+            </main>
           </SidebarInset>
         </div>
       </SidebarProvider>
