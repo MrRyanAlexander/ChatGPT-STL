@@ -66,9 +66,9 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background w-full max-w-full">
-      <Header />
-      <div className="flex flex-1 overflow-hidden w-full">
-        <SidebarProvider defaultOpen={false}>
+      <SidebarProvider defaultOpen={false}>
+        <Header />
+        <div className="flex flex-1 overflow-hidden w-full">
           <CustomSidebar />         
           <SidebarInset>
             <div className="relative h-full">
