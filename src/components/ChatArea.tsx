@@ -1,21 +1,16 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ArrowUp, Paperclip as Attach, Globe, FileText, Mic } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useChatHistory } from "@/hooks/useChatHistory";
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-};
-
-// Global chat history storage
-const chatHistories: Record<string, Message[]> = {};
-
-const formatTimeStamp = (date: Date) => {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 // Expanded simulated responses for all agents (Corrected)
@@ -115,6 +110,10 @@ const DEFAULT_PROMPTS = [
   "Tell me about Boeing's presence in St. Louis"
 ];
 
+const formatTimeStamp = (date: Date) => {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 const ChatArea = () => {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -123,17 +122,24 @@ const ChatArea = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
+  const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Get a unique key for this chat
-  const chatKey = agentId || 'home';
+  const { chatHistories, addChat, updateChat, getChatById } = useChatHistory();
   
-  // Load chat history from global storage when component mounts or key changes
+  // Get a unique key for this chat
+  const chatKey = location.pathname.startsWith('/chat/history/') 
+    ? location.pathname.split('/').pop() || 'home'
+    : agentId || 'home';
+  
+  // Load chat history when component mounts or key changes
   useEffect(() => {
-    if (chatHistories[chatKey]) {
-      setMessages(chatHistories[chatKey]);
+    const chatData = getChatById(chatKey);
+    
+    if (chatData?.messages) {
+      setMessages(chatData.messages);
       // Hide prompt cards if we have existing messages
-      if (chatHistories[chatKey].length > 0) {
+      if (chatData.messages.length > 0) {
         setPromptCards([]);
       } else {
         // Set agent-specific prompts or default prompts
@@ -159,19 +165,27 @@ const ChatArea = () => {
     setInputValue("");
     
     // Set default prompt from location state if available and only if it's a new chat
-    if (location.state?.defaultPrompt && (!chatHistories[chatKey] || chatHistories[chatKey].length === 0)) {
+    if (location.state?.defaultPrompt && (!chatData?.messages || chatData.messages.length === 0)) {
       setInputValue("");
       // Clear the location state to prevent it from persisting
       window.history.replaceState({}, document.title);
     }
-  }, [agentId, location.state, chatKey]);
+  }, [agentId, location.pathname, location.state, chatKey, getChatById]);
 
-  // Save chat history to global storage when messages change
+  // Save chat history when messages change
   useEffect(() => {
     if (messages.length > 0) {
-      chatHistories[chatKey] = messages;
+      const title = messages[0].content.substring(0, 30) + (messages[0].content.length > 30 ? "..." : "");
+      updateChat(chatKey, {
+        id: chatKey,
+        title: title,
+        messages: messages,
+        createdAt: messages[0].timestamp,
+        updatedAt: new Date(),
+        agentId: agentId || null
+      });
     }
-  }, [messages, chatKey]);
+  }, [messages, chatKey, agentId, updateChat]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

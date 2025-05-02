@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Layout from "@/components/Layout";
 import HomePage from "@/pages/HomePage";
 import ChatPage from "@/pages/ChatPage";
+import ChatHistoryPage from "@/pages/ChatHistoryPage";
 import PublicChatPage from "@/pages/PublicChatPage";
 import GalleryPage from "@/pages/GalleryPage";
 import ExploreFeeds from "@/pages/ExploreFeeds";
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
                 <Route path="chat/:agentId" element={<ChatPage />} />
+                <Route path="chat/history/:chatId" element={<ChatHistoryPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
                 <Route path="explore" element={<ExploreFeeds />} />
