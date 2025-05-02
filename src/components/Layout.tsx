@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import ChatArea from "@/components/ChatArea";
 import { 
   SidebarProvider, 
   Sidebar,
@@ -70,7 +71,13 @@ const Layout = () => {
           <SidebarInset>
             <div className="relative h-full">
               <main className="h-full px-2 pt-4 md:pt-4 md:pl-6">
-                <Outlet />
+                {isChatPage ? (
+                  // Show the chat interface for chat-related pages
+                  <ChatArea key="main-chat" />
+                ) : (
+                  // Show other content for non-chat pages using Outlet
+                  <Outlet />
+                )}
               </main>
             </div>
           </SidebarInset>
