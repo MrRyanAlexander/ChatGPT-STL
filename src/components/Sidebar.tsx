@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -12,12 +12,14 @@ import {
   User, 
   Moon, 
   Sun, 
-  LogOut
+  LogOut,
+  Clock
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useChatHistory, Chat } from "@/hooks/useChatHistory";
 
 type AgentCategory = {
   name: string;
@@ -73,9 +75,13 @@ const Sidebar = () => {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const { getAllChats } = useChatHistory();
+  const recentChats = getAllChats().slice(0, 6); // Get up to 6 most recent chats
   
   const handleAgentClick = (slug: string) => {
     setActiveItem(slug);
+    setActiveChatId(null);
     navigate(`/chat/${slug}`, { 
       state: { 
         defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
@@ -85,7 +91,14 @@ const Sidebar = () => {
   
   const handleNewChat = () => {
     setActiveItem(null);
+    setActiveChatId(null);
     navigate("/", { replace: true });
+  };
+
+  const handleChatHistoryClick = (chatId: string) => {
+    setActiveItem(null);
+    setActiveChatId(chatId);
+    navigate(`/chat/history/${chatId}`);
   };
 
   return (
@@ -123,7 +136,7 @@ const Sidebar = () => {
       
       <ScrollArea className="flex-1">
         <div className="p-2">
-          <div className="text-center mb-1 mt-2">
+          <div className="text-center mb-3 mt-2">
             <h3 className="font-bold text-sm">AGENTS</h3>
             <Separator className="mt-1" />
           </div>
@@ -149,6 +162,33 @@ const Sidebar = () => {
               )}
             </div>
           ))}
+          
+          {/* Recent Chats Section */}
+          <div className="mt-4">
+            <div className="text-center mb-3 mt-2">
+              <h3 className="font-bold text-sm">RECENT CHATS</h3>
+              <Separator className="mt-1" />
+            </div>
+            {recentChats.length > 0 ? (
+              <div className="space-y-1">
+                {recentChats.map((chat) => (
+                  <button
+                    key={chat.id}
+                    className={`sidebar-item ${activeChatId === chat.id ? 'sidebar-item-active' : ''} w-full text-left flex items-center gap-2`}
+                    onClick={() => handleChatHistoryClick(chat.id)}
+                    title={chat.title}
+                  >
+                    <Clock className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="truncate">{chat.title}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-center text-muted-foreground px-2">
+                Your recent conversations will appear here
+              </p>
+            )}
+          </div>
         </div>
       </ScrollArea>
       
