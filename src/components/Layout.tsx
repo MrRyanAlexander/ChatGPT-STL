@@ -93,6 +93,7 @@ const Layout = () => {
               </main>
             </div>
           </SidebarInset>
+          </div>
         </SidebarProvider>
       </div>
     </div>
