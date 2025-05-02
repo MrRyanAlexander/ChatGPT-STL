@@ -80,4 +80,34 @@ const Layout = () => {
   );
 };
 
+// New component: can hook into sidebar context
+const InnerLayout = () => {
+  const { isOpen, toggleSidebar } = useSidebar();   /* hook after provider */
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // (keep your existing useEffect logic here…)
+
+  return (
+    <div
+      className={`
+        flex flex-col h-screen w-full max-w-full bg-background
+        transform transition-transform duration-200 ease-in-out
+        ${isOpen ? "translate-x-[85vw]" : "translate-x-0"}
+      `}
+    >
+      <Header onMenuClick={toggleSidebar} /> /* pass toggle down */
+      <div className="flex flex-1 overflow-hidden w-full">
+        <CustomSidebar />
+        <main className="flex-1 overflow-auto">
+          <div className="h-full relative">
+            <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
+              <Outlet />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
 export default Layout;
