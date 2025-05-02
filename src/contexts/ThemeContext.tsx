@@ -29,6 +29,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = window.document.documentElement;
     
+    // Apply theme
     if (theme === "dark") {
       root.classList.add("dark");
     } else {
@@ -47,13 +48,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Add the current font size class
     root.classList.add(`font-size-${fontSize}`);
     
-    // Apply additional styling based on font size
-    if (fontSize === "small") {
-      document.body.style.fontSize = "0.875rem";
-    } else if (fontSize === "medium") {
-      document.body.style.fontSize = "1rem";
-    } else if (fontSize === "large") {
-      document.body.style.fontSize = "1.125rem";
+    // Apply consistent font sizes based on preference
+    switch (fontSize) {
+      case "small":
+        document.body.style.fontSize = "0.875rem"; // 14px
+        break;
+      case "medium":
+        document.body.style.fontSize = "1rem"; // 16px
+        break;
+      case "large":
+        document.body.style.fontSize = "1.125rem"; // 18px
+        break;
     }
     
     localStorage.setItem("stl-font-size", fontSize);

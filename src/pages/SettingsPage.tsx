@@ -55,14 +55,14 @@ const SettingsPage = () => {
                   <Button 
                     onClick={() => handleThemeChange("light")} 
                     variant={theme === "light" ? "default" : "outline"}
-                    className={`flex-1 ${theme === "dark" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
+                    className="flex-1"
                   >
                     Light
                   </Button>
                   <Button 
                     onClick={() => handleThemeChange("dark")} 
                     variant={theme === "dark" ? "default" : "outline"}
-                    className={`flex-1 ${theme === "dark" ? "bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700" : ""}`}
+                    className="flex-1"
                   >
                     Dark
                   </Button>
@@ -87,21 +87,21 @@ const SettingsPage = () => {
                   <Button 
                     onClick={() => handleFontSizeChange("small")} 
                     variant={fontSize === "small" ? "default" : "outline"}
-                    className={`flex-1 ${theme === "dark" && fontSize !== "small" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
+                    className="flex-1"
                   >
                     Small
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("medium")} 
                     variant={fontSize === "medium" ? "default" : "outline"}
-                    className={`flex-1 ${theme === "dark" && fontSize !== "medium" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
+                    className="flex-1"
                   >
                     Medium
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("large")} 
                     variant={fontSize === "large" ? "default" : "outline"}
-                    className={`flex-1 ${theme === "dark" && fontSize !== "large" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
+                    className="flex-1"
                   >
                     Large
                   </Button>
