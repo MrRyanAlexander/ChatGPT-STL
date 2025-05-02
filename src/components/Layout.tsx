@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import ChatArea from "@/components/ChatArea";
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  //const [openMobile, setOpenMobile] = useState(false);
+  const [openMobile, setOpenMobile] = useState(false);
   
   // Ensure the UI reflects the correct state when navigating directly to a page
   useEffect(() => {
