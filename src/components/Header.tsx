@@ -50,6 +50,12 @@ const Header = () => {
       navigate("/gallery");
     }
   };
+
+  const handleNewChat = () => {
+    // Always navigate to a fresh chat when clicking New Chat
+    navigate("/", { replace: true });
+    setActiveTab("Chat");
+  };
   
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
@@ -75,6 +81,15 @@ const Header = () => {
       </div>
       
       <div className="flex items-center space-x-2">
+        <Button 
+          variant="ghost" 
+          onClick={handleNewChat}
+          className="text-large focus-visible-ring"
+          aria-label="New chat"
+        >
+          New Chat
+        </Button>
+        
         <Button 
           variant="ghost" 
           size="icon" 

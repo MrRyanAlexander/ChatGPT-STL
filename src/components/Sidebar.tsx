@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { 
   Plus, 
   ImageIcon, 
@@ -84,7 +85,7 @@ const Sidebar = () => {
   
   const handleNewChat = () => {
     setActiveItem(null);
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -122,11 +123,12 @@ const Sidebar = () => {
       
       <ScrollArea className="flex-1">
         <div className="p-2">
-          <p className="text-sm font-medium text-muted-foreground ml-2 mb-1 mt-2">
-            AGENTS
-          </p>
+          <div className="text-center mb-1 mt-2">
+            <h3 className="font-bold text-sm">AGENTS</h3>
+            <Separator className="mt-1" />
+          </div>
           
-          {AGENT_CATEGORIES.map((category) => (
+          {AGENT_CATEGORIES.map((category, index) => (
             <div key={category.name} className="mb-4">
               <p className="text-xs font-medium text-muted-foreground ml-2 mb-1">
                 {category.name}
@@ -141,6 +143,10 @@ const Sidebar = () => {
                   {item.name}
                 </button>
               ))}
+              
+              {index < AGENT_CATEGORIES.length - 1 && (
+                <Separator className="my-3 mx-2" />
+              )}
             </div>
           ))}
         </div>
