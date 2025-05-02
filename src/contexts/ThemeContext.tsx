@@ -47,6 +47,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Add the current font size class
     root.classList.add(`font-size-${fontSize}`);
     
+    // Apply additional styling based on font size
+    if (fontSize === "small") {
+      document.body.style.fontSize = "0.875rem";
+    } else if (fontSize === "medium") {
+      document.body.style.fontSize = "1rem";
+    } else if (fontSize === "large") {
+      document.body.style.fontSize = "1.125rem";
+    }
+    
     localStorage.setItem("stl-font-size", fontSize);
   }, [fontSize]);
 

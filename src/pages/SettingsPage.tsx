@@ -35,9 +35,9 @@ const SettingsPage = () => {
       
       <Tabs defaultValue="appearance" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="appearance" className="text-large">Appearance</TabsTrigger>
-          <TabsTrigger value="accessibility" className="text-large">Accessibility</TabsTrigger>
-          <TabsTrigger value="notifications" className="text-large">Notifications</TabsTrigger>
+          <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
         
         <TabsContent value="appearance">
@@ -50,19 +50,19 @@ const SettingsPage = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="theme" className="text-large">Theme</Label>
+                <Label htmlFor="theme">Theme</Label>
                 <div className="flex space-x-4">
                   <Button 
                     onClick={() => handleThemeChange("light")} 
                     variant={theme === "light" ? "default" : "outline"}
-                    className="flex-1 text-large"
+                    className={`flex-1 ${theme === "dark" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
                   >
                     Light
                   </Button>
                   <Button 
                     onClick={() => handleThemeChange("dark")} 
                     variant={theme === "dark" ? "default" : "outline"}
-                    className="flex-1 text-large"
+                    className={`flex-1 ${theme === "dark" ? "bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700" : ""}`}
                   >
                     Dark
                   </Button>
@@ -82,26 +82,26 @@ const SettingsPage = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="fontSize" className="text-large">Text Size</Label>
+                <Label htmlFor="fontSize">Text Size</Label>
                 <div className="flex space-x-4">
                   <Button 
                     onClick={() => handleFontSizeChange("small")} 
                     variant={fontSize === "small" ? "default" : "outline"}
-                    className="flex-1 text-large"
+                    className={`flex-1 ${theme === "dark" && fontSize !== "small" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
                   >
                     Small
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("medium")} 
                     variant={fontSize === "medium" ? "default" : "outline"}
-                    className="flex-1 text-large"
+                    className={`flex-1 ${theme === "dark" && fontSize !== "medium" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
                   >
                     Medium
                   </Button>
                   <Button 
                     onClick={() => handleFontSizeChange("large")} 
                     variant={fontSize === "large" ? "default" : "outline"}
-                    className="flex-1 text-large"
+                    className={`flex-1 ${theme === "dark" && fontSize !== "large" ? "border-zinc-700 hover:bg-zinc-800 text-white" : ""}`}
                   >
                     Large
                   </Button>
@@ -126,7 +126,7 @@ const SettingsPage = () => {
                   checked={notifications} 
                   onCheckedChange={setNotifications} 
                 />
-                <Label htmlFor="notifications" className="text-large">Enable notifications</Label>
+                <Label htmlFor="notifications">Enable notifications</Label>
               </div>
             </CardContent>
           </Card>
