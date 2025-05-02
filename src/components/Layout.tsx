@@ -5,14 +5,18 @@ import Header from "@/components/Header";
 import ChatArea from "@/components/ChatArea";
 import { 
   SidebarProvider, 
+  SidebarTrigger,
   Sidebar,
   SidebarInset
 } from "@/components/ui/sidebar";
 import CustomSidebar from "@/components/CustomSidebar";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  //const [openMobile, setOpenMobile] = useState(false);
   
   // Ensure the UI reflects the correct state when navigating directly to a page
   useEffect(() => {
