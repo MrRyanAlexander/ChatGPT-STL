@@ -13,6 +13,7 @@ import CustomSidebar from "@/components/CustomSidebar";
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toggleSidebar } = useSidebar();
   
   // Determine if we're on a chat-related page
   const isChatPage = !location.pathname.startsWith('/explore') && 
@@ -24,7 +25,7 @@ const Layout = () => {
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex flex-col h-screen bg-background w-full max-w-full">
-        <Header />
+        <Header onMenuClick={toggleSidebar} />
         <div className="flex flex-1 overflow-hidden w-full">
           <CustomSidebar />         
           <main className="flex-1 overflow-hidden">
@@ -43,7 +44,7 @@ const Layout = () => {
 
 // New component: can hook into sidebar context
 const InnerLayout = () => {
-  const { isOpen, toggleSidebar } = useSidebar();
+  const { open, toggleSidebar } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -92,7 +93,7 @@ const InnerLayout = () => {
       className={`
         flex flex-col h-screen w-full max-w-full bg-background
         transform transition-transform duration-200 ease-in-out
-        ${isOpen ? "translate-x-[85vw]" : "translate-x-0"}
+        ${open ? "translate-x-[85vw]" : "translate-x-0"}
       `}
     >
       <Header onMenuClick={toggleSidebar} />
