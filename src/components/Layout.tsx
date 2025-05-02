@@ -86,8 +86,12 @@ const Layout = () => {
               </div>
               
               <main className="h-full px-2 pt-14 md:pt-14 md:pl-6">
-        </SidebarProvider>
-      </div>
+                <Outlet />
+              </main>
+            </div>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
     </div>
   );
 };
