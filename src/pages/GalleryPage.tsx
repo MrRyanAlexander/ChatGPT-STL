@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 // More reliable St. Louis images with placeholder fallbacks
 const GALLERY_IMAGES = [
   {
-    url: "https://images.pexels.com/photos/2194407/pexels-photo-2194407.jpeg?auto=compress&cs=tinysrgb&w=800",
+    url: "https://images.pexels.com/photos/16827724/pexels-photo-16827724.jpeg?auto=compress&cs=tinysrgb&w=800",
     alt: "Gateway Arch St. Louis"
   },
   {
