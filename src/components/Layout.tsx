@@ -1,12 +1,12 @@
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
-import ChatArea from "@/components/ChatArea";
 import { 
   SidebarProvider, 
   Sidebar,
-  SidebarInset
+  SidebarInset,
+  useSidebar
 } from "@/components/ui/sidebar";
 import CustomSidebar from "@/components/CustomSidebar";
 
@@ -76,6 +76,7 @@ const Layout = () => {
           </main>
         </div>
       </div>
+      <InnerLayout />
     </SidebarProvider>
   );
 };
@@ -111,3 +112,8 @@ const InnerLayout = () => {
   );
 };
 export default Layout;
+
+
+
+
+};

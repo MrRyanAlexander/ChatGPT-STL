@@ -13,14 +13,18 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
-const Header = () => {
+interface HeaderProps {
+   onMenuClick: () => void;
+}
+
+const Header = ({ onMenuClick }: HeaderProps) => {
   const { user, profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("Chat");
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const previousChatRef = useRef<string | null>(null);
-  const { isMobile, toggleSidebar } = useSidebar();
+
   
   // Update activeTab based on current location and store chat route
   useEffect(() => {
@@ -56,7 +60,7 @@ const Header = () => {
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
       <div className="flex items-center gap-2">
-        <SidebarTrigger className="h-9 w-9 rounded-full shadow-sm bg-background" />
+        <SidebarTrigger className="h-9 w-9 rounded-full shadow-sm bg-background" onClick={onMenuClick} />
         <h1 className="text-xl md:text-2xl font-semibold">ChatGPT-STL</h1>
       </div>
       
