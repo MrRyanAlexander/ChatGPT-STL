@@ -11,7 +11,11 @@ interface Step {
   content: JSX.Element;
 }
 
-const OnboardingWalkthrough = () => {
+interface OnboardingWalkthroughProps {
+  onComplete: () => void;
+}
+
+const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   
@@ -25,6 +29,7 @@ const OnboardingWalkthrough = () => {
   const completeOnboarding = () => {
     localStorage.setItem("stl-onboarding-completed", "true");
     setIsOpen(false);
+    onComplete();
   };
   
   const steps: Step[] = [
