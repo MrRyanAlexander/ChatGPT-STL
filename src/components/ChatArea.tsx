@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -114,7 +113,12 @@ const formatTimeStamp = (date: Date) => {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const ChatArea = () => {
+// Update the props interface for ChatArea to accept chatId
+interface ChatAreaProps {
+  chatId?: string;
+}
+
+const ChatArea = ({ chatId }: ChatAreaProps) => {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [promptCards, setPromptCards] = useState<string[]>([]);
@@ -128,9 +132,9 @@ const ChatArea = () => {
   const { chatHistories, addChat, updateChat, getChatById } = useChatHistory();
   
   // Get a unique key for this chat
-  const chatKey = location.pathname.startsWith('/chat/history/') 
+  const chatKey = chatId || (location.pathname.startsWith('/chat/history/') 
     ? location.pathname.split('/').pop() || 'home'
-    : agentId || 'home';
+    : agentId || 'home');
   
   // Load chat history when component mounts or key changes
   useEffect(() => {

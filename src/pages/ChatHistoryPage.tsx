@@ -19,7 +19,7 @@ const ChatHistoryPage = () => {
   }, [chatId, getChatById]);
   
   return (
-    <ChatArea key={chatId} chatId={chatId} />
+    <ChatArea chatId={chatId} />
   );
 };
 
