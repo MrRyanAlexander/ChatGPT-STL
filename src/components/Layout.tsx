@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -65,8 +66,8 @@ const Layout = () => {
                      !location.pathname.startsWith('/privacy');
 
   return (
-    <div className="flex flex-col h-screen bg-background w-full max-w-full">
-      <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={false}>
+      <div className="flex flex-col h-screen bg-background w-full max-w-full">
         <Header />
         <div className="flex flex-1 overflow-hidden w-full">
           <CustomSidebar />         
@@ -93,10 +94,9 @@ const Layout = () => {
               </main>
             </div>
           </SidebarInset>
-          </div>
-        </SidebarProvider>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
