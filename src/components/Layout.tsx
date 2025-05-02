@@ -64,18 +64,28 @@ const Layout = () => {
   return (
     <div className="flex flex-col h-screen bg-background w-full max-w-full">
       <Header />
-      <div className="flex flex-1 overflow-hidden w-full">
-        <SidebarProvider defaultOpen={false}>
-          <CustomSidebar />
-          <div className="flex-1 flex flex-col w-full overflow-hidden">
-            {isChatPage ? (
-              // Show the chat interface for chat-related pages
-              <ChatArea key="main-chat" />
-            ) : (
-              // Show other content for non-chat pages using Outlet
-              <Outlet />
-            )}
-          </div>
+      <SidebarProvider defaultOpen={false}>
+        <div className="flex flex-1 overflow-hidden w-full">
+          <CustomSidebar />         
+          <SidebarInset>
+            <div className="relative h-full">
+              <div className="absolute top-4 left-4 md:hidden z-10">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full shadow-sm"
+                  onClick={() => setOpenMobile(!openMobile)}
+                >
+                  <Menu size={18} />
+                </Button>
+              </div>
+              
+              {/* Desktop sidebar trigger */}
+              <div className="hidden md:block absolute top-4 left-4 z-10">
+                <SidebarTrigger className="rounded-full shadow-sm bg-background" />
+              </div>
+              
+              <main className="h-full px-2 pt-14 md:pt-14 md:pl-6">
         </SidebarProvider>
       </div>
     </div>
