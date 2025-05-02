@@ -4,6 +4,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Heart,
   MessageSquare,
@@ -196,128 +197,132 @@ const ExploreFeeds = () => {
   };
 
   return (
-    <div className="container max-w-2xl mx-auto py-4">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Explore STL</h1>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="rounded-full">
-            Latest
-          </Button>
-          <Button variant="ghost" size="sm" className="rounded-full">
-            Popular
-          </Button>
+    <div className="h-full overflow-hidden">
+      <div className="container max-w-2xl mx-auto py-4 px-4 h-full flex flex-col">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-bold text-foreground">Explore STL</h1>
+          <div className="flex space-x-2">
+            <Button variant="outline" size="sm" className="rounded-full">
+              Latest
+            </Button>
+            <Button variant="ghost" size="sm" className="rounded-full">
+              Popular
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-6">
-        {feedItems.map((item) => (
-          <Card key={item.id} className="overflow-hidden">
-            <div className="p-4">
-              <div className="flex items-start gap-3">
-                <Avatar className="h-10 w-10">
-                  <img src={item.author.avatar} alt={item.author.name} />
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{item.author.name}</h3>
-                    {item.author.handle && (
-                      <span className="text-sm text-muted-foreground">@{item.author.handle}</span>
-                    )}
-                    <span className="text-xs text-muted-foreground ml-auto">{item.timestamp}</span>
-                    {getTypeIcon(item.type)}
-                  </div>
-                  
-                  {item.content && (
-                    <p className="mt-2 text-base">{item.content}</p>
-                  )}
-                  
-                  {item.image && (
-                    <div className="mt-3 rounded-md overflow-hidden">
-                      <img src={item.image} alt="" className="w-full h-auto object-cover" />
-                      {item.meta?.aiCaption && (
-                        <p className="mt-2 text-sm text-muted-foreground italic">
-                          AI Caption: {item.meta.aiCaption}
+        <ScrollArea className="flex-1 pr-4">
+          <div className="space-y-6 pb-6">
+            {feedItems.map((item) => (
+              <Card key={item.id} className="overflow-hidden">
+                <div className="p-4">
+                  <div className="flex items-start gap-3">
+                    <Avatar className="h-10 w-10">
+                      <img src={item.author.avatar} alt={item.author.name} />
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium text-foreground">{item.author.name}</h3>
+                        {item.author.handle && (
+                          <span className="text-sm text-muted-foreground">@{item.author.handle}</span>
+                        )}
+                        <span className="text-xs text-muted-foreground ml-auto">{item.timestamp}</span>
+                        {getTypeIcon(item.type)}
+                      </div>
+                      
+                      {item.content && (
+                        <p className="mt-2 text-base text-foreground">{item.content}</p>
+                      )}
+                      
+                      {item.image && (
+                        <div className="mt-3 rounded-md overflow-hidden">
+                          <img src={item.image} alt="" className="w-full h-auto object-cover" />
+                          {item.meta?.aiCaption && (
+                            <p className="mt-2 text-sm text-muted-foreground italic">
+                              AI Caption: {item.meta.aiCaption}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      
+                      {item.type === "poll" && item.meta?.pollOptions && (
+                        <div className="mt-3 space-y-2">
+                          {item.meta.pollOptions.map((option, index) => {
+                            const percentage = Math.round((option.votes / (item.meta?.totalVotes || 1)) * 100);
+                            return (
+                              <div key={index} className="space-y-1">
+                                <div className="flex items-center justify-between text-sm text-foreground">
+                                  <span>{option.text}</span>
+                                  <span>{percentage}%</span>
+                                </div>
+                                <div className="w-full bg-secondary h-2 rounded-full">
+                                  <div 
+                                    className="bg-primary h-2 rounded-full" 
+                                    style={{ width: `${percentage}%` }} 
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {item.meta.totalVotes} votes
+                          </p>
+                        </div>
+                      )}
+                      
+                      {item.type === "trending" && item.meta?.promptUsage && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {item.meta.promptUsage} people exploring this topic
                         </p>
                       )}
+                      
+                      <div className="flex items-center gap-6 mt-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex items-center gap-1 text-muted-foreground hover:text-primary"
+                          onClick={() => handleLike(item.id)}
+                        >
+                          <Heart size={18} className={item.isLiked ? "fill-red-500 text-red-500" : ""} />
+                          <span>{item.likes}</span>
+                        </Button>
+                        
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex items-center gap-1 text-muted-foreground"
+                        >
+                          <MessageSquare size={18} />
+                          <span>{item.comments}</span>
+                        </Button>
+                        
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex items-center gap-1 text-muted-foreground"
+                        >
+                          <Share size={18} />
+                        </Button>
+                        
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex items-center gap-1 text-muted-foreground ml-auto"
+                          onClick={() => handleBookmark(item.id)}
+                        >
+                          <Bookmark 
+                            size={18} 
+                            className={item.isBookmarked ? "fill-primary text-primary" : ""} 
+                          />
+                        </Button>
+                      </div>
                     </div>
-                  )}
-                  
-                  {item.type === "poll" && item.meta?.pollOptions && (
-                    <div className="mt-3 space-y-2">
-                      {item.meta.pollOptions.map((option, index) => {
-                        const percentage = Math.round((option.votes / (item.meta?.totalVotes || 1)) * 100);
-                        return (
-                          <div key={index} className="space-y-1">
-                            <div className="flex items-center justify-between text-sm">
-                              <span>{option.text}</span>
-                              <span>{percentage}%</span>
-                            </div>
-                            <div className="w-full bg-secondary h-2 rounded-full">
-                              <div 
-                                className="bg-primary h-2 rounded-full" 
-                                style={{ width: `${percentage}%` }} 
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {item.meta.totalVotes} votes
-                      </p>
-                    </div>
-                  )}
-                  
-                  {item.type === "trending" && item.meta?.promptUsage && (
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {item.meta.promptUsage} people exploring this topic
-                    </p>
-                  )}
-                  
-                  <div className="flex items-center gap-6 mt-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-muted-foreground hover:text-primary"
-                      onClick={() => handleLike(item.id)}
-                    >
-                      <Heart size={18} className={item.isLiked ? "fill-red-500 text-red-500" : ""} />
-                      <span>{item.likes}</span>
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-muted-foreground"
-                    >
-                      <MessageSquare size={18} />
-                      <span>{item.comments}</span>
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-muted-foreground"
-                    >
-                      <Share size={18} />
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-muted-foreground ml-auto"
-                      onClick={() => handleBookmark(item.id)}
-                    >
-                      <Bookmark 
-                        size={18} 
-                        className={item.isBookmarked ? "fill-primary text-primary" : ""} 
-                      />
-                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </Card>
-        ))}
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );
