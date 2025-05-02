@@ -53,6 +53,13 @@ const Layout = () => {
     }
   }, [location.pathname]);
 
+  // Determine if we're on a chat-related page
+  const isChatPage = !location.pathname.startsWith('/explore') && 
+                     !location.pathname.startsWith('/gallery') &&
+                     !location.pathname.startsWith('/settings') &&
+                     !location.pathname.startsWith('/terms') &&
+                     !location.pathname.startsWith('/privacy');
+
   return (
     <div className="flex flex-col h-screen bg-background">
       <SidebarProvider defaultOpen={false}>

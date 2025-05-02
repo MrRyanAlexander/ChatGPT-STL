@@ -143,3 +143,11 @@
     max-width: 320px !important;
   }
 }
+
+/* Mobile chat container styles */
+@media (max-width: 767px) {
+  .chat-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
