@@ -27,16 +27,6 @@ const HomePage = () => {
     
   }, [chatId, getChatById]);
 
-   // Verify the chat exists in local storage
-  useEffect(() => {
-    if (chatId) {
-      const chat = getChatById(chatId);
-      if (!chat) {
-        console.warn(`Chat with ID ${chatId} not found in history.`);
-      }
-    }
-  }, [chatId, getChatById]);
-
   const completeOnboarding = () => {
     localStorage.setItem("onboardingCompleted", "true");
     setShowOnboarding(false);
