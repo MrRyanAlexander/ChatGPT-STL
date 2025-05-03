@@ -77,18 +77,33 @@ const InnerLayout = () => {
       
       {/* Main content area with sidebar and outlet */}
       <div className="flex flex-1 overflow-hidden w-full relative">
-        {/* Sidebar positioned absolutely so it doesn't shift with main content */}
-        <div className={`fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-[-100%]'}`} style={{ top: '0', paddingTop: '0', width: '85vw', maxWidth: '320px' }}>
+        {/* Sidebar with fixed positioning - doesn't shift with content */}
+        <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-300 ease-in-out h-full`} 
+             style={{ 
+               top: '60px', // Account for header height
+               width: '320px',
+               transform: open ? 'translateX(0)' : 'translateX(-100%)'
+             }}>
           <CustomSidebar />
         </div>
+        
+        {/* Overlay to capture clicks when sidebar is open on mobile */}
+        {open && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-20 md:hidden"
+            onClick={toggleSidebar}
+          />
+        )}
         
         {/* Main content that slides right when sidebar opens */}
         <div 
           className={`
-            flex-1 w-full overflow-auto
-            transform transition-transform duration-300 ease-in-out
-            ${open ? 'translate-x-[85vw] md:translate-x-[320px]' : 'translate-x-0'}
+            flex-1 w-full overflow-auto transition-transform duration-300 ease-in-out
+            ${open ? 'md:pl-[320px]' : ''}
           `}
+          style={{
+            transform: open && isMobile ? 'translateX(320px)' : 'translateX(0)'
+          }}
         >
           <main className="h-full relative">
             <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
