@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import OnboardingWalkthrough from "@/components/OnboardingWalkthrough";
 import ChatArea from "@/components/ChatArea";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { userParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [showOnboarding, setShowOnboarding] = useState(true);
