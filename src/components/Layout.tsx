@@ -1,59 +1,35 @@
-
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { 
   SidebarProvider, 
-  Sidebar,
-  SidebarInset,
   useSidebar
 } from "@/components/ui/sidebar";
 import CustomSidebar from "@/components/CustomSidebar";
 
 const Layout = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  
-  // Determine if we're on a chat-related page
-  const isChatPage = !location.pathname.startsWith('/explore') && 
-                     !location.pathname.startsWith('/gallery') &&
-                     !location.pathname.startsWith('/settings') &&
-                     !location.pathname.startsWith('/terms') &&
-                     !location.pathname.startsWith('/privacy');
-
-  // Create a placeholder function for the Header's onMenuClick
-  // The actual sidebar functionality will be handled by components inside SidebarProvider
-  const handleMenuClick = () => {
-    // This is a placeholder, the real toggleSidebar will be used in InnerLayout
-  };
-
+  // We only need SidebarProvider here, InnerLayout will handle everything else
   return (
     <SidebarProvider defaultOpen={false}>
-      <div className="flex flex-col h-screen bg-background w-full max-w-full">
-        <Header onMenuClick={handleMenuClick} />
-        <div className="flex flex-1 overflow-hidden w-full">
-          <CustomSidebar />         
-          <main className="flex-1 overflow-hidden">
-            <div className="h-full relative">
-              <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
-                <Outlet />
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
       <InnerLayout />
     </SidebarProvider>
   );
 };
 
-// New component: can hook into sidebar context
+// Keep InnerLayout with all the functionality
 const InnerLayout = () => {
   const { open, toggleSidebar } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Moved useEffect logic from main Layout component
+  // Determine if we're on a chat-related page
+  const isChatPage = !location.pathname.startsWith('/explore') && 
+                    !location.pathname.startsWith('/gallery') &&
+                    !location.pathname.startsWith('/settings') &&
+                    !location.pathname.startsWith('/terms') &&
+                    !location.pathname.startsWith('/privacy');
+
+  // useEffect for handling tab states
   useEffect(() => {
     // Handle navigation based on current route
     const isExplorePage = location.pathname === '/explore';
