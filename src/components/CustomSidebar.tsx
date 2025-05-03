@@ -136,7 +136,7 @@ const CustomSidebar = () => {
   const handleNewChat = () => {
     setActiveItem(null);
     setActiveChatId(null);
-    log("new chat clicked");
+    console.log("new chat clicked");
     
     // Close the sidebar before navigating
     if (isMobile) {
