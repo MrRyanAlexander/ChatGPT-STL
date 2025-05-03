@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -18,7 +19,7 @@ const Layout = () => {
 
 // Keep InnerLayout with all the functionality
 const InnerLayout = () => {
-  const { open, toggleSidebar } = useSidebar();
+  const { open, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -70,23 +71,31 @@ const InnerLayout = () => {
   }, [location.pathname]);
 
   return (
-    <div
-      className={`
-        flex flex-col h-screen w-full max-w-full bg-background
-        transform transition-transform duration-200 ease-in-out
-        ${open ? "translate-x-[85vw]" : "translate-x-0"}
-      `}
-    >
+    <div className="flex flex-col h-screen w-full max-w-full bg-background">
+      {/* Fixed-position header */}
       <Header onMenuClick={toggleSidebar} />
-      <div className="flex flex-1 overflow-hidden w-full">
-        <CustomSidebar />
-        <main className="flex-1 overflow-auto">
-          <div className="h-full relative">
+      
+      {/* Main content area with sidebar and outlet */}
+      <div className="flex flex-1 overflow-hidden w-full relative">
+        {/* Sidebar positioned absolutely so it doesn't shift with main content */}
+        <div className={`fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-[-100%]'}`} style={{ top: '0', paddingTop: '0', width: '85vw', maxWidth: '320px' }}>
+          <CustomSidebar />
+        </div>
+        
+        {/* Main content that slides right when sidebar opens */}
+        <div 
+          className={`
+            flex-1 w-full overflow-auto
+            transform transition-transform duration-300 ease-in-out
+            ${open ? 'translate-x-[85vw] md:translate-x-[320px]' : 'translate-x-0'}
+          `}
+        >
+          <main className="h-full relative">
             <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
               <Outlet />
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );

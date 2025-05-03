@@ -89,7 +89,7 @@ const CustomSidebar = () => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const { getAllChats } = useChatHistory();
-  const { isMobile, openMobile, setOpenMobile, toggleSidebar } = useSidebar();
+  const { isMobile, setOpenMobile, setOpen, toggleSidebar } = useSidebar();
   
   const recentChats = getAllChats().slice(0, 6); // Get up to 6 most recent chats
   
@@ -102,6 +102,10 @@ const CustomSidebar = () => {
     } else if (pathParts[1] === 'chat' && pathParts[2] === 'history' && pathParts[3]) {
       setActiveItem(null);
       setActiveChatId(pathParts[3]);
+    } else if (pathParts[1] === '') {
+      // We're on the home page (root path)
+      setActiveItem(null);
+      setActiveChatId(null);
     } else {
       setActiveItem(null);
       setActiveChatId(null);
@@ -111,36 +115,60 @@ const CustomSidebar = () => {
   const handleAgentClick = (slug: string) => {
     setActiveItem(slug);
     setActiveChatId(null);
+    
+    // Close the sidebar before navigating
     if (isMobile) {
       setOpenMobile(false);
+    } else {
+      setOpen(false);
     }
-    navigate(`/chat/${slug}`, { 
-      state: { 
-        defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
-      } 
-    });
+    
+    // Use a small timeout to ensure the sidebar closing animation starts before navigation
+    setTimeout(() => {
+      navigate(`/chat/${slug}`, { 
+        state: { 
+          defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
+        } 
+      });
+    }, 100);
   };
   
   const handleNewChat = () => {
     setActiveItem(null);
     setActiveChatId(null);
+    
+    // Close the sidebar before navigating
     if (isMobile) {
       setOpenMobile(false);
+    } else {
+      setOpen(false);
     }
-    navigate("/", { replace: true });
+    
+    // Use a small timeout to ensure the sidebar closing animation starts before navigation
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 100);
   };
 
   const handleChatHistoryClick = (chatId: string) => {
     setActiveItem(null);
     setActiveChatId(chatId);
+    
+    // Close the sidebar before navigating
     if (isMobile) {
       setOpenMobile(false);
+    } else {
+      setOpen(false);
     }
-    navigate(`/chat/history/${chatId}`);
+    
+    // Use a small timeout to ensure the sidebar closing animation starts before navigation
+    setTimeout(() => {
+      navigate(`/chat/history/${chatId}`);
+    }, 100);
   };
 
   return (
-    <Sidebar className="bg-sidebar border-sidebar-border text-sidebar-foreground">
+    <Sidebar className="bg-sidebar border-sidebar-border text-sidebar-foreground h-full max-h-screen overflow-hidden">
       <SidebarHeader className="pb-0 relative">
         {isMobile && (
           <Button
@@ -170,7 +198,8 @@ const CustomSidebar = () => {
             className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
             onClick={() => {
               if (isMobile) setOpenMobile(false);
-              navigate("/gallery");
+              else setOpen(false);
+              setTimeout(() => navigate("/gallery"), 100);
             }}
           >
             <ImageIcon className="h-4 w-4" />
@@ -182,7 +211,8 @@ const CustomSidebar = () => {
             className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
             onClick={() => {
               if (isMobile) setOpenMobile(false);
-              navigate("/public-chat");
+              else setOpen(false);
+              setTimeout(() => navigate("/public-chat"), 100);
             }}
           >
             <Users className="h-4 w-4" />
