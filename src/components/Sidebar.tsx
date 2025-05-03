@@ -109,7 +109,6 @@ const Sidebar = () => {
     setActiveItem(null);
     setActiveChatId(null);
     navigate("/", { replace: true });
-    log("new chat clicked");
   };
 
   const handleChatHistoryClick = (chatId: string) => {
