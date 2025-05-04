@@ -1,4 +1,6 @@
+
 import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from "uuid";
 import { 
   Sidebar, 
   SidebarContent,
@@ -135,7 +137,10 @@ const CustomSidebar = () => {
   const handleNewChat = () => {
     setActiveItem(null);
     setActiveChatId(null);
-    console.log("new chat clicked");
+    
+    // Generate a new unique chat ID
+    const newChatId = `new-${uuidv4()}`;
+    console.log("new chat clicked, generating ID:", newChatId);
     
     // Close the sidebar before navigating
     if (isMobile) {
@@ -146,7 +151,13 @@ const CustomSidebar = () => {
     
     // Use a small timeout to ensure the sidebar closing animation starts before navigation
     setTimeout(() => {
-      navigate("/", { replace: true, state: { newChat: true } });
+      navigate("/", { 
+        replace: true, 
+        state: { 
+          newChat: true,
+          chatId: newChatId 
+        } 
+      });
     }, 100);
   };
 
