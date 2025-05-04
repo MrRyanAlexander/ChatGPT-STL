@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { 
   Sidebar, 
@@ -147,7 +146,7 @@ const CustomSidebar = () => {
     
     // Use a small timeout to ensure the sidebar closing animation starts before navigation
     setTimeout(() => {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true, state: { newChat: true } });
     }, 100);
   };
 

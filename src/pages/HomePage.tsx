@@ -1,31 +1,25 @@
 
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 import OnboardingWalkthrough from "@/components/OnboardingWalkthrough";
 import ChatArea from "@/components/ChatArea";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { useParams, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [showOnboarding, setShowOnboarding] = useState(true);
-  const { chatId } = useParams<{ chatId: string }>();
+  // Generate a unique ID for new chats
+  const [newChatId] = useState(() => `new-${uuidv4()}`);
   const { getChatById } = useChatHistory();
   const navigate = useNavigate();
   
   // Check if the user has completed onboarding before (could be stored in localStorage)
-  // Verify the chat exists in local storage
   useEffect(() => {
     const hasCompletedOnboarding = localStorage.getItem("onboardingCompleted");
     if (hasCompletedOnboarding === "true") {
       setShowOnboarding(false);
     }
-    if (chatId) {
-      const chat = getChatById(chatId);
-      if (!chat) {
-        console.warn(`Chat with ID ${chatId} not found in history.`);
-      }
-    }
-    
-  }, [chatId, getChatById]);
+  }, []);
 
   const completeOnboarding = () => {
     localStorage.setItem("onboardingCompleted", "true");
@@ -37,8 +31,8 @@ const HomePage = () => {
       {showOnboarding ? (
         <OnboardingWalkthrough onComplete={completeOnboarding} />
       ) : (
-        // Pass a unique chatId to ensure the chat area always displays properly
-        <ChatArea chatId={chatId} />
+        // Pass the new unique chatId to the ChatArea
+        <ChatArea chatId={newChatId} />
       )}
     </div>
   );

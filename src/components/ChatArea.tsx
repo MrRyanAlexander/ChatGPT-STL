@@ -140,23 +140,9 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   // Load chat history when component mounts or when key changes
   useEffect(() => {
     const loadChatData = () => {
-      const chatData = getChatById(chatKey);
-      
-      if (chatData?.messages) {
-        setMessages(chatData.messages);
-        // Hide prompt cards if we have existing messages
-        if (chatData.messages.length > 0) {
-          setPromptCards([]);
-        } else {
-          // Set agent-specific prompts or default prompts
-          if (agentId && AGENT_PROMPTS[agentId]) {
-            setPromptCards(AGENT_PROMPTS[agentId]);
-          } else {
-            setPromptCards(DEFAULT_PROMPTS);
-          }
-        }
-      } else {
-        // Reset messages for new chat
+      // Check if this is a new chat (chatId starts with "new-")
+      if (chatKey && chatKey.startsWith('new-')) {
+        // This is a new chat, reset messages
         setMessages([]);
         
         // Set agent-specific prompts or default prompts
@@ -164,6 +150,34 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
           setPromptCards(AGENT_PROMPTS[agentId]);
         } else {
           setPromptCards(DEFAULT_PROMPTS);
+        }
+      } else {
+        // Try to load existing chat
+        const chatData = getChatById(chatKey);
+        
+        if (chatData?.messages) {
+          setMessages(chatData.messages);
+          // Hide prompt cards if we have existing messages
+          if (chatData.messages.length > 0) {
+            setPromptCards([]);
+          } else {
+            // Set agent-specific prompts or default prompts
+            if (agentId && AGENT_PROMPTS[agentId]) {
+              setPromptCards(AGENT_PROMPTS[agentId]);
+            } else {
+              setPromptCards(DEFAULT_PROMPTS);
+            }
+          }
+        } else {
+          // Reset messages for new chat
+          setMessages([]);
+          
+          // Set agent-specific prompts or default prompts
+          if (agentId && AGENT_PROMPTS[agentId]) {
+            setPromptCards(AGENT_PROMPTS[agentId]);
+          } else {
+            setPromptCards(DEFAULT_PROMPTS);
+          }
         }
       }
       
