@@ -22,7 +22,7 @@ const RecentChatsList = ({ chats, activeChatId, onChatClick }: RecentChatsListPr
           {chats.map((chat) => (
             <button
               key={chat.id}
-              className={`sidebar-item ${activeChatId === chat.id ? 'sidebar-item-active' : ''} w-full text-left flex items-center gap-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`}
+              className={`sidebar-item ${activeChatId === chat.id ? 'sidebar-item-active' : ''}`}
               onClick={() => onChatClick(chat.id)}
               title={chat.title}
             >

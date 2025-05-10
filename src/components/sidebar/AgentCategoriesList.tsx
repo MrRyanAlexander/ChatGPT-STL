@@ -31,7 +31,7 @@ const AgentCategoriesList = ({
           {category.items.map((item) => (
             <button
               key={item.slug}
-              className={`sidebar-item ${activeItem === item.slug ? 'sidebar-item-active' : ''} w-full text-left text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`}
+              className={`sidebar-item ${activeItem === item.slug ? 'sidebar-item-active' : ''}`}
               onClick={() => onAgentClick(item.slug)}
             >
               {item.name}
