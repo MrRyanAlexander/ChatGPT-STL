@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -7,6 +6,11 @@ import {
   useSidebar
 } from "@/components/ui/sidebar";
 import CustomSidebar from "@/components/CustomSidebar";
+import { 
+  Drawer,
+  DrawerContent,
+  DrawerOverlay 
+} from "@/components/ui/drawer";
 
 const Layout = () => {
   // We only need SidebarProvider here, InnerLayout will handle everything else
@@ -70,31 +74,35 @@ const InnerLayout = () => {
     }
   }, [location.pathname]);
 
+  // Toggle handler that ensures proper behavior on both mobile and desktop
+  const handleSidebarToggle = () => {
+    if (isMobile) {
+      setOpenMobile(!openMobile);
+    } else {
+      toggleSidebar();
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-full max-w-full bg-background">
       {/* Fixed-position header */}
-      <Header onMenuClick={toggleSidebar} />
+      <Header onMenuClick={handleSidebarToggle} />
       
       {/* Main content area with sidebar and outlet */}
       <div className="flex flex-1 overflow-hidden w-full relative">
-        {/* Mobile Sidebar - Absolutely positioned */}
-        <div 
-          className={`fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out h-full ${isMobile ? 'block' : 'hidden md:block'}`} 
-          style={{ 
-            top: '60px', // Account for header height
-            width: '320px',
-            transform: isMobile 
-              ? (openMobile ? 'translateX(0)' : 'translateX(-100%)')
-              : (open ? 'translateX(0)' : 'translateX(-100%)')
-          }}
-        >
-          <CustomSidebar />
-        </div>
+        {/* Mobile Sidebar using Drawer */}
+        {isMobile && (
+          <Drawer open={openMobile} onOpenChange={setOpenMobile}>
+            <DrawerContent className="p-0 max-h-[calc(100vh-60px)] mt-[60px]">
+              <CustomSidebar />
+            </DrawerContent>
+          </Drawer>
+        )}
         
         {/* Desktop Sidebar */}
         {!isMobile && (
           <div 
-            className={`hidden md:block fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out h-full`} 
+            className="hidden md:block fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out h-full"
             style={{ 
               top: '60px', // Account for header height
               width: '320px',
@@ -105,8 +113,8 @@ const InnerLayout = () => {
           </div>
         )}
         
-        {/* Overlay to capture clicks when sidebar is open */}
-        {((isMobile && openMobile) || (!isMobile && open)) && (
+        {/* Desktop Overlay */}
+        {(!isMobile && open) && (
           <div 
             className="fixed inset-0 bg-black/50 z-20"
             onClick={toggleSidebar}
@@ -114,14 +122,14 @@ const InnerLayout = () => {
           />
         )}
         
-        {/* Main content that slides right when sidebar opens */}
+        {/* Main content that slides right when sidebar opens on desktop */}
         <div 
           className={`
             flex-1 w-full overflow-auto transition-transform duration-300 ease-in-out
             ${open && !isMobile ? 'md:pl-[320px]' : ''}
           `}
           style={{
-            transform: isMobile && openMobile ? 'translateX(320px)' : 'translateX(0)'
+            transform: isMobile ? 'translateX(0)' : 'translateX(0)'
           }}
         >
           <main className="h-full relative">
