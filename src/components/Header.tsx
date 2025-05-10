@@ -60,7 +60,15 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
       <div className="flex items-center gap-2">
-        <SidebarTrigger className="h-9 w-9 rounded-full shadow-sm bg-background" onClick={onMenuClick} />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 rounded-full shadow-sm bg-background"
+          onClick={onMenuClick}
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
         <h1 className="text-xl md:text-2xl font-semibold">ChatGPT-STL</h1>
       </div>
       

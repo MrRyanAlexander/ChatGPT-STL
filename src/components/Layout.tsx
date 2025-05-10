@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -23,7 +24,7 @@ const Layout = () => {
 
 // Keep InnerLayout with all the functionality
 const InnerLayout = () => {
-  const { open, openMobile, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
+  const { open, openMobile, toggleSidebar, setOpenMobile, setOpen, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -79,7 +80,7 @@ const InnerLayout = () => {
     if (isMobile) {
       setOpenMobile(!openMobile);
     } else {
-      toggleSidebar();
+      setOpen(!open);
     }
   };
 
@@ -93,6 +94,7 @@ const InnerLayout = () => {
         {/* Mobile Sidebar using Drawer */}
         {isMobile && (
           <Drawer open={openMobile} onOpenChange={setOpenMobile}>
+            <DrawerOverlay />
             <DrawerContent className="p-0 max-h-[calc(100vh-60px)] mt-[60px]">
               <CustomSidebar />
             </DrawerContent>
@@ -117,7 +119,7 @@ const InnerLayout = () => {
         {(!isMobile && open) && (
           <div 
             className="fixed inset-0 bg-black/50 z-20"
-            onClick={toggleSidebar}
+            onClick={() => setOpen(false)}
             style={{ top: '60px' }} // Account for header height
           />
         )}

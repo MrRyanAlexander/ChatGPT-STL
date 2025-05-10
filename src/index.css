@@ -189,3 +189,13 @@
     padding-right: 0.5rem;
   }
 }
+
+/* Drawer component specific styles for mobile sidebar */
+.vaul-drawer {
+  z-index: 40 !important;
+}
+
+.vaul-drawer-content {
+  width: 320px !important;
+  max-width: 85vw !important;
+}
