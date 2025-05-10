@@ -198,4 +198,15 @@
 .vaul-drawer-content {
   width: 320px !important;
   max-width: 85vw !important;
+  left: 0 !important;
+  right: auto !important;
+  bottom: 0 !important;
+  top: 0 !important;
+  height: calc(100% - 60px) !important;
+  border-radius: 0 !important;
+  transform: none !important;
+}
+
+.vaul-drawer-overlay {
+  z-index: 39 !important;
 }

@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -10,7 +9,9 @@ import CustomSidebar from "@/components/CustomSidebar";
 import { 
   Drawer,
   DrawerContent,
-  DrawerOverlay 
+  DrawerOverlay,
+  DrawerHeader,
+  DrawerTitle
 } from "@/components/ui/drawer";
 
 const Layout = () => {
@@ -24,7 +25,7 @@ const Layout = () => {
 
 // Keep InnerLayout with all the functionality
 const InnerLayout = () => {
-  const { open, openMobile, toggleSidebar, setOpenMobile, setOpen, isMobile } = useSidebar();
+  const { open, openMobile, setOpenMobile, setOpen, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -96,6 +97,9 @@ const InnerLayout = () => {
           <Drawer open={openMobile} onOpenChange={setOpenMobile}>
             <DrawerOverlay />
             <DrawerContent className="p-0 max-h-[calc(100vh-60px)] mt-[60px]">
+              <DrawerHeader className="sr-only">
+                <DrawerTitle>Navigation Menu</DrawerTitle>
+              </DrawerHeader>
               <CustomSidebar />
             </DrawerContent>
           </Drawer>
