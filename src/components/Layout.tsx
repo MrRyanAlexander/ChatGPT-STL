@@ -19,7 +19,7 @@ const Layout = () => {
 
 // Keep InnerLayout with all the functionality
 const InnerLayout = () => {
-  const { open, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
+  const { open, openMobile, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -82,13 +82,15 @@ const InnerLayout = () => {
              style={{ 
                top: '60px', // Account for header height
                width: '320px',
-               transform: open ? 'translateX(0)' : 'translateX(-100%)'
+               transform: isMobile 
+                 ? (openMobile ? 'translateX(0)' : 'translateX(-100%)')
+                 : (open ? 'translateX(0)' : 'translateX(-100%)')
              }}>
           <CustomSidebar />
         </div>
         
         {/* Overlay to capture clicks when sidebar is open on mobile */}
-        {open && (
+        {((isMobile && openMobile) || (!isMobile && open)) && (
           <div 
             className="fixed inset-0 bg-black/50 z-20 md:hidden"
             onClick={toggleSidebar}
@@ -99,10 +101,10 @@ const InnerLayout = () => {
         <div 
           className={`
             flex-1 w-full overflow-auto transition-transform duration-300 ease-in-out
-            ${open ? 'md:pl-[320px]' : ''}
+            ${open && !isMobile ? 'md:pl-[320px]' : ''}
           `}
           style={{
-            transform: open && isMobile ? 'translateX(320px)' : 'translateX(0)'
+            transform: isMobile && openMobile ? 'translateX(320px)' : 'translateX(0)'
           }}
         >
           <main className="h-full relative">
