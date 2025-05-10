@@ -170,18 +170,6 @@
   @apply dark:bg-accent/50 dark:text-foreground;
 }
 
-/* Improved sheet styles for mobile sidebar */
-.sheet-content-sidebar {
-  @apply p-0 border-r-0 max-w-full sm:max-w-full;
-}
-
-@media (max-width: 640px) {
-  [data-sidebar="sidebar"] {
-    width: 85vw !important;
-    max-width: 320px !important;
-  }
-}
-
 /* Mobile chat container styles */
 @media (max-width: 767px) {
   .chat-container {
@@ -192,21 +180,19 @@
 
 /* Drawer component specific styles for mobile sidebar */
 .vaul-drawer {
-  z-index: 40 !important;
-}
-
-.vaul-drawer-content {
-  width: 320px !important;
-  max-width: 85vw !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: 0 !important;
-  top: 0 !important;
-  height: calc(100% - 60px) !important;
-  border-radius: 0 !important;
-  transform: none !important;
+  position: fixed;
+  z-index: 40;
 }
 
 .vaul-drawer-overlay {
-  z-index: 39 !important;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 39;
+}
+
+.vaul-drawer-content {
+  position: fixed;
+  background: var(--background);
+  z-index: 40;
 }

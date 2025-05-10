@@ -95,12 +95,13 @@ const InnerLayout = () => {
         {/* Mobile Sidebar using Drawer */}
         {isMobile && (
           <Drawer open={openMobile} onOpenChange={setOpenMobile}>
-            <DrawerOverlay />
-            <DrawerContent className="p-0 max-h-[calc(100vh-60px)] mt-[60px]">
-              <DrawerHeader className="sr-only">
-                <DrawerTitle>Navigation Menu</DrawerTitle>
+            <DrawerContent className="w-[85%] max-w-[320px] h-full left-0 top-[60px] bottom-0 fixed rounded-none">
+              <DrawerHeader className="p-0">
+                <DrawerTitle className="sr-only">Navigation Menu</DrawerTitle>
               </DrawerHeader>
-              <CustomSidebar />
+              <div className="h-full overflow-y-auto">
+                <CustomSidebar />
+              </div>
             </DrawerContent>
           </Drawer>
         )}
@@ -134,9 +135,6 @@ const InnerLayout = () => {
             flex-1 w-full overflow-auto transition-transform duration-300 ease-in-out
             ${open && !isMobile ? 'md:pl-[320px]' : ''}
           `}
-          style={{
-            transform: isMobile ? 'translateX(0)' : 'translateX(0)'
-          }}
         >
           <main className="h-full relative">
             <div className="h-full px-2 pt-14 md:pt-14 md:pl-6">
