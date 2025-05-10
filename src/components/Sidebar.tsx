@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +18,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useChatHistory, Chat } from "@/hooks/useChatHistory";
+import { useChatHistory } from "@/hooks/useChatHistory";
+import { Chat } from "@/types/chat";
 
 type AgentCategory = {
   name: string;
