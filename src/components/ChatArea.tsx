@@ -687,10 +687,10 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
             <a href="/privacy" className="underline hover:text-primary">
               Privacy Policy
             </a>
-            . Built with ❤️ by 
-              <a href="https://ryan.chatgptstl.com" className="underline hover:text-primary">
-                 Ryan
-              </a>
+            . Built with ❤️ by{" "}
+            <a href="https://ryan.chatgptstl.com" className="hover:text-primary">
+               Ryan
+            </a>
           </div>
         </form>
       </div>
