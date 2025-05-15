@@ -689,7 +689,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
             </a>
             . Built with ❤️ by 
               <a href="https://ryan.chatgptstl.com" className="underline hover:text-primary">
-                Ryan
+                 Ryan
               </a>
           </div>
         </form>
