@@ -79,7 +79,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               key={tab}
               variant={activeTab === tab ? "default" : "ghost"} 
               onClick={() => handleTabChange(tab)}
-              className="text-large"
+              className="text-sm md:text-base"
               data-tab={tab}
               data-active={activeTab === tab ? "true" : "false"}
             >
@@ -94,7 +94,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           variant="ghost" 
           size="icon" 
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="text-large focus-visible-ring"
+          className="text-foreground focus-visible-ring"
           aria-label="Toggle theme"
         >
           {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -104,7 +104,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="text-large focus-visible-ring"
+            className="text-foreground focus-visible-ring"
             aria-label="Settings"
           >
             <Settings className="h-5 w-5" />
@@ -116,7 +116,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="text-large focus-visible-ring"
+              className="text-foreground focus-visible-ring"
               aria-label="User menu"
             >
               <User className="h-5 w-5" />
