@@ -106,6 +106,27 @@
   .font-size-large {
     font-size: 1.125rem;
   }
+  
+  /* Text size utility classes for buttons and text elements */
+  .text-xs {
+    font-size: 0.75rem;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .text-base {
+    font-size: 1rem;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
 }
 
 @layer components {
