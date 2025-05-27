@@ -1,13 +1,37 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const TermsPage = () => {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="p-6 md:p-10 h-[calc(100vh-64px)]">
+      <div className="flex items-center gap-4 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleBack}
+          className="h-8 w-8"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <h1 className="text-3xl font-bold">Terms of Service</h1>
+      </div>
+      
       <ScrollArea className="h-full">
         <div className="max-w-4xl mx-auto pr-4">
-          <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
-          
           <div className="prose prose-lg max-w-none">
             <p className="text-large mb-4">
               Welcome to ChatGPTSTL. ChatGPTSTL and ChatGPTSTL.com are not affiliated with OpenAi or ChatGPT.com. By accessing and using this website, you agree to be bound by these Terms of Service.
