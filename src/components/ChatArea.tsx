@@ -336,6 +336,9 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   // Load chat history when component mounts or when key changes
   useEffect(() => {
     const loadChatData = () => {
+      // Always clear input when changing chats
+      setInputValue("");
+      
       // Check if this is a new chat (chatId starts with "new-")
       if (chatKey && chatKey.startsWith('new-')) {
         // This is a new chat, reset messages
@@ -377,21 +380,12 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
         }
       }
       
-      // Clear input field when changing chats
-      setInputValue("");
       // Reset interaction tracking
       setCurrentInteraction(null);
     };
     
     loadChatData();
-    
-    // Set default prompt from location state if available and only if it's a new chat
-    if (location.state?.defaultPrompt) {
-      setInputValue(location.state.defaultPrompt);
-      // Clear the location state to prevent it from persisting
-      window.history.replaceState({}, document.title);
-    }
-  }, [agentId, location.pathname, location.state, chatKey, getChatById]);
+  }, [agentId, location.pathname, chatKey, getChatById]);
 
   // Save chat history when messages change - with a check to avoid infinite updates
   useEffect(() => {
@@ -460,6 +454,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
     };
     
     setMessages([...messages, userMessage]);
+    // Clear input immediately after submission
     setInputValue("");
     
     // Store the current question for the interaction
@@ -498,7 +493,8 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
     };
     
     setMessages([userMessage]);
-    setInputValue(""); // Clear input immediately after using a prompt card
+    // Clear input immediately when a prompt is clicked
+    setInputValue("");
     
     // Store the current question for the interaction
     setCurrentInteraction({
