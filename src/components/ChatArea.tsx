@@ -1,8 +1,7 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowUp, Paperclip as Attach, Globe, FileText, Mic } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useChatHistory } from "@/hooks/useChatHistory";
@@ -680,13 +679,13 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
           
           <div className="text-xs text-center text-muted-foreground mt-10">
             By using this app, you agree to our{" "}
-            <a href="/terms" className="underline hover:text-primary">
+            <Link to="/terms" className="underline hover:text-primary">
               Terms
-            </a>{" "}
+            </Link>{" "}
             and have read our{" "}
-            <a href="/privacy" className="underline hover:text-primary">
+            <Link to="/privacy" className="underline hover:text-primary">
               Privacy Policy
-            </a>
+            </Link>
             . Built with ❤️ by{" "}
             <a href="https://ryan.chatgptstl.com" className="underline hover:text-primary">
                Ryan
