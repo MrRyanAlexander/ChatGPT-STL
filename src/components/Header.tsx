@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { Settings, User, Sun, Moon, Menu } from "lucide-react";
+import { Settings, User, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   DropdownMenu,
@@ -11,13 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useSidebar } from '@/components/ui/sidebar';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
-interface HeaderProps {
-   onMenuClick: () => void;
-}
-
-const Header = ({ onMenuClick }: HeaderProps) => {
+const Header = () => {
   const { user, profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("Chat");
   const { theme, setTheme } = useTheme();
@@ -25,7 +21,6 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   const location = useLocation();
   const previousChatRef = useRef<string | null>(null);
 
-  
   // Update activeTab based on current location and store chat route
   useEffect(() => {
     if (location.pathname === '/explore') {
@@ -46,13 +41,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     setActiveTab(tab);
     
     if (tab === "Chat") {
-      // Navigate to the previous chat page if available, otherwise to home
       navigate(previousChatRef.current || "/");
     } else if (tab === "Explore") {
-      // Navigate to the new explore page
       navigate("/explore");
     } else if (tab === "Gallery") {
-      // Navigate to gallery page
       navigate("/gallery");
     }
   };
@@ -60,15 +52,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
       <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9 rounded-full shadow-sm bg-background"
-          onClick={onMenuClick}
-          aria-label="Toggle sidebar"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+        <SidebarTrigger className="h-9 w-9 rounded-full shadow-sm bg-background" />
         <h1 className="text-xl md:text-2xl font-semibold">ChatGPT-STL</h1>
       </div>
       
