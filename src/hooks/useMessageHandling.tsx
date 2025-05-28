@@ -1,9 +1,8 @@
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Message } from '@/types/chat';
 import { ChatService } from '@/services/chatService';
 import { useAsyncState } from '@/hooks/useAsyncState';
-import { useOptimisticUpdates } from '@/hooks/useOptimisticUpdates';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface MessageHandlingHook {
@@ -55,6 +54,22 @@ export const useMessageHandling = (): MessageHandlingHook => {
   const { loading: isProcessing, execute } = useAsyncState();
   const { handleAsyncError } = useErrorHandler();
 
+  // Memoized function to create user message
+  const createUserMessage = useMemo(() => 
+    (content: string) => ChatService.generateUserMessage(content),
+    []
+  );
+
+  // Memoized function to create interaction state
+  const createInteractionState = useMemo(() => 
+    (question: string) => ({
+      question,
+      action: '',
+      showFeedback: false
+    }),
+    []
+  );
+
   const handleSubmit = useCallback((
     inputValue: string,
     messages: Message[],
@@ -70,30 +85,23 @@ export const useMessageHandling = (): MessageHandlingHook => {
   ) => {
     if (!inputValue.trim() || isProcessing) return;
     
-    const userMessage = ChatService.generateUserMessage(inputValue);
-    setMessages([...messages, userMessage]);
-    setInputValue("");
+    const userMessage = createUserMessage(inputValue);
+    const userContent = typeof userMessage.content === 'string' ? userMessage.content : '';
     
-    setCurrentInteraction({
-      question: typeof userMessage.content === 'string' ? userMessage.content : '',
-      action: '',
-      showFeedback: false
-    });
+    // Optimistic update
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+    setPromptCards([]);
+    
+    setCurrentInteraction(createInteractionState(userContent));
     
     // Generate AI response with error handling
     execute(async () => {
-      const aiResponse = await ChatService.generateAIResponse(
-        agentId,
-        typeof userMessage.content === 'string' ? userMessage.content : ''
-      );
-      setMessages((prev) => [...prev, aiResponse]);
+      const aiResponse = await ChatService.generateAIResponse(agentId, userContent);
+      setMessages(prev => [...prev, aiResponse]);
       return aiResponse;
     });
-    
-    if (setPromptCards) {
-      setPromptCards([]);
-    }
-  }, [isProcessing, execute]);
+  }, [isProcessing, execute, createUserMessage, createInteractionState]);
 
   const handlePromptClick = useCallback((
     text: string,
@@ -109,25 +117,22 @@ export const useMessageHandling = (): MessageHandlingHook => {
   ) => {
     if (isProcessing) return;
 
-    const userMessage = ChatService.generateUserMessage(text);
+    const userMessage = createUserMessage(text);
+    
+    // Optimistic update
     setMessages([userMessage]);
     setInputValue("");
+    setPromptCards([]);
     
-    setCurrentInteraction({
-      question: text,
-      action: '',
-      showFeedback: false
-    });
+    setCurrentInteraction(createInteractionState(text));
     
     // Generate AI response with error handling
     execute(async () => {
       const aiResponse = await ChatService.generateAIResponse(agentId, text);
-      setMessages((prev) => [...prev, aiResponse]);
+      setMessages(prev => [...prev, aiResponse]);
       return aiResponse;
     });
-    
-    setPromptCards([]);
-  }, [isProcessing, execute]);
+  }, [isProcessing, execute, createUserMessage, createInteractionState]);
 
   const handleActionClick = useCallback((
     action: string,
@@ -147,6 +152,7 @@ export const useMessageHandling = (): MessageHandlingHook => {
   ) => {
     if (!currentInteraction || isProcessing) return;
     
+    // Optimistic update
     setCurrentInteraction({
       ...currentInteraction,
       action
@@ -155,9 +161,9 @@ export const useMessageHandling = (): MessageHandlingHook => {
     // Generate follow-up response with error handling
     handleAsyncError(async () => {
       const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
-      setMessages((prev) => [...prev, followUpResponse]);
+      setMessages(prev => [...prev, followUpResponse]);
       
-      // Check if feedback should be shown - properly check the type
+      // Check if feedback should be shown
       const content = followUpResponse.content;
       if (typeof content === 'object' && content.showFeedback) {
         setTimeout(() => {

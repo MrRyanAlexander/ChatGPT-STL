@@ -1,4 +1,5 @@
 
+import React, { memo } from 'react';
 import { Message } from "@/types/chat";
 import ResponseActions from "@/components/ResponseActions";
 import { formatTimeStamp } from "@/utils/dateUtils";
@@ -9,7 +10,7 @@ interface MessageDisplayProps {
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageDisplay = ({ messages, onActionClick, messagesEndRef }: MessageDisplayProps) => {
+const MessageDisplay = memo(({ messages, onActionClick, messagesEndRef }: MessageDisplayProps) => {
   const renderMessageContent = (message: Message) => {
     if (typeof message.content === 'string') {
       return <p className="text-large whitespace-pre-wrap">{message.content}</p>;
@@ -32,7 +33,7 @@ const MessageDisplay = ({ messages, onActionClick, messagesEndRef }: MessageDisp
     <div className="flex flex-col space-y-6">
       {messages.map((message, index) => (
         <div
-          key={index}
+          key={`${message.role}-${index}-${message.timestamp.getTime()}`}
           className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
         >
           <div className={message.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}>
@@ -46,6 +47,8 @@ const MessageDisplay = ({ messages, onActionClick, messagesEndRef }: MessageDisp
       <div ref={messagesEndRef} />
     </div>
   );
-};
+});
+
+MessageDisplay.displayName = 'MessageDisplay';
 
 export default MessageDisplay;

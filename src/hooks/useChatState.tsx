@@ -31,7 +31,7 @@ export const useChatState = (chatId?: string): ChatStateHook => {
   
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
-  const { updateChat, getChatById } = useChatHistory();
+  const { updateChat, getChatById, loading: historyLoading } = useChatHistory();
   const { loading: isLoading, execute } = useAsyncState();
   
   const chatKey = useMemo(() => 
@@ -73,9 +73,11 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     });
   }, [agentId, location.pathname, chatKey, getChatById, agentPrompts, execute]);
 
-  // Save chat history when messages change
+  // Save chat history when messages change - optimized with debouncing
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length === 0) return;
+
+    const timeoutId = setTimeout(() => {
       const title = ChatService.generateChatTitle(messages);
       const existingChat = getChatById(chatKey);
       
@@ -89,12 +91,18 @@ export const useChatState = (chatId?: string): ChatStateHook => {
           agentId: agentId || null
         });
       }
-    }
+    }, 500); // Debounce for 500ms
+
+    return () => clearTimeout(timeoutId);
   }, [messages, chatKey, agentId, updateChat, getChatById]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const timeoutId = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [messages]);
 
   return {
@@ -107,6 +115,6 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     messagesEndRef,
     inputRef,
     chatKey,
-    isLoading
+    isLoading: isLoading || historyLoading
   };
 };
