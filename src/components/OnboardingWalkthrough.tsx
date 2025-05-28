@@ -35,79 +35,86 @@ const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
   const steps: Step[] = [
     {
       id: 1,
-      title: "Welcome to St. Louis Chat!",
-      description: "Your local information assistant",
+      title: "Agentic Governance Demo",
+      description: "Exploring AI-powered civic engagement",
       icon: (
         <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
           <svg width="32" height="32" viewBox="0 0 24 24">
             <path
               fill="currentColor"
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
             />
           </svg>
         </div>
       ),
       content: (
-        <div className="space-y-4">
+        <div className="space-y-4 h-48 overflow-y-auto">
           <p className="text-large">
-            ChatGPT-STL is designed to provide information about St. Louis
-            services, utilities, and local companies.
+            This is an example of agentic governance tools attempting to demo how it might feel using AI in a more direct way to resolve friction between residents and government.
+          </p>
+          <p className="text-large">
+            Consider this a nudge towards digital governance - showcasing how intelligent systems can bridge the gap between civic needs and government response.
           </p>
         </div>
       ),
     },
     {
       id: 2,
-      title: "Find local agents here",
-      description: "Access government agencies, utilities, and local companies",
+      title: "AI-Powered Civic Engagement",
+      description: "Transforming how residents interact with city services",
       icon: (
         <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
           <svg width="32" height="32" viewBox="0 0 24 24">
             <path
               fill="currentColor"
-              d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
             />
           </svg>
         </div>
       ),
       content: (
-        <div className="space-y-4">
+        <div className="space-y-4 h-48 overflow-y-auto">
           <p className="text-large">
-            The sidebar contains all the local agents grouped by category:
+            The sidebar contains specialized AI agents organized by category, each designed to enhance communication between residents and government:
           </p>
           <ul className="list-disc pl-6 space-y-2 text-large">
-            <li><strong>GOV</strong>: County and City resources</li>
-            <li><strong>UTILITIES</strong>: Water, Trash, and Sewer services</li>
-            <li><strong>COMPANIES</strong>: Local businesses information</li>
+            <li><strong>GOV</strong>: Direct access to county and city resources through intelligent assistance</li>
+            <li><strong>UTILITIES</strong>: Streamlined water, trash, and sewer service interactions</li>
+            <li><strong>COMPANIES</strong>: AI-enhanced local business information and services</li>
           </ul>
+          <p className="text-large">
+            This demonstrates the transformative potential of digital governance tools in creating more responsive civic engagement.
+          </p>
         </div>
       ),
     },
     {
       id: 3,
-      title: "Accessibility Features",
-      description: "We've designed this app to be accessible for everyone",
+      title: "The Future of Digital Governance",
+      description: "Demonstrating intelligent, data-driven civic interaction",
       icon: (
         <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
           <svg width="32" height="32" viewBox="0 0 24 24">
             <path
               fill="currentColor"
-              d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"
+              d="M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9v1zm3-19C8.1 2 5 5.1 5 9c0 2.4 1.2 4.5 3 5.7V17c0 .5.4 1 1 1h6c.6 0 1-.5 1-1v-2.3c1.8-1.3 3-3.4 3-5.7 0-3.9-3.1-7-7-7z"
             />
           </svg>
         </div>
       ),
       content: (
-        <div className="space-y-4">
+        <div className="space-y-4 h-48 overflow-y-auto">
+          <p className="text-large">
+            This platform showcases how AI can provide data-driven insights and intelligent conversation to revolutionize government-citizen interaction.
+          </p>
           <ul className="list-disc pl-6 space-y-2 text-large">
-            <li>Large buttons and text for easy navigation</li>
-            <li>Minimal wording for clarity</li>
-            <li>High contrast colors</li>
-            <li>Screen reader compatible</li>
+            <li>Real-time assistance with civic processes and procedures</li>
+            <li>Intelligent routing to appropriate government departments</li>
+            <li>24/7 availability for citizen inquiries and support</li>
+            <li>Data-driven responses based on local policies and regulations</li>
           </ul>
-          <p className="text-large mt-4">
-            You can toggle between light and dark theme using the button in the
-            top right corner or in the sidebar.
+          <p className="text-large">
+            Experience how digital governance tools can make civic engagement more accessible, efficient, and responsive to community needs.
           </p>
         </div>
       ),
@@ -132,17 +139,17 @@ const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-md md:max-w-xl p-0">
-        <div className="p-6">
+      <DialogContent className="sm:max-w-2xl md:max-w-2xl p-0 h-[550px] overflow-hidden">
+        <div className="p-6 h-full flex flex-col">
           <div className="flex flex-col items-center text-center mb-6">
             {currentStepData.icon}
             <h2 className="text-2xl font-bold">{currentStepData.title}</h2>
             <p className="text-muted-foreground">{currentStepData.description}</p>
           </div>
           
-          <div className="py-4">{currentStepData.content}</div>
+          <div className="flex-1 py-4">{currentStepData.content}</div>
           
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex justify-between items-center mt-auto pt-4">
             <Button
               variant="outline"
               onClick={handleBack}
