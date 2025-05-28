@@ -129,42 +129,6 @@
   }
 }
 
-@layer components {
-  /* New styles for sidebar items */
-  .sidebar-item {
-    @apply flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium w-full mb-1 transition-colors duration-150 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
-  }
-
-  .sidebar-item-active {
-    @apply bg-sidebar-accent text-sidebar-accent-foreground font-semibold;
-  }
-}
-
-/* Sidebar specific styles */
-.sidebar-toggle {
-  @apply fixed z-20 transition-all duration-200 ease-in-out;
-  @apply md:left-[260px] md:top-4;
-  @apply left-4 top-4;
-}
-
-.sidebar-toggle-collapsed {
-  @apply md:left-4;
-}
-
-/* Critical fixes for layout issues */
-[data-sidebar="sidebar"] {
-  position: relative;
-  z-index: 30;
-}
-
-[data-sidebar="sidebar-inset"] {
-  width: 100%;
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
 /* Mobile landscape mode optimizations */
 @media (orientation: landscape) and (max-height: 500px) {
   .sidebar-header {
@@ -197,23 +161,4 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
-}
-
-/* Drawer component specific styles for mobile sidebar */
-.vaul-drawer {
-  position: fixed;
-  z-index: 40;
-}
-
-.vaul-drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 39;
-}
-
-.vaul-drawer-content {
-  position: fixed;
-  background: var(--background);
-  z-index: 40;
 }

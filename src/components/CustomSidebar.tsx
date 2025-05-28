@@ -6,6 +6,11 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -27,7 +32,7 @@ const CustomSidebar = () => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const { getAllChats } = useChatHistory();
-  const { setOpen, toggleSidebar } = useSidebar();
+  const { setOpen } = useSidebar();
   
   const recentChats = getAllChats().slice(0, 6);
   
@@ -102,7 +107,7 @@ const CustomSidebar = () => {
 
   return (
     <Sidebar className="bg-sidebar border-sidebar-border text-sidebar-foreground">
-      <SidebarHeader className="pb-0">
+      <SidebarHeader>
         <Button
           variant="outline"
           className="w-full justify-center gap-2 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -113,25 +118,31 @@ const CustomSidebar = () => {
           <span>New Chat</span>
         </Button>
         
-        <div className="flex gap-2 mt-2">
-          <Button
-            variant="secondary"
-            className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
-            onClick={() => handleNavigationClick("/gallery")}
-          >
-            <ImageIcon className="h-4 w-4" />
-            Gallery
-          </Button>
-          
-          <Button
-            variant="secondary"
-            className="flex-1 justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
-            onClick={() => handleNavigationClick("/public-chat")}
-          >
-            <Users className="h-4 w-4" />
-            Public Chat
-          </Button>
-        </div>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => handleNavigationClick("/gallery")}
+                  className="w-full justify-start gap-2"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  Gallery
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => handleNavigationClick("/public-chat")}
+                  className="w-full justify-start gap-2"
+                >
+                  <Users className="h-4 w-4" />
+                  Public Chat
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarHeader>
       
       <SidebarContent>
