@@ -1,5 +1,4 @@
 
-import { useState, useEffect } from 'react';
 import { 
   Sidebar, 
   SidebarContent,
@@ -18,83 +17,45 @@ import {
   ImageIcon, 
   Users
 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useChatHistory } from "@/hooks/useChatHistory";
+import { useNavigation } from "@/hooks/useNavigation";
 import AgentCategoriesList from "@/components/sidebar/AgentCategoriesList";
 import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
 import { AgentService } from "@/services/agentService";
-import { ChatService } from "@/services/chatService";
-import { NavigationService } from "@/services/navigationService";
 
 const CustomSidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [activeItem, setActiveItem] = useState<string | null>(null);
-  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const { getAllChats } = useChatHistory();
   const { setOpen } = useSidebar();
+  const {
+    activeItem,
+    activeChatId,
+    handleAgentClick,
+    handleNewChat,
+    handleChatHistoryClick,
+    handleNavigationClick
+  } = useNavigation();
   
   const recentChats = getAllChats().slice(0, 6);
   
-  // Set active states based on current URL
-  useEffect(() => {
-    const navigationState = NavigationService.parseLocationToState(location.pathname);
-    setActiveItem(navigationState.activeItem);
-    setActiveChatId(navigationState.activeChatId);
-  }, [location.pathname]);
-  
-  const handleAgentClick = (slug: string) => {
-    setActiveItem(slug);
-    setActiveChatId(null);
-    
-    // Close the sidebar and navigate
+  const onAgentClick = (slug: string) => {
     setOpen(false);
-    setTimeout(() => {
-      const path = NavigationService.generateChatPath(slug);
-      navigate(path, { 
-        state: { 
-          defaultPrompt: AgentService.getAgentPrompts(slug)[0] || "" 
-        } 
-      });
-    }, 100);
+    setTimeout(() => handleAgentClick(slug), 100);
   };
   
-  const handleNewChat = () => {
-    setActiveItem(null);
-    setActiveChatId(null);
-    
-    const newChatId = ChatService.generateChatId();
-    console.log("new chat clicked, generating ID:", newChatId);
-    
-    // Close the sidebar and navigate
+  const onNewChat = () => {
     setOpen(false);
-    setTimeout(() => {
-      navigate("/", { 
-        replace: true, 
-        state: { 
-          newChat: true,
-          chatId: newChatId 
-        } 
-      });
-    }, 100);
+    setTimeout(() => handleNewChat(), 100);
   };
 
-  const handleChatHistoryClick = (chatId: string) => {
-    setActiveItem(null);
-    setActiveChatId(chatId);
-    
-    // Close the sidebar and navigate
+  const onChatHistoryClick = (chatId: string) => {
     setOpen(false);
-    setTimeout(() => {
-      const path = NavigationService.generateChatHistoryPath(chatId);
-      navigate(path);
-    }, 100);
+    setTimeout(() => handleChatHistoryClick(chatId), 100);
   };
 
-  const handleNavigationClick = (path: string) => {
+  const onNavigationClick = (path: string) => {
     setOpen(false);
-    setTimeout(() => navigate(path), 100);
+    setTimeout(() => handleNavigationClick(path), 100);
   };
 
   return (
@@ -103,7 +64,7 @@ const CustomSidebar = () => {
         <Button
           variant="outline"
           className="w-full justify-center gap-2 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          onClick={handleNewChat}
+          onClick={onNewChat}
           aria-label="New Chat"
         >
           <MessageSquare className="h-5 w-5" />
@@ -115,7 +76,7 @@ const CustomSidebar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  onClick={() => handleNavigationClick("/gallery")}
+                  onClick={() => onNavigationClick("/gallery")}
                   className="w-full justify-start gap-2"
                 >
                   <ImageIcon className="h-4 w-4" />
@@ -125,7 +86,7 @@ const CustomSidebar = () => {
               
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  onClick={() => handleNavigationClick("/public-chat")}
+                  onClick={() => onNavigationClick("/public-chat")}
                   className="w-full justify-start gap-2"
                 >
                   <Users className="h-4 w-4" />
@@ -141,13 +102,13 @@ const CustomSidebar = () => {
         <AgentCategoriesList 
           categories={AgentService.getCategories()}
           activeItem={activeItem}
-          onAgentClick={handleAgentClick}
+          onAgentClick={onAgentClick}
         />
         
         <RecentChatsList 
           chats={recentChats}
           activeChatId={activeChatId}
-          onChatClick={handleChatHistoryClick}
+          onChatClick={onChatHistoryClick}
         />
       </SidebarContent>
       
