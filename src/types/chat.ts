@@ -7,6 +7,7 @@ export type ActionOption = {
 export type MessageContent = {
   text: string;
   options?: ActionOption[];
+  showFeedback?: boolean;
 };
 
 export type Message = {

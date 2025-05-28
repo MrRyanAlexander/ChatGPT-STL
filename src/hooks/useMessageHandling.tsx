@@ -146,7 +146,7 @@ export const useMessageHandling = (): MessageHandlingHook => {
       const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
       setMessages((prev) => [...prev, followUpResponse]);
       
-      // Check if feedback should be shown
+      // Check if feedback should be shown - properly check the type
       const content = followUpResponse.content;
       if (typeof content === 'object' && content.showFeedback) {
         setTimeout(() => {
