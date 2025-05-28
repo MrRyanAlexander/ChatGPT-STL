@@ -11,6 +11,8 @@ export const useNavigation = (): NavigationState & NavigationHandlers => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Update navigation state based on current URL
   useEffect(() => {
@@ -20,49 +22,121 @@ export const useNavigation = (): NavigationState & NavigationHandlers => {
   }, [location.pathname]);
 
   const handleAgentClick = (slug: string) => {
-    setActiveItem(slug);
-    setActiveChatId(null);
+    setIsLoading(true);
+    setError(null);
     
-    const path = NavigationService.generateChatPath(slug);
-    navigate(path, { 
-      state: { 
-        defaultPrompt: AgentService.getAgentPrompts(slug)[0] || "" 
-      } 
-    });
+    try {
+      setActiveItem(slug);
+      setActiveChatId(null);
+      
+      const path = NavigationService.generateChatPath(slug);
+      navigate(path, { 
+        state: { 
+          defaultPrompt: AgentService.getAgentPrompts(slug)[0] || "" 
+        } 
+      });
+    } catch (err) {
+      setError('Failed to navigate to agent');
+      console.error('Navigation error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleNewChat = () => {
-    setActiveItem(null);
-    setActiveChatId(null);
+    setIsLoading(true);
+    setError(null);
     
-    const newChatId = ChatService.generateChatId();
-    navigate("/", { 
-      replace: true, 
-      state: { 
-        newChat: true,
-        chatId: newChatId 
-      } 
-    });
+    try {
+      setActiveItem(null);
+      setActiveChatId(null);
+      
+      const newChatId = ChatService.generateChatId();
+      navigate("/", { 
+        replace: true, 
+        state: { 
+          newChat: true,
+          chatId: newChatId 
+        } 
+      });
+    } catch (err) {
+      setError('Failed to create new chat');
+      console.error('New chat error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChatHistoryClick = (chatId: string) => {
-    setActiveItem(null);
-    setActiveChatId(chatId);
+    setIsLoading(true);
+    setError(null);
     
-    const path = NavigationService.generateChatHistoryPath(chatId);
-    navigate(path);
+    try {
+      setActiveItem(null);
+      setActiveChatId(chatId);
+      
+      const path = NavigationService.generateChatHistoryPath(chatId);
+      navigate(path);
+    } catch (err) {
+      setError('Failed to navigate to chat history');
+      console.error('Chat history navigation error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleNavigationClick = (path: string) => {
-    navigate(path);
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      navigate(path);
+    } catch (err) {
+      setError('Failed to navigate');
+      console.error('Navigation error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoBack = () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      navigate(-1);
+    } catch (err) {
+      setError('Failed to go back');
+      console.error('Go back error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoForward = () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      navigate(1);
+    } catch (err) {
+      setError('Failed to go forward');
+      console.error('Go forward error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
     activeItem,
     activeChatId,
+    isLoading,
+    error,
     handleAgentClick,
     handleNewChat,
     handleChatHistoryClick,
-    handleNavigationClick
+    handleNavigationClick,
+    handleGoBack,
+    handleGoForward
   };
 };

@@ -1,7 +1,7 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase, Profile, getProfile } from '@/lib/supabase';
+import { supabase, getProfile } from '@/lib/supabase';
+import { Profile } from '@/types/auth';
 import { useToast } from "@/hooks/use-toast";
 
 interface AuthContextType {
@@ -30,8 +30,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (data.session?.user) {
           setUser(data.session.user);
-          const userProfile = await getProfile();
-          setProfile(userProfile);
+          const profileResponse = await getProfile();
+          if (profileResponse.success && profileResponse.data) {
+            setProfile(profileResponse.data);
+          }
         }
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -60,8 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user || null);
       
       if (session?.user) {
-        const userProfile = await getProfile();
-        setProfile(userProfile);
+        const profileResponse = await getProfile();
+        if (profileResponse.success && profileResponse.data) {
+          setProfile(profileResponse.data);
+        }
       } else {
         setProfile(null);
       }

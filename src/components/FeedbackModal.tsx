@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -10,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Check, X } from "lucide-react";
-import { FeedbackData } from "@/types/chat";
+import { FeedbackData, FeedbackType } from "@/types/chat";
 
 interface FeedbackModalProps {
   open: boolean;
@@ -36,8 +35,10 @@ const FeedbackModal = ({
         interactionId,
         userResponse,
         feedback: {
+          type: helpful ? 'helpful' : 'not_helpful',
           helpful,
           comment: comment.trim() || null,
+          timestamp: new Date(),
         },
       });
       onClose();

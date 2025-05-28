@@ -8,20 +8,26 @@ export class NavigationService {
     if (pathParts[1] === 'chat' && pathParts[2] !== 'history') {
       return {
         activeItem: pathParts[2],
-        activeChatId: null
+        activeChatId: null,
+        isLoading: false,
+        error: null
       };
     } 
     
     if (pathParts[1] === 'chat' && pathParts[2] === 'history' && pathParts[3]) {
       return {
         activeItem: null,
-        activeChatId: pathParts[3]
+        activeChatId: pathParts[3],
+        isLoading: false,
+        error: null
       };
     }
     
     return {
       activeItem: null,
-      activeChatId: null
+      activeChatId: null,
+      isLoading: false,
+      error: null
     };
   }
 

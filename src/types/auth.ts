@@ -8,6 +8,8 @@ export interface User {
   updated_at?: Date;
 }
 
+export interface Profile extends User {}
+
 export interface AuthState {
   user: User | null;
   isLoading: boolean;
