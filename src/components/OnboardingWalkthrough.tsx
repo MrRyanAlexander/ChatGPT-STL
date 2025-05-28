@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -30,6 +29,13 @@ const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
     localStorage.setItem("stl-onboarding-completed", "true");
     setIsOpen(false);
     onComplete();
+  };
+  
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      // Treat closing the dialog the same as completing onboarding
+      completeOnboarding();
+    }
   };
   
   const steps: Step[] = [
@@ -138,7 +144,7 @@ const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
   const currentStepData = steps[currentStep];
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
       <DialogContent className="sm:max-w-2xl md:max-w-2xl p-0 h-[550px] overflow-hidden">
         <div className="p-6 h-full flex flex-col">
           <div className="flex flex-col items-center text-center mb-6">
