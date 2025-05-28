@@ -165,7 +165,7 @@ export const useMessageHandling = (): MessageHandlingHook => {
         }, 1000);
       }
     }, 'action click');
-  }, [currentInteraction, isProcessing, handleAsyncError]);
+  }, [isProcessing, handleAsyncError]);
 
   return {
     handleSubmit,
