@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { AgentCategory, DEFAULT_PROMPTS } from "@/data/agentCategories";
+import { AgentCategory } from "@/data/agentCategories";
 
 type AgentCategoriesListProps = {
   categories: AgentCategory[];
