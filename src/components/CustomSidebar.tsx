@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from "uuid";
 import { 
@@ -24,7 +23,8 @@ import { useChatHistory } from "@/hooks/useChatHistory";
 import AgentCategoriesList from "@/components/sidebar/AgentCategoriesList";
 import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
-import { AGENT_CATEGORIES, DEFAULT_PROMPTS } from "@/data/agentCategories";
+import { AGENT_CATEGORIES } from "@/data/agentCategories";
+import { DEFAULT_PROMPTS } from "@/data/prompts";
 
 const CustomSidebar = () => {
   const navigate = useNavigate();
