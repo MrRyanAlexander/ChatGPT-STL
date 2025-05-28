@@ -23,7 +23,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
-                <Route path="agent/:agentId" element={<ChatPage />} />
+                <Route path="chat/:agentId" element={<ChatPage />} />
                 <Route path="super-agent" element={<SuperAgentPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
