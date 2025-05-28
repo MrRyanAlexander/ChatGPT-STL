@@ -1,115 +1,48 @@
 
-import { QueryAnalysis, StatusUpdate } from '@/types/super-agent';
+import { QueryAnalysis } from '@/types/super-agent';
+import { STATUS_UPDATE_TEMPLATES } from '@/data/superAgentResponses';
+import { AGENT_DISPLAY_NAMES, SUPER_AGENT_CONFIG } from '@/data/superAgent';
 
 export class StatusStreamService {
   static *createStatusStream(analysis: QueryAnalysis): Generator<string, void, unknown> {
-    const updates = this.generateStatusUpdates(analysis);
-    
-    for (const update of updates) {
-      yield update.message;
-    }
-  }
-
-  private static generateStatusUpdates(analysis: QueryAnalysis): StatusUpdate[] {
-    const updates: StatusUpdate[] = [];
-    let step = 1;
-    
     // Initial analysis
-    updates.push({
-      step: step++,
-      message: "🤖 Analyzing your request...",
-      delay: 800,
-      type: 'thinking'
-    });
+    yield STATUS_UPDATE_TEMPLATES.analyzing;
     
     // Complexity assessment
     if (analysis.complexity === 'complex') {
-      updates.push({
-        step: step++,
-        message: "🔍 Detected multi-domain request, coordinating agents...",
-        delay: 1000,
-        type: 'processing'
-      });
+      yield STATUS_UPDATE_TEMPLATES.coordinating;
     }
     
     // Primary agent call
-    updates.push({
-      step: step++,
-      message: `📞 Calling ${this.formatAgentName(analysis.primaryAgent)} agent...`,
-      delay: 1200,
-      type: 'calling',
-      agentId: analysis.primaryAgent
-    });
+    yield STATUS_UPDATE_TEMPLATES.calling(this.formatAgentName(analysis.primaryAgent));
     
     // Account access simulation
     if (analysis.requiredData.includes('account')) {
-      updates.push({
-        step: step++,
-        message: "🔐 Accessing your account information...",
-        delay: 1000,
-        type: 'searching'
-      });
+      yield STATUS_UPDATE_TEMPLATES.accessing;
     }
     
     // Database queries
-    updates.push({
-      step: step++,
-      message: `🗄️ Querying ${this.formatAgentName(analysis.primaryAgent)} database...`,
-      delay: 1500,
-      type: 'searching'
-    });
+    yield STATUS_UPDATE_TEMPLATES.querying(this.formatAgentName(analysis.primaryAgent));
     
     // Secondary agents
-    analysis.secondaryAgents.forEach(agentId => {
-      updates.push({
-        step: step++,
-        message: `🔗 Cross-referencing with ${this.formatAgentName(agentId)} system...`,
-        delay: 1000,
-        type: 'calling',
-        agentId
-      });
-    });
+    for (const agentId of analysis.secondaryAgents) {
+      yield STATUS_UPDATE_TEMPLATES.crossReferencing(this.formatAgentName(agentId));
+    }
     
     // MCP communication simulation
     if (analysis.complexity === 'complex') {
-      updates.push({
-        step: step++,
-        message: "🌐 Coordinating with external systems via MCP...",
-        delay: 1200,
-        type: 'processing'
-      });
+      yield STATUS_UPDATE_TEMPLATES.mcpCommunication;
     }
     
     // Data verification
-    updates.push({
-      step: step++,
-      message: "✅ Verifying data accuracy across systems...",
-      delay: 800,
-      type: 'processing'
-    });
+    yield STATUS_UPDATE_TEMPLATES.verifying;
     
     // Final response generation
-    updates.push({
-      step: step++,
-      message: "📋 Generating comprehensive response...",
-      delay: 600,
-      type: 'completing'
-    });
-    
-    return updates;
+    yield STATUS_UPDATE_TEMPLATES.generating;
   }
 
   private static formatAgentName(agentId: string): string {
-    const agentNames: Record<string, string> = {
-      water: 'Water Department',
-      property: 'Property Records',
-      business: 'Business Services',
-      utilities: 'Utilities Division',
-      county: 'County Services',
-      gov: 'Government Services'
-    };
-    
-    return agentNames[agentId] || agentId.charAt(0).toUpperCase() + agentId.slice(1);
+    return AGENT_DISPLAY_NAMES[agentId] || agentId.charAt(0).toUpperCase() + agentId.slice(1);
   }
 
   static async streamWithDelay(
@@ -118,8 +51,11 @@ export class StatusStreamService {
   ): Promise<void> {
     for (const message of updates) {
       onUpdate(message);
-      // Simulate real-time delay
-      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
+      // Simulate real-time delay using config
+      const delay = SUPER_AGENT_CONFIG.statusUpdateDelay;
+      await new Promise(resolve => 
+        setTimeout(resolve, delay.base + Math.random() * delay.max)
+      );
     }
   }
 }

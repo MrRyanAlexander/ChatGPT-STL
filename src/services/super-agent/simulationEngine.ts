@@ -1,32 +1,8 @@
 
-import { SimulatedOperation, UserAccountData, QueryAnalysis } from '@/types/super-agent';
+import { SimulatedOperation, QueryAnalysis } from '@/types/super-agent';
+import { MOCK_USER_ACCOUNT, MOCK_OPERATION_RESULTS } from '@/data/userAccountData';
 
-export class SimulationService {
-  private static readonly MOCK_USER_ACCOUNT: UserAccountData = {
-    address: "1234 Example St, St. Louis MO 63108",
-    accounts: {
-      water: { 
-        balance: 78.45, 
-        lastPayment: "2024-11-15", 
-        usage: 3200 
-      },
-      property: { 
-        assessment: 195800, 
-        taxes: 2850, 
-        lastAssessment: "2024-01-01" 
-      },
-      business: { 
-        licenses: ["Food Service License", "Retail Sales License"], 
-        applications: ["Liquor License - Pending"] 
-      }
-    },
-    preferences: {
-      notifications: true,
-      autopay: false,
-      language: "en"
-    }
-  };
-
+export class SimulationEngine {
   static simulateOperations(analysis: QueryAnalysis): SimulatedOperation[] {
     const operations: SimulatedOperation[] = [];
     
@@ -36,7 +12,7 @@ export class SimulationService {
         type: 'database',
         target: 'St. Louis Water Division Database',
         status: 'completed',
-        result: { records_found: 156, last_updated: '2024-11-20' }
+        result: MOCK_OPERATION_RESULTS.waterDatabase
       });
     }
     
@@ -45,7 +21,7 @@ export class SimulationService {
         type: 'database',
         target: 'County Property Records System',
         status: 'completed',
-        result: { assessment_year: 2024, verified: true }
+        result: MOCK_OPERATION_RESULTS.propertyRecords
       });
     }
     
@@ -55,7 +31,7 @@ export class SimulationService {
         type: 'web_search',
         target: 'Current St. Louis Service Alerts',
         status: 'completed',
-        result: { alerts_found: 2, maintenance_scheduled: true }
+        result: MOCK_OPERATION_RESULTS.webSearch
       });
     }
     
@@ -65,7 +41,7 @@ export class SimulationService {
         type: 'account_access',
         target: 'User Account Profile',
         status: 'completed',
-        result: { profile_verified: true, last_login: '2024-11-20' }
+        result: MOCK_OPERATION_RESULTS.accountAccess
       });
     }
     
@@ -82,8 +58,8 @@ export class SimulationService {
     return operations;
   }
 
-  static getUserAccountData(): UserAccountData {
-    return this.MOCK_USER_ACCOUNT;
+  static getUserAccountData() {
+    return MOCK_USER_ACCOUNT;
   }
 
   static simulateApiCall(endpoint: string): Promise<any> {
@@ -100,18 +76,12 @@ export class SimulationService {
   }
 
   static simulateThirdPartyIntegration(vendor: string): Promise<any> {
-    const vendors: Record<string, any> = {
-      'ameren': { service_status: 'active', last_bill: 125.67 },
-      'msd': { account_status: 'current', next_service: '2024-12-01' },
-      'boeing': { hr_verified: true, employment_status: 'active' }
-    };
-    
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           vendor,
           status: 'connected',
-          data: vendors[vendor] || { status: 'no_data' }
+          data: MOCK_OPERATION_RESULTS.thirdPartyVendors[vendor as keyof typeof MOCK_OPERATION_RESULTS.thirdPartyVendors] || { status: 'no_data' }
         });
       }, 800 + Math.random() * 700);
     });

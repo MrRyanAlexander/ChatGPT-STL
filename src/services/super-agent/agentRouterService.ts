@@ -1,24 +1,8 @@
 
 import { QueryAnalysis } from '@/types/super-agent';
+import { AGENT_KEYWORDS, INTENT_PATTERNS } from '@/data/superAgent';
 
 export class AgentRouterService {
-  private static readonly AGENT_KEYWORDS = {
-    water: ['water', 'bill', 'billing', 'usage', 'leak', 'pressure', 'outage', 'meter'],
-    property: ['property', 'tax', 'assessment', 'real estate', 'deed', 'title', 'ownership'],
-    business: ['business', 'license', 'permit', 'application', 'registration', 'llc', 'company'],
-    utilities: ['electric', 'gas', 'power', 'energy', 'ameren', 'utility', 'service'],
-    county: ['county', 'marriage', 'birth', 'death', 'certificate', 'record', 'vital'],
-    gov: ['government', 'city', 'municipal', 'ordinance', 'law', 'regulation', 'policy']
-  };
-
-  private static readonly INTENT_PATTERNS = {
-    payment: ['pay', 'payment', 'bill', 'charge', 'fee', 'cost', 'balance'],
-    inquiry: ['what', 'how', 'when', 'where', 'why', 'status', 'information'],
-    application: ['apply', 'application', 'request', 'submit', 'file'],
-    dispute: ['dispute', 'problem', 'issue', 'complaint', 'error', 'wrong'],
-    coordination: ['multiple', 'several', 'both', 'all', 'coordinate', 'together']
-  };
-
   static analyzeQuery(query: string): QueryAnalysis {
     const normalizedQuery = query.toLowerCase();
     const words = normalizedQuery.split(/\s+/);
@@ -53,7 +37,7 @@ export class AgentRouterService {
   private static extractKeywords(words: string[]): string[] {
     const keywords: string[] = [];
     
-    Object.entries(this.AGENT_KEYWORDS).forEach(([agent, agentKeywords]) => {
+    Object.entries(AGENT_KEYWORDS).forEach(([agent, agentKeywords]) => {
       agentKeywords.forEach(keyword => {
         if (words.some(word => word.includes(keyword))) {
           keywords.push(keyword);
@@ -67,7 +51,7 @@ export class AgentRouterService {
   private static detectIntents(words: string[]): string[] {
     const intents: string[] = [];
     
-    Object.entries(this.INTENT_PATTERNS).forEach(([intent, patterns]) => {
+    Object.entries(INTENT_PATTERNS).forEach(([intent, patterns]) => {
       if (patterns.some(pattern => words.some(word => word.includes(pattern)))) {
         intents.push(intent);
       }
@@ -79,7 +63,7 @@ export class AgentRouterService {
   private static scoreAgents(words: string[]): Record<string, number> {
     const scores: Record<string, number> = {};
     
-    Object.entries(this.AGENT_KEYWORDS).forEach(([agent, keywords]) => {
+    Object.entries(AGENT_KEYWORDS).forEach(([agent, keywords]) => {
       scores[agent] = 0;
       keywords.forEach(keyword => {
         if (words.some(word => word.includes(keyword))) {
