@@ -1,11 +1,12 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Message } from '@/types/chat';
 import { ChatService } from '@/services/chatService';
 import { AgentService } from '@/services/agentService';
 import { NavigationService } from '@/services/navigationService';
 import { useChatHistory } from '@/hooks/useChatHistory';
+import { useAsyncState } from '@/hooks/useAsyncState';
 
 interface ChatStateHook {
   messages: Message[];
@@ -17,6 +18,7 @@ interface ChatStateHook {
   messagesEndRef: React.RefObject<HTMLDivElement>;
   inputRef: React.RefObject<HTMLInputElement>;
   chatKey: string;
+  isLoading: boolean;
 }
 
 export const useChatState = (chatId?: string): ChatStateHook => {
@@ -30,17 +32,27 @@ export const useChatState = (chatId?: string): ChatStateHook => {
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
   const { updateChat, getChatById } = useChatHistory();
+  const { loading: isLoading, execute } = useAsyncState();
   
-  const chatKey = NavigationService.getChatKeyFromLocation(location.pathname, chatId);
+  const chatKey = useMemo(() => 
+    NavigationService.getChatKeyFromLocation(location.pathname, chatId),
+    [location.pathname, chatId]
+  );
+
+  // Memoize agent prompts to avoid unnecessary recalculations
+  const agentPrompts = useMemo(() => 
+    AgentService.getAgentPrompts(agentId) || AgentService.getDefaultPrompts(),
+    [agentId]
+  );
 
   // Load chat data when component mounts or when key changes
   useEffect(() => {
-    const loadChatData = () => {
+    execute(async () => {
       setInputValue("");
       
       if (chatKey && chatKey.startsWith('new-')) {
         setMessages([]);
-        setPromptCards(AgentService.getAgentPrompts(agentId) || AgentService.getDefaultPrompts());
+        setPromptCards(agentPrompts);
       } else {
         const chatData = getChatById(chatKey);
         
@@ -49,17 +61,17 @@ export const useChatState = (chatId?: string): ChatStateHook => {
           if (chatData.messages.length > 0) {
             setPromptCards([]);
           } else {
-            setPromptCards(AgentService.getAgentPrompts(agentId) || AgentService.getDefaultPrompts());
+            setPromptCards(agentPrompts);
           }
         } else {
           setMessages([]);
-          setPromptCards(AgentService.getAgentPrompts(agentId) || AgentService.getDefaultPrompts());
+          setPromptCards(agentPrompts);
         }
       }
-    };
-    
-    loadChatData();
-  }, [agentId, location.pathname, chatKey, getChatById]);
+      
+      return true;
+    });
+  }, [agentId, location.pathname, chatKey, getChatById, agentPrompts, execute]);
 
   // Save chat history when messages change
   useEffect(() => {
@@ -94,6 +106,7 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     setInputValue,
     messagesEndRef,
     inputRef,
-    chatKey
+    chatKey,
+    isLoading
   };
 };

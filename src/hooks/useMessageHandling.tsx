@@ -1,7 +1,10 @@
 
+import { useCallback } from 'react';
 import { Message } from '@/types/chat';
 import { ChatService } from '@/services/chatService';
-import { getInteractiveResponse, getFollowUpResponse } from '@/utils/responseUtils';
+import { useAsyncState } from '@/hooks/useAsyncState';
+import { useOptimisticUpdates } from '@/hooks/useOptimisticUpdates';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface MessageHandlingHook {
   handleSubmit: (
@@ -45,10 +48,14 @@ interface MessageHandlingHook {
     setFeedbackModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
     agentId?: string
   ) => void;
+  isProcessing: boolean;
 }
 
 export const useMessageHandling = (): MessageHandlingHook => {
-  const handleSubmit = (
+  const { loading: isProcessing, execute } = useAsyncState();
+  const { handleAsyncError } = useErrorHandler();
+
+  const handleSubmit = useCallback((
     inputValue: string,
     messages: Message[],
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
@@ -61,7 +68,7 @@ export const useMessageHandling = (): MessageHandlingHook => {
     } | null>>,
     agentId?: string
   ) => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isProcessing) return;
     
     const userMessage = ChatService.generateUserMessage(inputValue);
     setMessages([...messages, userMessage]);
@@ -73,21 +80,22 @@ export const useMessageHandling = (): MessageHandlingHook => {
       showFeedback: false
     });
     
-    // Simulate AI response
-    setTimeout(async () => {
+    // Generate AI response with error handling
+    execute(async () => {
       const aiResponse = await ChatService.generateAIResponse(
         agentId,
         typeof userMessage.content === 'string' ? userMessage.content : ''
       );
       setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
+      return aiResponse;
+    });
     
     if (setPromptCards) {
       setPromptCards([]);
     }
-  };
+  }, [isProcessing, execute]);
 
-  const handlePromptClick = (
+  const handlePromptClick = useCallback((
     text: string,
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
     setInputValue: React.Dispatch<React.SetStateAction<string>>,
@@ -99,6 +107,8 @@ export const useMessageHandling = (): MessageHandlingHook => {
     } | null>>,
     agentId?: string
   ) => {
+    if (isProcessing) return;
+
     const userMessage = ChatService.generateUserMessage(text);
     setMessages([userMessage]);
     setInputValue("");
@@ -109,16 +119,17 @@ export const useMessageHandling = (): MessageHandlingHook => {
       showFeedback: false
     });
     
-    // Simulate AI response
-    setTimeout(async () => {
+    // Generate AI response with error handling
+    execute(async () => {
       const aiResponse = await ChatService.generateAIResponse(agentId, text);
       setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
+      return aiResponse;
+    });
     
     setPromptCards([]);
-  };
+  }, [isProcessing, execute]);
 
-  const handleActionClick = (
+  const handleActionClick = useCallback((
     action: string,
     currentInteraction: {
       question: string;
@@ -134,15 +145,15 @@ export const useMessageHandling = (): MessageHandlingHook => {
     setFeedbackModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
     agentId?: string
   ) => {
-    if (!currentInteraction) return;
+    if (!currentInteraction || isProcessing) return;
     
     setCurrentInteraction({
       ...currentInteraction,
       action
     });
     
-    // Generate follow-up response
-    setTimeout(async () => {
+    // Generate follow-up response with error handling
+    handleAsyncError(async () => {
       const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
       setMessages((prev) => [...prev, followUpResponse]);
       
@@ -153,12 +164,13 @@ export const useMessageHandling = (): MessageHandlingHook => {
           setFeedbackModalOpen(true);
         }, 1000);
       }
-    }, 500);
-  };
+    }, 'action click');
+  }, [currentInteraction, isProcessing, handleAsyncError]);
 
   return {
     handleSubmit,
     handlePromptClick,
-    handleActionClick
+    handleActionClick,
+    isProcessing
   };
 };
