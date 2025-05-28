@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Settings, User, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,23 +21,16 @@ const Header = () => {
   const location = useLocation();
   const previousChatRef = useRef<string | null>(null);
 
-  // Update activeTab based on current location and store chat route
-  useEffect(() => {
-    if (location.pathname === '/explore') {
-      setActiveTab("Explore");
-    } else if (location.pathname === '/gallery') {
-      setActiveTab("Gallery");
-    } else {
-      setActiveTab("Chat");
-      
-      // Store the current path if it's a chat page
-      if (location.pathname === '/' || location.pathname.startsWith('/chat')) {
-        previousChatRef.current = location.pathname;
-      }
-    }
-  }, [location.pathname]);
-  
-  const handleTabChange = (tab: string) => {
+  // Memoize tab options to prevent recreating on each render
+  const tabs = useMemo(() => ["Chat", "Explore"], []);
+
+  // Optimize theme toggle with useCallback
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
+  // Optimize tab change handler with useCallback
+  const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab);
     
     if (tab === "Chat") {
@@ -47,7 +40,30 @@ const Header = () => {
     } else if (tab === "Gallery") {
       navigate("/gallery");
     }
-  };
+  }, [navigate]);
+
+  // Optimize sign out handler with useCallback
+  const handleSignOut = useCallback(() => {
+    signOut();
+  }, [signOut]);
+
+  // Update activeTab based on current location and store chat route
+  useEffect(() => {
+    const pathname = location.pathname;
+    
+    if (pathname === '/explore') {
+      setActiveTab("Explore");
+    } else if (pathname === '/gallery') {
+      setActiveTab("Gallery");
+    } else {
+      setActiveTab("Chat");
+      
+      // Store the current path if it's a chat page
+      if (pathname === '/' || pathname.startsWith('/chat')) {
+        previousChatRef.current = pathname;
+      }
+    }
+  }, [location.pathname]);
   
   return (
     <header className="border-b border-border w-full py-2 px-3 md:px-6 flex items-center justify-between bg-background z-10">
@@ -58,7 +74,7 @@ const Header = () => {
       
       <div className="flex justify-center flex-1">
         <div className="hidden md:flex items-center space-x-1 bg-secondary rounded-lg p-1">
-          {["Chat", "Explore"].map((tab) => (
+          {tabs.map((tab) => (
             <Button 
               key={tab}
               variant={activeTab === tab ? "default" : "ghost"} 
@@ -77,7 +93,7 @@ const Header = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           className="text-foreground focus-visible-ring"
           aria-label="Toggle theme"
         >
@@ -106,13 +122,13 @@ const Header = () => {
               <User className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 bg-background border-border">
             {user ? (
               <>
                 <DropdownMenuItem className="font-medium">
                   {profile?.username || user.email}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   Sign Out
                 </DropdownMenuItem>
               </>

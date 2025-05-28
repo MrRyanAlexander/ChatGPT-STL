@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Message } from "@/types/chat";
 import ResponseActions from "@/components/ResponseActions";
 import { formatTimeStamp } from "@/utils/dateUtils";
@@ -11,39 +11,45 @@ interface MessageDisplayProps {
 }
 
 const MessageDisplay = memo(({ messages, onActionClick, messagesEndRef }: MessageDisplayProps) => {
-  const renderMessageContent = (message: Message) => {
-    if (typeof message.content === 'string') {
-      return <p className="text-large whitespace-pre-wrap">{message.content}</p>;
-    } else {
-      return (
-        <>
-          <p className="text-large whitespace-pre-wrap">{message.content.text}</p>
-          {message.content.options && message.content.options.length > 0 && (
-            <ResponseActions 
-              options={message.content.options} 
-              onActionClick={onActionClick}
-            />
-          )}
-        </>
-      );
-    }
-  };
+  const renderMessageContent = useMemo(() => 
+    (message: Message) => {
+      if (typeof message.content === 'string') {
+        return <p className="text-large whitespace-pre-wrap">{message.content}</p>;
+      } else {
+        return (
+          <>
+            <p className="text-large whitespace-pre-wrap">{message.content.text}</p>
+            {message.content.options && message.content.options.length > 0 && (
+              <ResponseActions 
+                options={message.content.options} 
+                onActionClick={onActionClick}
+              />
+            )}
+          </>
+        );
+      }
+    }, [onActionClick]
+  );
+
+  const memoizedMessages = useMemo(() => 
+    messages.map((message, index) => (
+      <div
+        key={`${message.role}-${index}-${message.timestamp.getTime()}`}
+        className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+      >
+        <div className={message.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}>
+          {renderMessageContent(message)}
+        </div>
+        <span className="text-xs text-muted-foreground mt-1 px-1">
+          {formatTimeStamp(message.timestamp)}
+        </span>
+      </div>
+    )), [messages, renderMessageContent]
+  );
 
   return (
     <div className="flex flex-col space-y-6">
-      {messages.map((message, index) => (
-        <div
-          key={`${message.role}-${index}-${message.timestamp.getTime()}`}
-          className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
-        >
-          <div className={message.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}>
-            {renderMessageContent(message)}
-          </div>
-          <span className="text-xs text-muted-foreground mt-1 px-1">
-            {formatTimeStamp(message.timestamp)}
-          </span>
-        </div>
-      ))}
+      {memoizedMessages}
       <div ref={messagesEndRef} />
     </div>
   );

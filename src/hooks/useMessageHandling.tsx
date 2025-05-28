@@ -4,6 +4,7 @@ import { Message } from '@/types/chat';
 import { ChatService } from '@/services/chatService';
 import { useAsyncState } from '@/hooks/useAsyncState';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { PerformanceMonitor } from '@/utils/performanceUtils';
 
 interface MessageHandlingHook {
   handleSubmit: (
@@ -95,11 +96,13 @@ export const useMessageHandling = (): MessageHandlingHook => {
     
     setCurrentInteraction(createInteractionState(userContent));
     
-    // Generate AI response with error handling
+    // Generate AI response with performance monitoring
     execute(async () => {
-      const aiResponse = await ChatService.generateAIResponse(agentId, userContent);
-      setMessages(prev => [...prev, aiResponse]);
-      return aiResponse;
+      return PerformanceMonitor.measureAsync('ai-response-generation', async () => {
+        const aiResponse = await ChatService.generateAIResponse(agentId, userContent);
+        setMessages(prev => [...prev, aiResponse]);
+        return aiResponse;
+      });
     });
   }, [isProcessing, execute, createUserMessage, createInteractionState]);
 
@@ -126,11 +129,13 @@ export const useMessageHandling = (): MessageHandlingHook => {
     
     setCurrentInteraction(createInteractionState(text));
     
-    // Generate AI response with error handling
+    // Generate AI response with performance monitoring
     execute(async () => {
-      const aiResponse = await ChatService.generateAIResponse(agentId, text);
-      setMessages(prev => [...prev, aiResponse]);
-      return aiResponse;
+      return PerformanceMonitor.measureAsync('ai-prompt-response', async () => {
+        const aiResponse = await ChatService.generateAIResponse(agentId, text);
+        setMessages(prev => [...prev, aiResponse]);
+        return aiResponse;
+      });
     });
   }, [isProcessing, execute, createUserMessage, createInteractionState]);
 
@@ -158,18 +163,20 @@ export const useMessageHandling = (): MessageHandlingHook => {
       action
     });
     
-    // Generate follow-up response with error handling
+    // Generate follow-up response with error handling and performance monitoring
     handleAsyncError(async () => {
-      const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
-      setMessages(prev => [...prev, followUpResponse]);
-      
-      // Check if feedback should be shown
-      const content = followUpResponse.content;
-      if (typeof content === 'object' && content.showFeedback) {
-        setTimeout(() => {
-          setFeedbackModalOpen(true);
-        }, 1000);
-      }
+      return PerformanceMonitor.measureAsync('followup-response', async () => {
+        const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
+        setMessages(prev => [...prev, followUpResponse]);
+        
+        // Check if feedback should be shown
+        const content = followUpResponse.content;
+        if (typeof content === 'object' && content.showFeedback) {
+          setTimeout(() => {
+            setFeedbackModalOpen(true);
+          }, 1000);
+        }
+      });
     }, 'action click');
   }, [isProcessing, handleAsyncError]);
 

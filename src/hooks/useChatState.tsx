@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Message } from '@/types/chat';
 import { ChatService } from '@/services/chatService';
@@ -45,6 +45,32 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     [agentId]
   );
 
+  // Debounced update chat function
+  const debouncedUpdateChat = useCallback(
+    (() => {
+      let timeoutId: NodeJS.Timeout;
+      return (key: string, messages: Message[], agentId?: string) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          const title = ChatService.generateChatTitle(messages);
+          const existingChat = getChatById(key);
+          
+          if (!existingChat || existingChat.messages.length !== messages.length) {
+            updateChat(key, {
+              id: key,
+              title: title,
+              messages: messages,
+              createdAt: existingChat?.createdAt || messages[0].timestamp,
+              updatedAt: new Date(),
+              agentId: agentId || null
+            });
+          }
+        }, 500);
+      };
+    })(),
+    [updateChat, getChatById]
+  );
+
   // Load chat data when component mounts or when key changes
   useEffect(() => {
     execute(async () => {
@@ -76,25 +102,8 @@ export const useChatState = (chatId?: string): ChatStateHook => {
   // Save chat history when messages change - optimized with debouncing
   useEffect(() => {
     if (messages.length === 0) return;
-
-    const timeoutId = setTimeout(() => {
-      const title = ChatService.generateChatTitle(messages);
-      const existingChat = getChatById(chatKey);
-      
-      if (!existingChat || existingChat.messages.length !== messages.length) {
-        updateChat(chatKey, {
-          id: chatKey,
-          title: title,
-          messages: messages,
-          createdAt: existingChat?.createdAt || messages[0].timestamp,
-          updatedAt: new Date(),
-          agentId: agentId || null
-        });
-      }
-    }, 500); // Debounce for 500ms
-
-    return () => clearTimeout(timeoutId);
-  }, [messages, chatKey, agentId, updateChat, getChatById]);
+    debouncedUpdateChat(chatKey, messages, agentId);
+  }, [messages, chatKey, agentId, debouncedUpdateChat]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {

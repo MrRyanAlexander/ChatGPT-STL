@@ -1,11 +1,13 @@
 
+import React, { memo } from 'react';
+
 interface PromptCardsProps {
   agentName: string | null;
   promptCards: string[];
   onPromptClick: (text: string) => void;
 }
 
-const PromptCards = ({ agentName, promptCards, onPromptClick }: PromptCardsProps) => {
+const PromptCards = memo(({ agentName, promptCards, onPromptClick }: PromptCardsProps) => {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <h1 className="text-4xl font-bold mb-8">
@@ -15,9 +17,10 @@ const PromptCards = ({ agentName, promptCards, onPromptClick }: PromptCardsProps
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
         {promptCards.map((text, index) => (
           <button
-            key={index}
+            key={`${text}-${index}`}
             className="border border-border rounded-lg p-4 text-left hover:bg-secondary transition-colors text-large"
             onClick={() => onPromptClick(text)}
+            aria-label={`Ask: ${text}`}
           >
             <div className="flex items-center gap-2 text-muted-foreground mb-2">
               <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
@@ -30,6 +33,8 @@ const PromptCards = ({ agentName, promptCards, onPromptClick }: PromptCardsProps
       </div>
     </div>
   );
-};
+});
+
+PromptCards.displayName = 'PromptCards';
 
 export default PromptCards;

@@ -1,4 +1,5 @@
 
+import { memo, useCallback, useMemo } from 'react';
 import { 
   Sidebar, 
   SidebarContent,
@@ -24,7 +25,7 @@ import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
 import { AgentService } from "@/services/agentService";
 
-const CustomSidebar = () => {
+const CustomSidebar = memo(() => {
   const { getAllChats } = useChatHistory();
   const { setOpen } = useSidebar();
   const {
@@ -36,27 +37,53 @@ const CustomSidebar = () => {
     handleNavigationClick
   } = useNavigation();
   
-  const recentChats = getAllChats().slice(0, 6);
+  // Memoize recent chats to prevent unnecessary recalculations
+  const recentChats = useMemo(() => 
+    getAllChats().slice(0, 6), 
+    [getAllChats]
+  );
   
-  const onAgentClick = (slug: string) => {
+  // Memoize categories to prevent unnecessary recalculations
+  const categories = useMemo(() => 
+    AgentService.getCategories(), 
+    []
+  );
+
+  // Optimize sidebar close with delayed execution
+  const closeSidebarAndExecute = useCallback((fn: () => void) => {
     setOpen(false);
-    setTimeout(() => handleAgentClick(slug), 100);
-  };
+    setTimeout(fn, 100);
+  }, [setOpen]);
   
-  const onNewChat = () => {
-    setOpen(false);
-    setTimeout(() => handleNewChat(), 100);
-  };
+  const onAgentClick = useCallback((slug: string) => {
+    closeSidebarAndExecute(() => handleAgentClick(slug));
+  }, [closeSidebarAndExecute, handleAgentClick]);
+  
+  const onNewChat = useCallback(() => {
+    closeSidebarAndExecute(() => handleNewChat());
+  }, [closeSidebarAndExecute, handleNewChat]);
 
-  const onChatHistoryClick = (chatId: string) => {
-    setOpen(false);
-    setTimeout(() => handleChatHistoryClick(chatId), 100);
-  };
+  const onChatHistoryClick = useCallback((chatId: string) => {
+    closeSidebarAndExecute(() => handleChatHistoryClick(chatId));
+  }, [closeSidebarAndExecute, handleChatHistoryClick]);
 
-  const onNavigationClick = (path: string) => {
-    setOpen(false);
-    setTimeout(() => handleNavigationClick(path), 100);
-  };
+  const onNavigationClick = useCallback((path: string) => {
+    closeSidebarAndExecute(() => handleNavigationClick(path));
+  }, [closeSidebarAndExecute, handleNavigationClick]);
+
+  // Memoize navigation items
+  const navigationItems = useMemo(() => [
+    {
+      path: "/gallery",
+      icon: ImageIcon,
+      label: "Gallery"
+    },
+    {
+      path: "/public-chat",
+      icon: Users,
+      label: "Public Chat"
+    }
+  ], []);
 
   return (
     <Sidebar className="bg-sidebar border-sidebar-border text-sidebar-foreground">
@@ -74,25 +101,18 @@ const CustomSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => onNavigationClick("/gallery")}
-                  className="w-full justify-start gap-2"
-                >
-                  <ImageIcon className="h-4 w-4" />
-                  Gallery
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => onNavigationClick("/public-chat")}
-                  className="w-full justify-start gap-2"
-                >
-                  <Users className="h-4 w-4" />
-                  Public Chat
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton
+                    onClick={() => onNavigationClick(item.path)}
+                    className="w-full justify-start gap-2"
+                    aria-label={item.label}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -100,7 +120,7 @@ const CustomSidebar = () => {
       
       <SidebarContent>
         <AgentCategoriesList 
-          categories={AgentService.getCategories()}
+          categories={categories}
           activeItem={activeItem}
           onAgentClick={onAgentClick}
         />
@@ -117,6 +137,8 @@ const CustomSidebar = () => {
       </SidebarFooter>
     </Sidebar>
   );
-};
+});
+
+CustomSidebar.displayName = 'CustomSidebar';
 
 export default CustomSidebar;
