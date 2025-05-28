@@ -1,67 +1,40 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-
+import { Toaster } from "@/components/ui/sonner";
 import Layout from "@/components/Layout";
 import HomePage from "@/pages/HomePage";
 import ChatPage from "@/pages/ChatPage";
-import ChatHistoryPage from "@/pages/ChatHistoryPage";
-import PublicChatPage from "@/pages/PublicChatPage";
+import SuperAgentPage from "@/pages/SuperAgentPage";
 import GalleryPage from "@/pages/GalleryPage";
-import ExploreFeeds from "@/pages/ExploreFeeds";
-import SettingsPage from "@/pages/SettingsPage";
-import TermsPage from "@/pages/TermsPage";
-import PrivacyPage from "@/pages/PrivacyPage";
-import LoginPage from "@/pages/auth/LoginPage";
-import SignupPage from "@/pages/auth/SignupPage";
-import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
-import VerifyPage from "@/pages/auth/VerifyPage";
-import AuthCallback from "@/pages/auth/AuthCallback";
-import NotFound from "@/pages/NotFound";
+import PublicChatPage from "@/pages/PublicChatPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
-                <Route path="chat/:agentId" element={<ChatPage />} />
-                <Route path="chat/history/:chatId" element={<ChatHistoryPage />} />
-                <Route path="public-chat" element={<PublicChatPage />} />
+                <Route path="agent/:agentId" element={<ChatPage />} />
+                <Route path="super-agent" element={<SuperAgentPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
-                <Route path="explore" element={<ExploreFeeds />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="terms" element={<TermsPage />} />
-                <Route path="privacy" element={<PrivacyPage />} />
+                <Route path="public-chat" element={<PublicChatPage />} />
               </Route>
-              
-              <Route path="/auth">
-                <Route path="login" element={<LoginPage />} />
-                <Route path="signup" element={<SignupPage />} />
-                <Route path="reset-password" element={<ResetPasswordPage />} />
-                <Route path="verify" element={<VerifyPage />} />
-                <Route path="callback" element={<AuthCallback />} />
-              </Route>
-              
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+            <Toaster />
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

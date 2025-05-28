@@ -1,4 +1,3 @@
-
 import { memo, useCallback, useMemo } from 'react';
 import { 
   Sidebar, 
@@ -16,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { 
   MessageSquare, 
   ImageIcon, 
-  Users
+  Users,
+  Bot
 } from "lucide-react";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { useNavigation } from "@/hooks/useNavigation";
@@ -71,8 +71,13 @@ const CustomSidebar = memo(() => {
     closeSidebarAndExecute(() => handleNavigationClick(path));
   }, [closeSidebarAndExecute, handleNavigationClick]);
 
-  // Memoize navigation items
+  // Memoize navigation items with Super Agent
   const navigationItems = useMemo(() => [
+    {
+      path: "/super-agent",
+      icon: Bot,
+      label: "🤖 AI Assistant"
+    },
     {
       path: "/gallery",
       icon: ImageIcon,
