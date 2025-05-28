@@ -1,5 +1,5 @@
+
 import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from "uuid";
 import { 
   Sidebar, 
   SidebarContent,
@@ -23,8 +23,9 @@ import { useChatHistory } from "@/hooks/useChatHistory";
 import AgentCategoriesList from "@/components/sidebar/AgentCategoriesList";
 import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
-import { AGENT_CATEGORIES } from "@/data/agentCategories";
-import { DEFAULT_PROMPTS } from "@/data/prompts";
+import { AgentService } from "@/services/agentService";
+import { ChatService } from "@/services/chatService";
+import { NavigationService } from "@/services/navigationService";
 
 const CustomSidebar = () => {
   const navigate = useNavigate();
@@ -38,20 +39,9 @@ const CustomSidebar = () => {
   
   // Set active states based on current URL
   useEffect(() => {
-    const pathParts = location.pathname.split('/');
-    if (pathParts[1] === 'chat' && pathParts[2] !== 'history') {
-      setActiveItem(pathParts[2]);
-      setActiveChatId(null);
-    } else if (pathParts[1] === 'chat' && pathParts[2] === 'history' && pathParts[3]) {
-      setActiveItem(null);
-      setActiveChatId(pathParts[3]);
-    } else if (pathParts[1] === '') {
-      setActiveItem(null);
-      setActiveChatId(null);
-    } else {
-      setActiveItem(null);
-      setActiveChatId(null);
-    }
+    const navigationState = NavigationService.parseLocationToState(location.pathname);
+    setActiveItem(navigationState.activeItem);
+    setActiveChatId(navigationState.activeChatId);
   }, [location.pathname]);
   
   const handleAgentClick = (slug: string) => {
@@ -61,9 +51,10 @@ const CustomSidebar = () => {
     // Close the sidebar and navigate
     setOpen(false);
     setTimeout(() => {
-      navigate(`/chat/${slug}`, { 
+      const path = NavigationService.generateChatPath(slug);
+      navigate(path, { 
         state: { 
-          defaultPrompt: DEFAULT_PROMPTS[slug] || "" 
+          defaultPrompt: AgentService.getAgentPrompts(slug)[0] || "" 
         } 
       });
     }, 100);
@@ -73,7 +64,7 @@ const CustomSidebar = () => {
     setActiveItem(null);
     setActiveChatId(null);
     
-    const newChatId = `new-${uuidv4()}`;
+    const newChatId = ChatService.generateChatId();
     console.log("new chat clicked, generating ID:", newChatId);
     
     // Close the sidebar and navigate
@@ -96,7 +87,8 @@ const CustomSidebar = () => {
     // Close the sidebar and navigate
     setOpen(false);
     setTimeout(() => {
-      navigate(`/chat/history/${chatId}`);
+      const path = NavigationService.generateChatHistoryPath(chatId);
+      navigate(path);
     }, 100);
   };
 
@@ -147,7 +139,7 @@ const CustomSidebar = () => {
       
       <SidebarContent>
         <AgentCategoriesList 
-          categories={AGENT_CATEGORIES}
+          categories={AgentService.getCategories()}
           activeItem={activeItem}
           onAgentClick={handleAgentClick}
         />

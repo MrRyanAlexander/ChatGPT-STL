@@ -1,7 +1,8 @@
 
 import { INTERACTIVE_RESPONSES, FOLLOW_UP_RESPONSES } from "@/data/responses";
+import { AgentId } from "@/types/agent";
 
-export const getInteractiveResponse = (agentId: string | undefined, prompt: string): any => {
+export const getInteractiveResponse = (agentId: AgentId | undefined, prompt: string): any => {
   // Check if we have a specific response for this agent and prompt
   if (agentId && INTERACTIVE_RESPONSES[agentId]?.[prompt]) {
     return INTERACTIVE_RESPONSES[agentId][prompt];
@@ -14,7 +15,7 @@ export const getInteractiveResponse = (agentId: string | undefined, prompt: stri
   };
 };
 
-export const getFollowUpResponse = (agentId: string | undefined, action: string): any => {
+export const getFollowUpResponse = (agentId: AgentId | undefined, action: string): any => {
   if (agentId && FOLLOW_UP_RESPONSES[agentId]?.[action]) {
     return FOLLOW_UP_RESPONSES[agentId][action];
   }
@@ -27,7 +28,8 @@ export const getFollowUpResponse = (agentId: string | undefined, action: string)
   };
 };
 
-export const formatAgentName = (agentId: string | undefined): string | null => {
+// Legacy exports for backward compatibility - will be removed in next phase
+export const formatAgentName = (agentId: AgentId | undefined): string | null => {
   if (!agentId) return null;
   return agentId.charAt(0).toUpperCase() + agentId.slice(1);
 };

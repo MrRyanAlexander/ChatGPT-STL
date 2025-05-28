@@ -1,13 +1,5 @@
 
-export type AgentItem = {
-  name: string;
-  slug: string;
-};
-
-export type AgentCategory = {
-  name: string;
-  items: AgentItem[];
-};
+import { AgentItem, AgentCategory } from "@/types/agent";
 
 export const AGENT_CATEGORIES: AgentCategory[] = [
   {
