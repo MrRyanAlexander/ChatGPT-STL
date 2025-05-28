@@ -4,7 +4,7 @@ import { Message } from '@/types/chat';
 import { SuperAgentService } from '@/services/super-agent/superAgentService';
 import { StatusStreamService } from '@/services/super-agent/statusStreamService';
 import ProcessingStatus from './ProcessingStatus';
-import MessageDisplay from '@/components/chat/MessageDisplay';
+import SuperAgentMessageDisplay from './MessageDisplay';
 import PromptCards from '@/components/chat/PromptCards';
 import ResponseActions from '@/components/ResponseActions';
 import { Button } from '@/components/ui/button';
@@ -110,7 +110,7 @@ const SuperAgentChat = () => {
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div key={index}>
-                <MessageDisplay
+                <SuperAgentMessageDisplay
                   message={message}
                   isUser={message.role === 'user'}
                 />

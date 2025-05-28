@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -9,7 +10,7 @@ import ChatPage from "@/pages/ChatPage";
 import SuperAgentPage from "@/pages/SuperAgentPage";
 import GalleryPage from "@/pages/GalleryPage";
 import PublicChatPage from "@/pages/PublicChatPage";
-import NotFoundPage from "@/pages/NotFoundPage";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +28,7 @@ function App() {
                 <Route path="gallery" element={<GalleryPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
               </Route>
-              <Route path="*" element={<NotFoundPage />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
           </Router>
