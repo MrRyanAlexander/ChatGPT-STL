@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { useNavigation } from "@/hooks/useNavigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 import AgentCategoriesList from "@/components/sidebar/AgentCategoriesList";
 import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
@@ -27,7 +28,8 @@ import { AgentService } from "@/services/agentService";
 
 const CustomSidebar = memo(() => {
   const { getAllChats } = useChatHistory();
-  const { setOpen } = useSidebar();
+  const { setOpen, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
   const {
     activeItem,
     activeChatId,
@@ -49,11 +51,15 @@ const CustomSidebar = memo(() => {
     []
   );
 
-  // Optimize sidebar close with delayed execution
+  // Updated sidebar close function to handle both mobile and desktop
   const closeSidebarAndExecute = useCallback((fn: () => void) => {
-    setOpen(false);
+    if (isMobile) {
+      setOpenMobile(false);
+    } else {
+      setOpen(false);
+    }
     setTimeout(fn, 100);
-  }, [setOpen]);
+  }, [isMobile, setOpen, setOpenMobile]);
   
   const onAgentClick = useCallback((slug: string) => {
     closeSidebarAndExecute(() => handleAgentClick(slug));
