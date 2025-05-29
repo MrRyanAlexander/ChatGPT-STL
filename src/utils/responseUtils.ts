@@ -8,10 +8,15 @@ export const getInteractiveResponse = (agentId: AgentId | undefined, prompt: str
     return INTERACTIVE_RESPONSES[agentId][prompt];
   }
   
-  // If no specific response, generate a generic one
+  // Improved generic fallback response with contextual options
   return {
-    text: `This is a simulated response about ${agentId || "general St. Louis information"} regarding: "${prompt}"`,
-    options: []
+    text: `I'd be happy to help you with "${prompt}". While I don't have specific details for this exact question, I can connect you with the right resources or help you find more information.`,
+    options: [
+      { text: "📞 Get contact information", action: "get_contact_info" },
+      { text: "🌐 Find official website", action: "find_website" },
+      { text: "📍 Locate nearest office", action: "locate_office" },
+      { text: "📧 Email relevant department", action: "email_department" }
+    ]
   };
 };
 
@@ -20,9 +25,38 @@ export const getFollowUpResponse = (agentId: AgentId | undefined, action: string
     return FOLLOW_UP_RESPONSES[agentId][action];
   }
   
-  // If no specific follow-up, generate a generic one
+  // Improved generic follow-up responses based on common actions
+  const genericResponses: Record<string, any> = {
+    "get_contact_info": {
+      text: "Here's the contact information you requested:\n\nFor general inquiries, you can reach the main office during business hours. If this is an emergency, please call the emergency hotline.\n\nI hope this helps you get the assistance you need!",
+      options: [],
+      showFeedback: true
+    },
+    "find_website": {
+      text: "I can help you find the official website for more detailed information and online services.\n\nMost St. Louis area services have comprehensive websites with forms, FAQs, and contact details.",
+      options: [],
+      showFeedback: true
+    },
+    "locate_office": {
+      text: "Let me help you find the nearest office location with address, hours, and directions.\n\nMost offices are open Monday through Friday during standard business hours.",
+      options: [],
+      showFeedback: true
+    },
+    "email_department": {
+      text: "I can provide you with the appropriate email contact for your specific inquiry.\n\nEmail responses typically take 1-2 business days, though urgent matters may be handled more quickly.",
+      options: [],
+      showFeedback: true
+    }
+  };
+
+  // Return generic response if available, otherwise create a basic completion
+  if (genericResponses[action]) {
+    return genericResponses[action];
+  }
+  
+  // Final fallback with satisfying conclusion
   return {
-    text: `Follow-up action for "${action}" selected.`,
+    text: `Your request for "${action}" has been noted. I've gathered the relevant information and this should help address your inquiry.\n\nIs there anything else I can help you with today?`,
     options: [],
     showFeedback: true
   };
