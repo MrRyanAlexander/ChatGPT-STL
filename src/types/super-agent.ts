@@ -47,6 +47,7 @@ export interface SuperAgentResponse {
     action: string;
     type: 'primary' | 'secondary';
   }>;
+  showFeedback?: boolean;
 }
 
 export interface QueryAnalysis {

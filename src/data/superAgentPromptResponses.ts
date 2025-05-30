@@ -170,27 +170,31 @@ Your property tax assessment has been verified as accurate based on improvements
 };
 
 export const SUPER_AGENT_ACTION_RESPONSES: Record<string, SuperAgentResponse> = {
-  // Water Billing Dispute Follow-ups
+  // Level 1 responses (from initial prompts)
   "download_dispute_report": {
     text: `📄 **Dispute Resolution Report Generated**
 
 Your comprehensive dispute resolution report has been prepared and is ready for download. This report includes:
 
-• Complete billing history analysis
+• Complete billing history analysis (24 months)
 • Meter reading verification documents  
 • Credit approval documentation ($127.50)
 • Future billing protection recommendations
+• Department contact information for follow-up
 
 The report has been saved to your account and sent to your email address. This documentation can be used for your records or if you need to reference this dispute resolution in the future.
 
 **Next Steps:**
 - Credit will appear on your next bill (due January 15, 2025)
-- New billing alerts have been recommended to prevent future issues
+- New billing alerts are recommended to prevent future issues
 - Your case reference number is: WTR-DISP-2024-1201`,
     sources: ['Water Department Dispute Resolution System'],
     operations: [],
-    options: [],
-    showFeedback: true
+    options: [
+      { text: 'Enable Automated Billing Alerts', action: 'enable_auto_alerts', type: 'primary' },
+      { text: 'Schedule Annual Account Review', action: 'schedule_annual_review', type: 'secondary' },
+      { text: 'Print Physical Copy', action: 'print_report_copy', type: 'secondary' }
+    ]
   },
 
   "setup_billing_alerts": {
@@ -206,22 +210,24 @@ Your water billing alerts have been successfully set up to prevent future disput
 • Annual billing review reminders
 
 **Delivery Methods:**
-• Email notifications: Enabled
-• SMS alerts: Enabled  
-• Mobile app push notifications: Enabled
+• Email notifications: ✅ Enabled
+• SMS alerts: ✅ Enabled  
+• Mobile app push notifications: ✅ Enabled
 
-These alerts will help you catch potential billing issues early and ensure accurate charges on your account. You can modify these settings anytime through your online account portal.`,
+These alerts will help you catch potential billing issues early and ensure accurate charges on your account.`,
     sources: ['Water Department Alert System'],
     operations: [],
-    options: [],
-    showFeedback: true
+    options: [
+      { text: 'Test Alert System Now', action: 'test_alert_system', type: 'primary' },
+      { text: 'Customize Alert Thresholds', action: 'customize_alert_thresholds', type: 'secondary' },
+      { text: 'Add Family Member Notifications', action: 'add_family_notifications', type: 'secondary' }
+    ]
   },
 
-  // Service Status Follow-ups
   "view_service_report": {
     text: `📊 **Detailed City Services Report**
 
-Your comprehensive service status report has been generated:
+Your comprehensive service status report has been generated with the following insights:
 
 **Critical Actions Needed:**
 1. Business License Renewal (Due: Feb 28, 2025) - $85 fee
@@ -233,201 +239,246 @@ Your comprehensive service status report has been generated:
 • Vehicle registration: March 15, 2025
 • Voter registration: Confirmed current
 
-**Service Performance:**
+**Service Performance Analysis:**
 • Payment history: 100% on-time last 12 months
 • Service interruptions: 0 reported issues
-• Account status: Excellent standing
-
-The full report includes 24 months of service history and has been saved to your resident portal.`,
+• Account status: Excellent standing across all departments
+• Estimated annual city service costs: $8,450`,
     sources: ['Multi-Department Service Integration'],
     operations: [],
     options: [
-      { text: 'Renew Business License Now', action: 'renew_business_license', type: 'primary' },
-      { text: 'Update Emergency Contacts', action: 'update_emergency_contacts', type: 'secondary' }
+      { text: 'Set Up Automatic Renewals', action: 'setup_auto_renewals', type: 'primary' },
+      { text: 'Create Payment Calendar', action: 'create_payment_calendar', type: 'primary' },
+      { text: 'Update All Contact Information', action: 'update_all_contacts', type: 'secondary' }
     ]
   },
 
   "renew_business_license": {
     text: `🏢 **Business License Renewal Process Initiated**
 
-Your business license renewal has been successfully started:
+Your business license renewal has been successfully started and processed:
 
 **License Details:**
 • License Type: General Business License
 • Current Expiration: February 28, 2025
-• Renewal Period: 2 years
-• Renewal Fee: $85.00
+• Renewal Period: 2 years (through February 28, 2027)
+• Renewal Fee: $85.00 ✅ Paid
 
 **Renewal Status:**
-✅ Application submitted
-✅ Fee payment processed
+✅ Application submitted and processed
+✅ Fee payment confirmed
 ✅ Background verification complete
-⏳ Final approval pending (typically 3-5 business days)
+✅ Final approval granted
 
-**What's Next:**
-Your renewed license will be mailed to your business address and available for download in your business portal. You'll receive email confirmation once the renewal is complete.
+**New License Information:**
+Your renewed license is now active and has been sent to your business address. Digital copy available immediately in your business portal.
 
 **Confirmation Number:** BLR-2025-0012`,
     sources: ['Business License Renewal System'],
     operations: [],
-    options: [],
+    options: [
+      { text: 'Download Digital License', action: 'download_digital_license', type: 'primary' },
+      { text: 'Update Business Information', action: 'update_business_info', type: 'secondary' },
+      { text: 'Set Renewal Reminder for 2027', action: 'set_renewal_reminder', type: 'secondary' }
+    ],
     showFeedback: true
   },
 
-  // Business Application Follow-ups
   "submit_business_application": {
     text: `🚀 **Business License Application Submitted Successfully**
 
-Your coordinated business application has been submitted to all required departments:
+Your coordinated business application has been submitted to all required departments with confirmed receipt:
 
-**Application Status:**
-✅ Business Services - Application received
-✅ Zoning Department - Commercial use approved  
-✅ Health Department - Inspection scheduled (Jan 20)
-✅ Fire Department - Safety review scheduled (Jan 22)
-✅ Utilities - Commercial upgrade scheduled (Jan 25)
+**Application Status - All Departments:**
+✅ Business Services - Application #BLA-2025-0156 received
+✅ Zoning Department - Commercial use pre-approved  
+✅ Health Department - Inspection scheduled (Jan 20, 9:00 AM)
+✅ Fire Department - Safety review scheduled (Jan 22, 2:00 PM)
+✅ Utilities Division - Commercial upgrade scheduled (Jan 25, All day)
 
-**Application Timeline:**
-• Health inspection: January 20, 2025 (9:00 AM)
-• Fire safety review: January 22, 2025 (2:00 PM)  
-• Utility upgrade: January 25, 2025 (All day)
-• Final approval: Estimated February 1, 2025
+**Complete Application Timeline:**
+• Health inspection: January 20, 2025 (9:00 AM) - Inspector: Sarah Chen
+• Fire safety review: January 22, 2025 (2:00 PM) - Captain Mike Rodriguez  
+• Utility upgrade: January 25, 2025 (8:00 AM - 5:00 PM)
+• Final license approval: Estimated February 1, 2025
 
-**Application Reference:** BLA-2025-0156
-
-You'll receive individual confirmations from each department and can track progress through your business portal.`,
+**Total Fees Paid:** $425 (Application: $150, Inspections: $125, Utility connection: $150)`,
     sources: ['Multi-Department Business Application System'],
     operations: [],
-    options: [],
-    showFeedback: true
-  },
-
-  "schedule_all_inspections": {
-    text: `📅 **All Inspections Scheduled Successfully**
-
-Your business inspections have been coordinated across all departments:
-
-**Inspection Schedule:**
-🏥 **Health Department Inspection**
-• Date: January 20, 2025 at 9:00 AM
-• Inspector: Sarah Chen, Health Inspector
-• Duration: Approximately 2 hours
-• Requirements: Kitchen equipment, food storage, sanitation
-
-🔥 **Fire Safety Inspection** 
-• Date: January 22, 2025 at 2:00 PM
-• Inspector: Captain Mike Rodriguez
-• Duration: Approximately 1.5 hours  
-• Requirements: Emergency exits, fire suppression, capacity
-
-**Preparation Checklist:**
-✅ All equipment documentation ready
-✅ Employee training records available
-✅ Safety equipment operational
-✅ Inspection fees paid ($150 total)
-
-Calendar invites have been sent to your email with inspector contact information.`,
-    sources: ['Multi-Department Inspection Coordination'],
-    operations: [],
-    options: [],
-    showFeedback: true
-  },
-
-  // Property Assessment Follow-ups
-  "view_assessment_report": {
-    text: `📈 **Detailed Property Assessment Report**
-
-Your comprehensive property assessment analysis:
-
-**Assessment Breakdown:**
-• Land Value: $185,000 (48%)
-• Building Value: $200,000 (52%)
-• Total Assessment: $${MOCK_USER_ACCOUNT.accounts.property.assessment.toLocaleString()}
-
-**Recent Improvements Impact:**
-• Kitchen renovation (2023): +$25,000 value
-• HVAC system upgrade: +$8,000 value  
-• Bathroom updates: +$7,000 value
-
-**Market Comparison Analysis:**
-• Your assessment: $${MOCK_USER_ACCOUNT.accounts.property.assessment.toLocaleString()}
-• Neighborhood median: $395,000
-• Assessment ratio: 98.7% of market value
-• Your position: Fairly assessed
-
-**5-Year Assessment History:**
-2020: $320,000 | 2021: $335,000 | 2022: $365,000 | 2023: $385,000 | 2024: $${MOCK_USER_ACCOUNT.accounts.property.assessment.toLocaleString()}
-
-The detailed report with comparables has been saved to your property records.`,
-    sources: ['County Assessment Analysis System'],
-    operations: [],
-    options: [],
-    showFeedback: true
-  },
-
-  "appeal_assessment": {
-    text: `⚖️ **Assessment Appeal Process Information**
-
-Based on our analysis, here's your appeal guidance:
-
-**Appeal Likelihood Assessment:**
-• Current assessment appears market-accurate
-• Recent improvements justify increase
-• Neighborhood comparables support valuation
-• **Recommendation:** Appeal unlikely to succeed
-
-**If You Choose to Appeal:**
-• Filing deadline: March 31, 2025
-• Filing fee: $25 (refundable if successful)
-• Required evidence: Recent appraisals, comparable sales
-• Process timeline: 60-90 days
-
-**Alternative Options:**
-• Property tax exemptions review (senior, disability, veteran)
-• Payment plan setup (spread payments over 12 months)
-• Property improvements review (ensure all counted)
-
-**Assessment Appeal Form:** Available in your property portal
-
-Given the analysis showing your assessment is fair and market-accurate, you may want to consider payment plan options instead.`,
-    sources: ['County Assessment Appeal System'],
-    operations: [],
     options: [
-      { text: 'Setup Payment Plan Instead', action: 'setup_payment_plan', type: 'primary' },
-      { text: 'Check Exemption Eligibility', action: 'check_exemptions', type: 'secondary' }
+      { text: 'Prepare for Inspections', action: 'prepare_inspections', type: 'primary' },
+      { text: 'Track Application Progress', action: 'track_application_progress', type: 'secondary' },
+      { text: 'Contact Inspection Team', action: 'contact_inspection_team', type: 'secondary' }
     ]
   },
 
-  "setup_payment_plan": {
-    text: `💳 **Property Tax Payment Plan Established**
+  "schedule_all_inspections": {
+    text: `📅 **All Inspections Scheduled and Coordinated**
 
-Your property tax payment plan has been successfully set up:
+Your business inspections have been successfully coordinated across all departments with confirmed appointments:
 
-**Payment Plan Details:**
-• Total amount: $3,200 (estimated annual tax)
-• Monthly payments: $266.67
-• Plan duration: 12 months
-• First payment due: February 15, 2025
-• Auto-pay: Enabled from checking account
+**Complete Inspection Schedule:**
 
-**Payment Schedule:**
-• February 15: $266.67 (includes $25 setup fee)
-• March 15 - January 15: $266.67/month
-• No interest charges with on-time payments
-• 10-day grace period each month
+🏥 **Health Department Inspection**
+• Date: January 20, 2025 at 9:00 AM
+• Inspector: Sarah Chen, Certified Health Inspector
+• Duration: Approximately 2 hours  
+• Focus Areas: Kitchen equipment, food storage, sanitation protocols
+• Required Documentation: Equipment certifications, employee training records
 
-**Benefits:**
-✅ Avoid large lump sum payment
-✅ No interest with on-time payments  
-✅ Automatic payment reminders
-✅ Can pay ahead anytime without penalty
+🔥 **Fire Safety Inspection** 
+• Date: January 22, 2025 at 2:00 PM
+• Inspector: Captain Mike Rodriguez, Fire Prevention
+• Duration: Approximately 1.5 hours  
+• Focus Areas: Emergency exits, fire suppression systems, occupancy capacity
+• Required Documentation: Emergency plans, equipment maintenance records
 
-**Confirmation Number:** PTP-2025-0089
-
-Your first payment will be automatically deducted on February 15, 2025.`,
-    sources: ['Property Tax Payment System'],
+**Pre-Inspection Checklist Completed:**
+✅ All equipment documentation gathered and verified
+✅ Employee training records current and accessible
+✅ Safety equipment operational and tested
+✅ Inspection fees paid in full ($150 total)
+✅ Calendar invites sent with inspector contact information`,
+    sources: ['Multi-Department Inspection Coordination'],
     operations: [],
-    options: [],
+    options: [
+      { text: 'Download Inspection Checklist', action: 'download_inspection_checklist', type: 'primary' },
+      { text: 'Schedule Pre-Inspection Walkthrough', action: 'schedule_walkthrough', type: 'secondary' },
+      { text: 'Contact Inspectors Directly', action: 'contact_inspectors', type: 'secondary' }
+    ],
+    showFeedback: true
+  },
+
+  // Level 2 responses (deeper engagement)
+  "enable_auto_alerts": {
+    text: `🤖 **Automated Billing Alert System Activated**
+
+Your intelligent billing monitoring system is now fully operational:
+
+**AI-Powered Monitoring Features:**
+• Smart usage pattern analysis (learns your normal consumption)
+• Predictive billing anomaly detection
+• Seasonal adjustment calculations
+• Weather-based usage correlation
+• Leak detection alerts (consumption spikes during low-usage periods)
+
+**Alert Triggers Now Active:**
+• Usage increase >20% from historical average
+• Bill amount variance >$40 from predicted amount
+• Unusual consumption patterns (possible leaks)
+• Payment due reminders (5, 3, and 1 day prior)
+
+**Smart Learning Enabled:**
+The system will learn your household patterns over the next 3 billing cycles to provide increasingly accurate predictions and reduce false alerts.
+
+**First Alert Test:** You'll receive a test notification within 24 hours to confirm delivery.`,
+    sources: ['AI Billing Monitoring System'],
+    operations: [],
+    options: [
+      { text: 'View Learning Dashboard', action: 'view_learning_dashboard', type: 'primary' },
+      { text: 'Add Seasonal Adjustments', action: 'add_seasonal_adjustments', type: 'secondary' }
+    ],
+    showFeedback: true
+  },
+
+  "test_alert_system": {
+    text: `🧪 **Alert System Test Results**
+
+Your billing alert system has been thoroughly tested across all notification channels:
+
+**Test Results:**
+📧 **Email Alerts**: ✅ Delivered successfully (received in 0.3 seconds)
+📱 **SMS Alerts**: ✅ Delivered successfully (received in 1.2 seconds)  
+🔔 **Push Notifications**: ✅ Delivered successfully (received in 0.8 seconds)
+📞 **Voice Alerts** (for critical issues): ✅ System ready
+
+**Test Scenarios Completed:**
+• High usage alert simulation: ✅ Triggered correctly
+• Payment reminder test: ✅ Delivered on schedule
+• Emergency leak detection: ✅ Immediate notification sent
+• System maintenance notice: ✅ Advance warning delivered
+
+**Alert Performance Score: 98.5%**
+
+Your alert system is functioning optimally. All notifications will be delivered reliably, and the system is monitoring your account 24/7 for any unusual activity.`,
+    sources: ['Alert System Testing Platform'],
+    operations: [],
+    options: [
+      { text: 'Set Quiet Hours', action: 'set_quiet_hours', type: 'secondary' },
+      { text: 'Add Emergency Contacts', action: 'add_emergency_contacts', type: 'secondary' }
+    ],
+    showFeedback: true
+  },
+
+  "setup_auto_renewals": {
+    text: `🔄 **Automatic Renewal System Configured**
+
+Your city services have been enrolled in the automatic renewal program:
+
+**Services Now on Auto-Renewal:**
+✅ Business License - Next renewal: Feb 28, 2027 (60-day advance notice)
+✅ Vehicle Registration - Auto-renews annually  
+✅ Waste Management - Continuous service with annual rate updates
+✅ Water Service - Account remains active with usage-based billing
+
+**Auto-Payment Setup:**
+• Payment method: Checking account ending in ****4892
+• Backup payment: Credit card ending in ****3456
+• Advance notification: 30 days before each renewal
+• Receipt delivery: Email and postal mail
+
+**Smart Renewal Features:**
+• Price change notifications (>10% increase requires approval)
+• Service upgrade recommendations based on usage
+• Bundled service discounts automatically applied
+• Priority customer service line access
+
+**Estimated Annual Savings:** $125 in late fees and convenience charges`,
+    sources: ['Automated Renewal Management System'],
+    operations: [],
+    options: [
+      { text: 'Review Renewal Schedule', action: 'review_renewal_schedule', type: 'primary' },
+      { text: 'Update Payment Methods', action: 'update_payment_methods', type: 'secondary' }
+    ],
+    showFeedback: true
+  },
+
+  "create_payment_calendar": {
+    text: `📅 **Personalized Payment Calendar Created**
+
+Your comprehensive city services payment calendar has been generated and synchronized:
+
+**2025 Payment Schedule:**
+
+**January 2025**
+• Jan 15: Water Bill ($${MOCK_USER_ACCOUNT.accounts.water.balance}) - Auto-pay enabled
+
+**February 2025**  
+• Feb 28: Business License Renewal ($85) - Auto-renewal active
+
+**March 2025**
+• Mar 15: Vehicle Registration ($75 estimated)
+
+**April 2025**
+• Apr 30: Property Taxes ($3,200 estimated) - Payment plan available
+
+**Calendar Integration:**
+✅ Google Calendar events created
+✅ Outlook calendar synchronized  
+✅ Apple Calendar events added
+✅ SMS reminders enabled (7 days, 3 days, 1 day before)
+
+**Budget Planning Tools:**
+• Monthly amount to save: $267 (spreads costs evenly)
+• Largest single payment: Property taxes (April)
+• Payment method optimization suggestions included
+• Early payment discount opportunities highlighted`,
+    sources: ['Financial Planning Integration System'],
+    operations: [],
+    options: [
+      { text: 'Set Up Budget Alerts', action: 'setup_budget_alerts', type: 'primary' },
+      { text: 'Explore Payment Plan Options', action: 'explore_payment_plans', type: 'secondary' }
+    ],
     showFeedback: true
   }
 };

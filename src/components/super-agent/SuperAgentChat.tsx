@@ -4,9 +4,10 @@ import ProcessingStatus from './ProcessingStatus';
 import SuperAgentMessageDisplay from './MessageDisplay';
 import PromptCards from '@/components/chat/PromptCards';
 import ResponseActions from '@/components/ResponseActions';
+import FeedbackModal from '@/components/FeedbackModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send } from 'lucide-react';
+import { Send, RotateCcw } from 'lucide-react';
 import { SUPER_AGENT_PROMPTS, SUPER_AGENT_CONFIG } from '@/data/superAgent';
 
 const SuperAgentChat = () => {
@@ -17,11 +18,17 @@ const SuperAgentChat = () => {
     isProcessing,
     statusMessage,
     showStatus,
+    showClearButton,
     messagesEndRef,
     inputRef,
+    currentInteraction,
+    feedbackModalOpen,
     handleSubmit,
     handleInputSubmit,
-    handleActionClick
+    handleActionClick,
+    clearMessages,
+    handleFeedbackSubmit,
+    handleFeedbackClose
   } = useSuperAgentChat();
 
   const handlePromptClick = (text: string) => {
@@ -32,16 +39,32 @@ const SuperAgentChat = () => {
     <div className="flex flex-col h-full">
       {/* Chat Header */}
       <div className="border-b border-border p-4">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-            <span className="text-white text-sm font-bold">{SUPER_AGENT_CONFIG.icon}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+              <span className="text-white text-sm font-bold">{SUPER_AGENT_CONFIG.icon}</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold">{SUPER_AGENT_CONFIG.name}</h1>
+              <p className="text-sm text-muted-foreground">
+                {SUPER_AGENT_CONFIG.description}
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold">{SUPER_AGENT_CONFIG.name}</h1>
-            <p className="text-sm text-muted-foreground">
-              {SUPER_AGENT_CONFIG.description}
-            </p>
-          </div>
+          
+          {showClearButton && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearMessages}
+              className={`flex items-center gap-2 ${
+                showClearButton ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+              }`}
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear Chat
+            </Button>
+          )}
         </div>
       </div>
 
@@ -104,6 +127,17 @@ const SuperAgentChat = () => {
           </Button>
         </form>
       </div>
+
+      {/* Feedback Modal */}
+      {currentInteraction && (
+        <FeedbackModal
+          open={feedbackModalOpen}
+          onClose={handleFeedbackClose}
+          interactionId={`super-agent-${Date.now()}`}
+          userResponse={currentInteraction.question}
+          onSubmitFeedback={handleFeedbackSubmit}
+        />
+      )}
     </div>
   );
 };

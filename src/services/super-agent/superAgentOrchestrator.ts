@@ -54,8 +54,7 @@ export class SuperAgentOrchestrator {
 You should receive confirmation within 1-2 business days for any actions requiring additional processing.`,
       sources: ['Super Agent Action Processing System'],
       operations: [],
-      options: [],
-      showFeedback: true
+      options: []
     };
   }
 
