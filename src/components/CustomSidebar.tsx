@@ -82,7 +82,7 @@ const CustomSidebar = memo(() => {
     {
       path: "/super-agent",
       icon: Bot,
-      label: "🤖 AI Assistant"
+      label: "🤖 Super Agent"
     },
     {
       path: "/gallery",
