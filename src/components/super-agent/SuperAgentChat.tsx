@@ -20,16 +20,12 @@ const SuperAgentChat = () => {
     messagesEndRef,
     inputRef,
     handleSubmit,
-    handleInputSubmit
+    handleInputSubmit,
+    handleActionClick
   } = useSuperAgentChat();
 
   const handlePromptClick = (text: string) => {
     handleSubmit(text);
-  };
-
-  const handleActionClick = (action: string) => {
-    console.log('Super Agent action clicked:', action);
-    // Handle super agent specific actions
   };
 
   return (

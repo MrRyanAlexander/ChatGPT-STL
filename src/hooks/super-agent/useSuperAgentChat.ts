@@ -48,6 +48,26 @@ export const useSuperAgentChat = () => {
     }
   };
 
+  const handleActionClick = async (action: string) => {
+    if (isProcessing) return;
+    
+    console.log('Super Agent action clicked:', action);
+    setIsProcessing(true);
+    
+    try {
+      // Process the action and get response
+      const actionResponse = await SuperAgentOrchestrator.processAction(action);
+      const aiMessage = SuperAgentOrchestrator.generateAIMessage(actionResponse);
+      
+      setMessages(prev => [...prev, aiMessage]);
+      
+    } catch (error) {
+      console.error('Super Agent action processing error:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSubmit(inputValue);
@@ -63,6 +83,7 @@ export const useSuperAgentChat = () => {
     messagesEndRef,
     inputRef,
     handleSubmit,
-    handleInputSubmit
+    handleInputSubmit,
+    handleActionClick
   };
 };

@@ -7,7 +7,7 @@ export const SUPER_AGENT_PROMPTS = [
 ];
 
 export const SUPER_AGENT_CONFIG = {
-  name: "AI Assistant",
+  name: "Super Agent",
   description: "Advanced multi-agent coordination system",
   icon: "🤖",
   placeholder: "Ask me to coordinate across multiple departments...",

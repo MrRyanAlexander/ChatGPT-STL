@@ -1,9 +1,9 @@
-
 import { Message } from '@/types/chat';
 import { QueryAnalysis, SuperAgentResponse } from '@/types/super-agent';
 import { AgentRouterService } from './agentRouterService';
 import { StatusStreamService } from './statusStreamService';
 import { SimulationEngine } from './simulationEngine';
+import { SUPER_AGENT_PROMPT_RESPONSES, SUPER_AGENT_ACTION_RESPONSES } from '@/data/superAgentPromptResponses';
 import { RESPONSE_TEMPLATES, AGENT_RESPONSE_TEMPLATES, DEFAULT_ACTION_OPTIONS } from '@/data/superAgentResponses';
 import { MOCK_USER_ACCOUNT } from '@/data/userAccountData';
 
@@ -13,19 +13,49 @@ export class SuperAgentOrchestrator {
     statusUpdates: Generator<string, void, unknown>;
     response: Promise<SuperAgentResponse>;
   }> {
-    // Analyze the query to determine routing and complexity
+    // Check if this is a specific prompt from the Super Agent prompts
+    const promptResponse = SUPER_AGENT_PROMPT_RESPONSES[query];
+    if (promptResponse) {
+      // For specific prompts, use pre-defined responses
+      const analysis = AgentRouterService.analyzeQuery(query);
+      const statusUpdates = StatusStreamService.createStatusStream(analysis);
+      const response = Promise.resolve(promptResponse);
+      
+      return {
+        analysis,
+        statusUpdates,
+        response
+      };
+    }
+
+    // Fallback to original analysis for custom queries
     const analysis = AgentRouterService.analyzeQuery(query);
-    
-    // Create status update stream
     const statusUpdates = StatusStreamService.createStatusStream(analysis);
-    
-    // Generate the comprehensive response
     const response = this.generateSuperAgentResponse(analysis, query);
     
     return {
       analysis,
       statusUpdates,
       response
+    };
+  }
+
+  static async processAction(action: string): Promise<SuperAgentResponse> {
+    // Check if we have a specific response for this action
+    const actionResponse = SUPER_AGENT_ACTION_RESPONSES[action];
+    if (actionResponse) {
+      return actionResponse;
+    }
+
+    // Fallback to generic action response
+    return {
+      text: `Action "${action}" has been processed successfully. The relevant departments have been notified and any necessary follow-up steps have been initiated.
+
+You should receive confirmation within 1-2 business days for any actions requiring additional processing.`,
+      sources: ['Super Agent Action Processing System'],
+      operations: [],
+      options: [],
+      showFeedback: true
     };
   }
 

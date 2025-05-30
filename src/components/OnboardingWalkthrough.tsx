@@ -96,6 +96,37 @@ const OnboardingWalkthrough = ({ onComplete }: OnboardingWalkthroughProps) => {
     },
     {
       id: 3,
+      title: "Meet the Super Agent",
+      description: "Advanced multi-agent coordination system",
+      icon: (
+        <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+          <svg width="32" height="32" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
+          </svg>
+        </div>
+      ),
+      content: (
+        <div className="space-y-4 h-48 overflow-y-auto">
+          <p className="text-large">
+            <strong>The Super Agent</strong> represents the pinnacle of digital governance - an AI system that coordinates across multiple departments simultaneously.
+          </p>
+          <ul className="list-disc pl-6 space-y-2 text-large">
+            <li>Coordinates complex requests requiring multiple departments</li>
+            <li>Cross-references data across city systems for comprehensive responses</li>
+            <li>Provides end-to-end resolution for complex civic issues</li>
+            <li>Simulates real-time multi-agent collaboration</li>
+          </ul>
+          <p className="text-large">
+            Experience how advanced AI coordination can handle complex government interactions that would normally require multiple phone calls and office visits.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 4,
       title: "The Future of Digital Governance",
       description: "Demonstrating intelligent, data-driven civic interaction",
       icon: (
