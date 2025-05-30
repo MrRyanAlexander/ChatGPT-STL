@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Message } from '@/types/chat';
@@ -19,12 +18,15 @@ interface ChatStateHook {
   inputRef: React.RefObject<HTMLInputElement>;
   chatKey: string;
   isLoading: boolean;
+  showClearButton: boolean;
+  clearMessages: () => void;
 }
 
 export const useChatState = (chatId?: string): ChatStateHook => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [promptCards, setPromptCards] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [showClearButton, setShowClearButton] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +46,19 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     AgentService.getAgentPrompts(agentId) || AgentService.getDefaultPrompts(),
     [agentId]
   );
+
+  // Clear messages function
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+    setInputValue("");
+    setPromptCards(agentPrompts);
+    setShowClearButton(false);
+  }, [agentPrompts]);
+
+  // Show clear button when messages exist
+  useEffect(() => {
+    setShowClearButton(messages.length > 0);
+  }, [messages]);
 
   // Debounced update chat function
   const debouncedUpdateChat = useCallback(
@@ -124,6 +139,8 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     messagesEndRef,
     inputRef,
     chatKey,
-    isLoading: isLoading || historyLoading
+    isLoading: isLoading || historyLoading,
+    showClearButton,
+    clearMessages
   };
 };

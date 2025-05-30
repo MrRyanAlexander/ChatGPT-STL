@@ -157,10 +157,11 @@ export const useMessageHandling = (): MessageHandlingHook => {
   ) => {
     if (!currentInteraction || isProcessing) return;
     
-    // Optimistic update
+    // Update interaction with action
     setCurrentInteraction({
       ...currentInteraction,
-      action
+      action,
+      showFeedback: false
     });
     
     // Generate follow-up response with error handling and performance monitoring
@@ -169,12 +170,20 @@ export const useMessageHandling = (): MessageHandlingHook => {
         const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
         setMessages(prev => [...prev, followUpResponse]);
         
-        // Check if feedback should be shown
+        // Check if feedback should be shown after a delay
         const content = followUpResponse.content;
         if (typeof content === 'object' && content.showFeedback) {
+          // Update interaction to show feedback capability
+          setCurrentInteraction(prev => prev ? {
+            ...prev,
+            action,
+            showFeedback: true
+          } : null);
+          
+          // Show feedback modal after a longer delay to let user read the response
           setTimeout(() => {
             setFeedbackModalOpen(true);
-          }, 1000);
+          }, 2000);
         }
       });
     }, 'action click');

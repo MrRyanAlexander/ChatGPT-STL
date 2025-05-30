@@ -2,7 +2,7 @@
 import { useLocation, useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUp, Paperclip as Attach, Globe, Mic } from "lucide-react";
+import { ArrowUp, Paperclip as Attach, Globe, Mic, RotateCcw } from "lucide-react";
 import FeedbackModal from "@/components/FeedbackModal";
 import MessageDisplay from "@/components/chat/MessageDisplay";
 import PromptCards from "@/components/chat/PromptCards";
@@ -31,7 +31,9 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
     setInputValue,
     messagesEndRef,
     inputRef,
-    isLoading
+    isLoading,
+    showClearButton,
+    clearMessages
   } = useChatState(chatId);
 
   const {
@@ -86,7 +88,26 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   return (
     <ErrorBoundary>
       <div className="flex flex-col h-full">
-        <ChatHeader agentName={agentName} />
+        {/* Chat Header with Clear Button */}
+        <div className="border-b border-border p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <ChatHeader agentName={agentName} />
+            </div>
+            
+            {showClearButton && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearMessages}
+                className="flex items-center gap-2 ring-2 ring-blue-500 ring-offset-2"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Clear Chat
+              </Button>
+            )}
+          </div>
+        </div>
         
         <div className="flex-1 overflow-auto p-4 md:p-8">
           {isLoading ? (
