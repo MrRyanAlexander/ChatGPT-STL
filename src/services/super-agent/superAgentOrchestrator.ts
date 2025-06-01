@@ -75,7 +75,7 @@ Classification:`;
 
         return {
           text: `🤖 **General Information Response**\n\n${generalResponse}\n\n*Note: For St. Louis city services, I can provide more detailed assistance with water billing, property records, business licenses, and other municipal services.*`,
-          sources: ['OpenAI GPT-4o'],
+          sources: ['OpenAI GPT-4.1'],
           operations: [],
           options: [
             { text: 'Ask About City Services', action: 'ask_city_services', type: 'primary' },
