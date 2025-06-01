@@ -1,7 +1,7 @@
 
 import { useLocation, useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ArrowUp, Paperclip as Attach, Globe, Mic, RotateCcw, MessageSquare } from "lucide-react";
 import FeedbackModal from "@/components/FeedbackModal";
 import MessageDisplay from "@/components/chat/MessageDisplay";
@@ -203,38 +203,45 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
         <div className="p-4 border-t border-border">
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
             <div className="relative max-w-4xl mx-auto w-full">
-              <div className="relative">
-                <Input
+              <div className="relative border border-border rounded-2xl bg-background shadow-sm">
+                <Textarea
                   ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={isPublicChat ? "Group chatting is possible here, but not enabled" : "Ask anything..."}
-                  className="py-6 pr-16 pl-16 rounded-2xl shadow-sm bg-background border-border text-large resize-none"
+                  className="min-h-[80px] max-h-[200px] resize-none border-0 bg-transparent px-4 pt-4 pb-12 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
                   disabled={isInputDisabled}
+                  rows={1}
+                  style={{ 
+                    overflowY: 'auto',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none'
+                  }}
                 />
                 
-                {/* Left side buttons inside input */}
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex gap-1">
-                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
-                    <Attach className="h-4 w-4" />
-                  </Button>
-                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
-                    <Globe className="h-4 w-4" />
-                  </Button>
-                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
-                    <Mic className="h-4 w-4" />
+                {/* Bottom row with buttons */}
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                  <div className="flex gap-1">
+                    <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                      <Attach className="h-4 w-4" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                      <Globe className="h-4 w-4" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                      <Mic className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    className="rounded-full h-8 w-8 p-0"
+                    size="icon"
+                    disabled={inputValue.trim() === '' || isInputDisabled}
+                  >
+                    <ArrowUp className="h-4 w-4" />
                   </Button>
                 </div>
-                
-                {/* Submit button */}
-                <Button
-                  type="submit"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full h-8 w-8 p-0"
-                  size="icon"
-                  disabled={inputValue.trim() === '' || isInputDisabled}
-                >
-                  <ArrowUp className="h-4 w-4" />
-                </Button>
               </div>
             </div>
             

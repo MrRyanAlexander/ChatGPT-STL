@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Message } from "@/types/chat";
 import { AgentId } from "@/types/agent";
 import { getInteractiveResponse, getFollowUpResponse } from "@/utils/responseUtils";
+import { OpenAIService } from "./openaiService";
 
 export class ChatService {
   static generateChatId(): string {
@@ -18,6 +19,26 @@ export class ChatService {
   }
 
   static async generateAIResponse(agentId: AgentId | undefined, prompt: string): Promise<Message> {
+    try {
+      // Try OpenAI first if API key is available
+      const openaiKey = localStorage.getItem('OPENAI_KEY') || process.env.OPENAI_KEY;
+      
+      if (openaiKey) {
+        const openaiResponse = await OpenAIService.generateResponse([
+          { role: 'user', content: prompt }
+        ], agentId);
+        
+        return {
+          role: "assistant",
+          content: openaiResponse,
+          timestamp: new Date(),
+        };
+      }
+    } catch (error) {
+      console.warn('OpenAI service failed, falling back to local responses:', error);
+    }
+
+    // Fallback to local responses
     return new Promise((resolve) => {
       setTimeout(() => {
         const response = getInteractiveResponse(agentId, prompt);
@@ -31,6 +52,31 @@ export class ChatService {
   }
 
   static async generateFollowUpResponse(agentId: AgentId | undefined, action: string): Promise<Message> {
+    try {
+      // Try OpenAI first if API key is available
+      const openaiKey = localStorage.getItem('OPENAI_KEY') || process.env.OPENAI_KEY;
+      
+      if (openaiKey) {
+        const contextPrompt = `User selected action: "${action}". Provide a helpful follow-up response as if you're processing this request and providing next steps or confirmation.`;
+        
+        const openaiResponse = await OpenAIService.generateResponse([
+          { role: 'user', content: contextPrompt }
+        ], agentId);
+        
+        return {
+          role: "assistant",
+          content: {
+            text: openaiResponse,
+            showFeedback: true
+          },
+          timestamp: new Date(),
+        };
+      }
+    } catch (error) {
+      console.warn('OpenAI service failed for follow-up, falling back to local responses:', error);
+    }
+
+    // Fallback to local responses
     return new Promise((resolve) => {
       setTimeout(() => {
         const followUp = getFollowUpResponse(agentId, action);

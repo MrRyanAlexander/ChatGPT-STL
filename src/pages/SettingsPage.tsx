@@ -1,137 +1,37 @@
 
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useTheme } from "@/contexts/ThemeContext";
+import OpenAIKeyInput from '@/components/OpenAIKeyInput';
 
 const SettingsPage = () => {
-  const { theme, setTheme, fontSize, setFontSize } = useTheme();
-  const [notifications, setNotifications] = useState(true);
-  const { toast } = useToast();
-  
-  const handleFontSizeChange = (size: "small" | "medium" | "large") => {
-    setFontSize(size);
-    toast({
-      title: "Font size updated",
-      description: `Text size has been set to ${size}`,
-    });
-  };
-  
-  const handleThemeChange = (newTheme: "light" | "dark") => {
-    setTheme(newTheme);
-    toast({
-      title: "Theme updated",
-      description: `Theme has been set to ${newTheme} mode`,
-    });
-  };
-  
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
-      
-      <Tabs defaultValue="appearance" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6 rounded-xl">
-          <TabsTrigger value="appearance" className="rounded-xl">Appearance</TabsTrigger>
-          <TabsTrigger value="accessibility" className="rounded-xl">Accessibility</TabsTrigger>
-          <TabsTrigger value="notifications" className="rounded-xl">Notifications</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="appearance">
-          <Card className="rounded-xl">
-            <CardHeader>
-              <CardTitle>Appearance Settings</CardTitle>
-              <CardDescription>
-                Customize how ChatGPT-STL looks
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="theme">Theme</Label>
-                <div className="flex space-x-4">
-                  <Button 
-                    onClick={() => handleThemeChange("light")} 
-                    variant={theme === "light" ? "default" : "outline"}
-                    className="flex-1 rounded-xl"
-                  >
-                    Light
-                  </Button>
-                  <Button 
-                    onClick={() => handleThemeChange("dark")} 
-                    variant={theme === "dark" ? "default" : "outline"}
-                    className="flex-1 rounded-xl"
-                  >
-                    Dark
-                  </Button>
-                </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage your application preferences and integrations.
+          </p>
+        </div>
+
+        <div className="grid gap-8">
+          <section>
+            <h2 className="text-xl font-semibold mb-4">AI Integration</h2>
+            <OpenAIKeyInput />
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-4">About</h2>
+            <div className="space-y-4">
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-medium">St. Louis AI Assistant</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Your intelligent companion for navigating St. Louis city services, 
+                  local businesses, and community resources.
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="accessibility">
-          <Card className="rounded-xl">
-            <CardHeader>
-              <CardTitle>Accessibility Settings</CardTitle>
-              <CardDescription>
-                Customize the interface for better accessibility
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="fontSize">Text Size</Label>
-                <div className="flex space-x-4">
-                  <Button 
-                    onClick={() => handleFontSizeChange("small")} 
-                    variant={fontSize === "small" ? "default" : "outline"}
-                    className="flex-1 rounded-xl"
-                  >
-                    Small
-                  </Button>
-                  <Button 
-                    onClick={() => handleFontSizeChange("medium")} 
-                    variant={fontSize === "medium" ? "default" : "outline"}
-                    className="flex-1 rounded-xl"
-                  >
-                    Medium
-                  </Button>
-                  <Button 
-                    onClick={() => handleFontSizeChange("large")} 
-                    variant={fontSize === "large" ? "default" : "outline"}
-                    className="flex-1 rounded-xl"
-                  >
-                    Large
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <Card className="rounded-xl">
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
-                Manage how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="notifications" 
-                  checked={notifications} 
-                  onCheckedChange={setNotifications} 
-                />
-                <Label htmlFor="notifications">Enable notifications</Label>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   );
 };

@@ -92,14 +92,8 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     execute(async () => {
       setInputValue("");
       
-      // Always start with blank state for regular agent chats
-      if (location.pathname.startsWith('/chat/') && !location.pathname.includes('/history/')) {
-        setMessages([]);
-        setPromptCards(agentPrompts);
-      } else if (chatKey && chatKey.startsWith('new-')) {
-        setMessages([]);
-        setPromptCards(agentPrompts);
-      } else {
+      // Only load from history if it's a history route
+      if (location.pathname.includes('/history/')) {
         const chatData = getChatById(chatKey);
         
         if (chatData?.messages) {
@@ -113,6 +107,10 @@ export const useChatState = (chatId?: string): ChatStateHook => {
           setMessages([]);
           setPromptCards(agentPrompts);
         }
+      } else {
+        // For regular agent chats, always start fresh
+        setMessages([]);
+        setPromptCards(agentPrompts);
       }
       
       return true;
@@ -121,9 +119,9 @@ export const useChatState = (chatId?: string): ChatStateHook => {
 
   // Save chat history when messages change - optimized with debouncing
   useEffect(() => {
-    if (messages.length === 0) return;
+    if (messages.length === 0 || location.pathname.includes('/history/')) return;
     debouncedUpdateChat(chatKey, messages, agentId);
-  }, [messages, chatKey, agentId, debouncedUpdateChat]);
+  }, [messages, chatKey, agentId, debouncedUpdateChat, location.pathname]);
 
   return {
     messages,

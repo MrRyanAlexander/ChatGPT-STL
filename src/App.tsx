@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Layout from "@/components/Layout";
 import HomePage from "@/pages/HomePage";
 import ChatPage from "@/pages/ChatPage";
+import ChatHistoryPage from "@/pages/ChatHistoryPage";
 import SuperAgentPage from "@/pages/SuperAgentPage";
 import GalleryPage from "@/pages/GalleryPage";
 import PublicChatPage from "@/pages/PublicChatPage";
@@ -28,6 +29,7 @@ function App() {
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
                 <Route path="chat/:agentId" element={<ChatPage />} />
+                <Route path="chat/history/:chatId" element={<ChatHistoryPage />} />
                 <Route path="super-agent" element={<SuperAgentPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
