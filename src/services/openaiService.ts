@@ -14,9 +14,11 @@ interface OpenAIResponse {
 
 export class OpenAIService {
   private static getApiKey(): string {
-    // In a real environment, this would come from environment variables
-    // For now, we'll expect it to be set in localStorage temporarily
-    return localStorage.getItem('OPENAI_KEY') || process.env.OPENAI_KEY || '';
+    // Check localStorage first, then fallback to import.meta.env (Vite environment)
+    const localKey = localStorage.getItem('OPENAI_KEY');
+    const envKey = import.meta.env?.VITE_OPENAI_KEY;
+    
+    return localKey || envKey || '';
   }
 
   static async generateResponse(
@@ -26,7 +28,7 @@ export class OpenAIService {
     const apiKey = this.getApiKey();
     
     if (!apiKey) {
-      throw new Error('OpenAI API key not found. Please set OPENAI_KEY in your environment.');
+      throw new Error('OpenAI API key not found. Please set your API key in Settings.');
     }
 
     // Add system context based on agent

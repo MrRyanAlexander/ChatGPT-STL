@@ -16,7 +16,7 @@ interface ChatStateHook {
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   messagesEndRef: React.RefObject<HTMLDivElement>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
   chatKey: string;
   isLoading: boolean;
   showClearButton: boolean;
@@ -30,7 +30,7 @@ export const useChatState = (chatId?: string): ChatStateHook => {
   const [showClearButton, setShowClearButton] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
@@ -92,8 +92,11 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     execute(async () => {
       setInputValue("");
       
-      // Only load from history if it's a history route
-      if (location.pathname.includes('/history/')) {
+      // Check if this is a history route
+      const isHistoryRoute = location.pathname.includes('/history/');
+      
+      if (isHistoryRoute) {
+        // Only load from history if it's a history route
         const chatData = getChatById(chatKey);
         
         if (chatData?.messages) {
@@ -108,7 +111,7 @@ export const useChatState = (chatId?: string): ChatStateHook => {
           setPromptCards(agentPrompts);
         }
       } else {
-        // For regular agent chats, always start fresh
+        // For regular agent chats, always start fresh - no loading from history
         setMessages([]);
         setPromptCards(agentPrompts);
       }
@@ -117,7 +120,7 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     });
   }, [agentId, location.pathname, chatKey, getChatById, agentPrompts, execute]);
 
-  // Save chat history when messages change - optimized with debouncing
+  // Save chat history when messages change - only for non-history routes
   useEffect(() => {
     if (messages.length === 0 || location.pathname.includes('/history/')) return;
     debouncedUpdateChat(chatKey, messages, agentId);

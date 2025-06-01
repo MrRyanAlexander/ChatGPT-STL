@@ -65,11 +65,9 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
     }, 100);
   };
 
-  // Auto-scroll when messages change
+  // Auto-scroll when messages change or processing starts/stops
   useEffect(() => {
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
+    scrollToBottom();
   }, [messages.length, isProcessing]);
 
   // Cleanup timeout on unmount
@@ -209,7 +207,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={isPublicChat ? "Group chatting is possible here, but not enabled" : "Ask anything..."}
-                  className="min-h-[80px] max-h-[200px] resize-none border-0 bg-transparent px-4 pt-4 pb-12 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="min-h-[80px] max-h-[200px] resize-none border-0 bg-transparent px-4 pt-4 pb-16 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
                   disabled={isInputDisabled}
                   rows={1}
                   style={{ 
@@ -219,8 +217,8 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
                   }}
                 />
                 
-                {/* Bottom row with buttons */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                {/* Bottom row with buttons - positioned below the text area */}
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-background">
                   <div className="flex gap-1">
                     <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
                       <Attach className="h-4 w-4" />

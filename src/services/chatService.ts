@@ -21,7 +21,9 @@ export class ChatService {
   static async generateAIResponse(agentId: AgentId | undefined, prompt: string): Promise<Message> {
     try {
       // Try OpenAI first if API key is available
-      const openaiKey = localStorage.getItem('OPENAI_KEY') || process.env.OPENAI_KEY;
+      const localKey = localStorage.getItem('OPENAI_KEY');
+      const envKey = import.meta.env?.VITE_OPENAI_KEY;
+      const openaiKey = localKey || envKey;
       
       if (openaiKey) {
         const openaiResponse = await OpenAIService.generateResponse([
@@ -54,7 +56,9 @@ export class ChatService {
   static async generateFollowUpResponse(agentId: AgentId | undefined, action: string): Promise<Message> {
     try {
       // Try OpenAI first if API key is available
-      const openaiKey = localStorage.getItem('OPENAI_KEY') || process.env.OPENAI_KEY;
+      const localKey = localStorage.getItem('OPENAI_KEY');
+      const envKey = import.meta.env?.VITE_OPENAI_KEY;
+      const openaiKey = localKey || envKey;
       
       if (openaiKey) {
         const contextPrompt = `User selected action: "${action}". Provide a helpful follow-up response as if you're processing this request and providing next steps or confirmation.`;
