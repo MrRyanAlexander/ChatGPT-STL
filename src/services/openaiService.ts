@@ -1,103 +1,64 @@
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY || import.meta.env?.VITE_OPENAI_KEY || ""
+});
 
 interface OpenAIMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: 'user';
   content: string;
 }
 
-interface OpenAIResponse {
-  choices: Array<{
-    message: {
-      content: string;
-    };
-  }>;
-}
-
 export class OpenAIService {
-  private static getApiKey(): string {
-    // Check localStorage first, then fallback to import.meta.env (Vite environment)
-    const localKey = localStorage.getItem('OPENAI_KEY');
-    const envKey = import.meta.env?.VITE_OPENAI_KEY;
-    
-    return localKey || envKey || '';
-  }
-
   static async generateResponse(
     messages: OpenAIMessage[],
-    agentId?: string
+    effort: 'low' | 'medium' | 'high' = 'medium',
+    model: string = 'gpt-4o'
   ): Promise<string> {
-    const apiKey = this.getApiKey();
-    
-    if (!apiKey) {
-      throw new Error('OpenAI API key not found. Please set your API key in Settings.');
+    if (!openai.apiKey) {
+      throw new Error('OpenAI API key not found. Set OPENAI_KEY in your server environment.');
     }
 
-    // Add system context based on agent
-    const systemMessage = this.getSystemMessage(agentId);
-    const fullMessages = [systemMessage, ...messages];
-
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o', // Using GPT-4o as the latest stable model
-          messages: fullMessages,
-          temperature: 0.7,
-          max_tokens: 1500,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        }),
+      const response = await openai.responses.create({
+        model,
+        reasoning: { effort },
+        input: messages
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}${errorData.error?.message ? ` - ${errorData.error.message}` : ''}`);
-      }
-
-      const data: OpenAIResponse = await response.json();
-      
-      if (!data.choices || data.choices.length === 0) {
-        throw new Error('No response generated from OpenAI');
-      }
-
-      return data.choices[0].message.content;
+      return response.output_text;
     } catch (error) {
-      console.error('OpenAI API call failed:', error);
+      console.error("OpenAI Responses API call failed:", error);
       throw error;
     }
   }
 
-  private static getSystemMessage(agentId?: string): OpenAIMessage {
-    const basePrompt = "You are a helpful AI assistant for St. Louis city services. Provide accurate, helpful responses about municipal services, billing, permits, licenses, and city processes. Always be professional and offer actionable next steps.";
-    
-    const agentPrompts: Record<string, string> = {
-      'super-agent': "You are the St. Louis Super Agent - an advanced AI coordinator that manages all city departments simultaneously. You have access to water, property, business, utilities, and county services. Provide comprehensive multi-department responses and coordinate complex city service requests.",
-      water: "You are a St. Louis water department assistant. Help with billing, service issues, and water-related inquiries.",
-      trash: "You are a St. Louis waste management assistant. Help with pickup schedules, bulk waste, and recycling information.",
-      sewer: "You are a St. Louis sewer and drainage assistant. Help with maintenance, billing, and infrastructure issues.",
-      boeing: "You are a Boeing St. Louis careers assistant. Help with job searches, applications, and company information.",
-      dierbergs: "You are a Dierbergs grocery assistant. Help with store locations, delivery, and shopping services.",
-      monsanto: "You are a Monsanto/Bayer St. Louis history and facilities assistant. Provide information about the company's legacy in St. Louis."
-    };
+  static async classifyScope(query: string): Promise<'IN_SCOPE' | 'OUT_OF_SCOPE' | 'UNKNOWN'> {
+    const prompt = `Analyze this St. Louis city services query and determine if it relates to: water billing, property records, business licenses, utilities, county services, or general government services.
 
-    return {
-      role: 'system',
-      content: agentPrompts[agentId || 'super-agent'] || basePrompt
-    };
+Query: "${query}"
+
+Respond with:
+- "IN_SCOPE" if it relates to city services, departments, billing, permits, licenses, property, utilities, or government processes
+- "OUT_OF_SCOPE" if it's about general topics, weather, sports, entertainment, or unrelated subjects
+
+Classification:`;
+
+    const result = await this.generateResponse([{ role: 'user', content: prompt }]);
+    if (result.includes('IN_SCOPE')) return 'IN_SCOPE';
+    if (result.includes('OUT_OF_SCOPE')) return 'OUT_OF_SCOPE';
+    return 'UNKNOWN';
   }
 
-  // Method to test API key validity
   static async testApiKey(): Promise<boolean> {
     try {
-      await this.generateResponse([
-        { role: 'user', content: 'Hello' }
-      ]);
-      return true;
-    } catch (error) {
+      const output = await this.generateResponse(
+        [{ role: 'user', content: 'Say hello if you can hear me.' }],
+        'low',
+        'o4-mini'
+      );
+      return output.toLowerCase().includes('hello');
+    } catch {
       return false;
     }
   }
