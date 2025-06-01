@@ -5,9 +5,10 @@ import SuperAgentMessageDisplay from './MessageDisplay';
 import PromptCards from '@/components/chat/PromptCards';
 import ResponseActions from '@/components/ResponseActions';
 import FeedbackModal from '@/components/FeedbackModal';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, RotateCcw } from 'lucide-react';
+import { Send, RotateCcw, MessageSquare } from 'lucide-react';
 import { SUPER_AGENT_PROMPTS, SUPER_AGENT_CONFIG } from '@/data/superAgent';
 
 const SuperAgentChat = () => {
@@ -19,6 +20,7 @@ const SuperAgentChat = () => {
     statusMessage,
     showStatus,
     showClearButton,
+    showInlineFeedback,
     messagesEndRef,
     inputRef,
     currentInteraction,
@@ -26,6 +28,7 @@ const SuperAgentChat = () => {
     handleSubmit,
     handleInputSubmit,
     handleActionClick,
+    handleInlineFeedbackClick,
     clearMessages,
     handleFeedbackSubmit,
     handleFeedbackClose
@@ -37,7 +40,7 @@ const SuperAgentChat = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Chat Header */}
+      {/* Chat Header with Clear Button */}
       <div className="border-b border-border p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -95,11 +98,35 @@ const SuperAgentChat = () => {
               </div>
             ))}
             
+            {/* Show status indicator during processing */}
             {showStatus && (
               <ProcessingStatus 
                 message={statusMessage}
                 isActive={isProcessing}
               />
+            )}
+            
+            {/* Show processing spinner when no status but still processing */}
+            {isProcessing && !showStatus && (
+              <div className="flex justify-start mt-4">
+                <div className="chat-bubble-ai">
+                  <LoadingSpinner size="sm" text="Processing..." />
+                </div>
+              </div>
+            )}
+            
+            {/* Inline Feedback Button */}
+            {showInlineFeedback && !isProcessing && (
+              <div className="flex justify-center mt-6">
+                <Button
+                  onClick={handleInlineFeedbackClick}
+                  variant="outline"
+                  className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  Done? Leave Feedback
+                </Button>
+              </div>
             )}
             
             <div ref={messagesEndRef} />

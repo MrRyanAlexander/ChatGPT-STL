@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Message } from '@/types/chat';
@@ -119,15 +120,6 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     if (messages.length === 0) return;
     debouncedUpdateChat(chatKey, messages, agentId);
   }, [messages, chatKey, agentId, debouncedUpdateChat]);
-
-  // Auto-scroll to bottom when messages change
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, [messages]);
 
   return {
     messages,

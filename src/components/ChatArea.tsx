@@ -2,7 +2,7 @@
 import { useLocation, useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUp, Paperclip as Attach, Globe, Mic, RotateCcw } from "lucide-react";
+import { ArrowUp, Paperclip as Attach, Globe, Mic, RotateCcw, MessageSquare } from "lucide-react";
 import FeedbackModal from "@/components/FeedbackModal";
 import MessageDisplay from "@/components/chat/MessageDisplay";
 import PromptCards from "@/components/chat/PromptCards";
@@ -13,6 +13,7 @@ import { AgentService } from "@/services/agentService";
 import { useChatState } from "@/hooks/useChatState";
 import { useFeedback } from "@/hooks/useFeedback";
 import { useMessageHandling } from "@/hooks/useMessageHandling";
+import { useState, useEffect } from "react";
 
 interface ChatAreaProps {
   chatId?: string;
@@ -21,6 +22,7 @@ interface ChatAreaProps {
 const ChatArea = ({ chatId }: ChatAreaProps) => {
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
+  const [showInlineFeedback, setShowInlineFeedback] = useState(false);
   
   const {
     messages,
@@ -46,8 +48,24 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
 
   const { handleSubmit, handlePromptClick, handleActionClick, isProcessing } = useMessageHandling();
 
+  // Auto-scroll to bottom when messages change - improved timing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ 
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest"
+        });
+      }
+    }, 300); // Increased delay for better stability
+
+    return () => clearTimeout(timeoutId);
+  }, [messages.length]); // Only trigger on message count change
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowInlineFeedback(false);
     handleSubmit(
       inputValue,
       messages,
@@ -60,6 +78,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   };
 
   const onPromptClick = (text: string) => {
+    setShowInlineFeedback(false);
     handlePromptClick(
       text,
       setMessages,
@@ -71,14 +90,24 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   };
 
   const onActionClick = (action: string) => {
+    setShowInlineFeedback(false);
     handleActionClick(
       action,
       currentInteraction,
       setCurrentInteraction,
       setMessages,
-      setFeedbackModalOpen,
+      setShowInlineFeedback,
       agentId
     );
+  };
+
+  const handleInlineFeedbackClick = () => {
+    setFeedbackModalOpen(true);
+  };
+
+  const handleFeedbackClose = () => {
+    setFeedbackModalOpen(false);
+    setShowInlineFeedback(false);
   };
 
   const isPublicChat = location.pathname === "/public-chat";
@@ -121,17 +150,33 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
               onPromptClick={onPromptClick}
             />
           ) : (
-            <MessageDisplay
-              messages={messages}
-              onActionClick={onActionClick}
-              messagesEndRef={messagesEndRef}
-            />
+            <div className="space-y-4">
+              <MessageDisplay
+                messages={messages}
+                onActionClick={onActionClick}
+                messagesEndRef={messagesEndRef}
+              />
+              
+              {/* Inline Feedback Button */}
+              {showInlineFeedback && !isProcessing && (
+                <div className="flex justify-center mt-6">
+                  <Button
+                    onClick={handleInlineFeedbackClick}
+                    variant="outline"
+                    className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Done? Leave Feedback
+                  </Button>
+                </div>
+              )}
+            </div>
           )}
           
           {isProcessing && (
             <div className="flex justify-start mt-4">
               <div className="chat-bubble-ai">
-                <LoadingSpinner size="sm" text="Thinking..." />
+                <LoadingSpinner size="sm" text="Coordinating with departments..." />
               </div>
             </div>
           )}
@@ -191,7 +236,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
         {currentInteraction && (
           <FeedbackModal
             open={feedbackModalOpen}
-            onClose={() => setFeedbackModalOpen(false)}
+            onClose={handleFeedbackClose}
             interactionId={currentInteraction.question}
             userResponse={currentInteraction.action}
             onSubmitFeedback={handleFeedbackSubmit}

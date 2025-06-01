@@ -45,7 +45,7 @@ interface MessageHandlingHook {
       showFeedback: boolean;
     } | null>>,
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-    setFeedbackModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setShowInlineFeedback: React.Dispatch<React.SetStateAction<boolean>>,
     agentId?: string
   ) => void;
   isProcessing: boolean;
@@ -99,6 +99,9 @@ export const useMessageHandling = (): MessageHandlingHook => {
     // Generate AI response with performance monitoring
     execute(async () => {
       return PerformanceMonitor.measureAsync('ai-response-generation', async () => {
+        // Add realistic delay for department coordination
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const aiResponse = await ChatService.generateAIResponse(agentId, userContent);
         setMessages(prev => [...prev, aiResponse]);
         return aiResponse;
@@ -132,6 +135,9 @@ export const useMessageHandling = (): MessageHandlingHook => {
     // Generate AI response with performance monitoring
     execute(async () => {
       return PerformanceMonitor.measureAsync('ai-prompt-response', async () => {
+        // Add realistic delay for department coordination
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const aiResponse = await ChatService.generateAIResponse(agentId, text);
         setMessages(prev => [...prev, aiResponse]);
         return aiResponse;
@@ -152,7 +158,7 @@ export const useMessageHandling = (): MessageHandlingHook => {
       showFeedback: boolean;
     } | null>>,
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-    setFeedbackModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setShowInlineFeedback: React.Dispatch<React.SetStateAction<boolean>>,
     agentId?: string
   ) => {
     if (!currentInteraction || isProcessing) return;
@@ -167,23 +173,23 @@ export const useMessageHandling = (): MessageHandlingHook => {
     // Generate follow-up response with error handling and performance monitoring
     handleAsyncError(async () => {
       return PerformanceMonitor.measureAsync('followup-response', async () => {
+        // Add realistic delay for processing
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        
         const followUpResponse = await ChatService.generateFollowUpResponse(agentId, action);
         setMessages(prev => [...prev, followUpResponse]);
         
-        // Check if feedback should be shown after a delay
+        // Instead of automatic feedback modal, enable inline feedback button
         const content = followUpResponse.content;
         if (typeof content === 'object' && content.showFeedback) {
-          // Update interaction to show feedback capability
           setCurrentInteraction(prev => prev ? {
             ...prev,
             action,
             showFeedback: true
           } : null);
           
-          // Show feedback modal after a longer delay to let user read the response
-          setTimeout(() => {
-            setFeedbackModalOpen(true);
-          }, 2000);
+          // Show inline feedback button instead of modal
+          setShowInlineFeedback(true);
         }
       });
     }, 'action click');
