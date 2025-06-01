@@ -23,6 +23,7 @@ const SuperAgentChat = () => {
     showInlineFeedback,
     messagesEndRef,
     inputRef,
+    statusRef,
     currentInteraction,
     feedbackModalOpen,
     handleSubmit,
@@ -98,17 +99,19 @@ const SuperAgentChat = () => {
               </div>
             ))}
             
-            {/* Show status indicator during processing */}
+            {/* Show status indicator during processing with ref for scrolling */}
             {showStatus && (
-              <ProcessingStatus 
-                message={statusMessage}
-                isActive={isProcessing}
-              />
+              <div ref={statusRef}>
+                <ProcessingStatus 
+                  message={statusMessage}
+                  isActive={isProcessing}
+                />
+              </div>
             )}
             
             {/* Show processing spinner when no status but still processing */}
             {isProcessing && !showStatus && (
-              <div className="flex justify-start mt-4">
+              <div className="flex justify-start mt-4" ref={statusRef}>
                 <div className="chat-bubble-ai">
                   <LoadingSpinner size="sm" text="Processing..." />
                 </div>

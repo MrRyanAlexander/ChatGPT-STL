@@ -13,6 +13,7 @@ export const useSuperAgentChat = () => {
   const [showInlineFeedback, setShowInlineFeedback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
   
   const { statusMessage, showStatus, startStatusStream, stopStatusStream } = useStatusStream();
   const { 
@@ -23,7 +24,7 @@ export const useSuperAgentChat = () => {
     handleFeedbackSubmit 
   } = useFeedback();
 
-  // Improved scroll to bottom with proper timing
+  // Enhanced scroll to bottom with proper timing
   const scrollToBottom = (delay = 100) => {
     setTimeout(() => {
       if (messagesEndRef.current) {
@@ -36,12 +37,31 @@ export const useSuperAgentChat = () => {
     }, delay);
   };
 
-  // Only scroll when messages change, not on every render
+  // Scroll to status element when processing starts
+  const scrollToStatus = () => {
+    setTimeout(() => {
+      if (statusRef.current) {
+        statusRef.current.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "center",
+          inline: "nearest"
+        });
+      }
+    }, 100);
+  };
+
+  // Auto-scroll when messages change or processing state changes
   useEffect(() => {
     if (messages.length > 0) {
       scrollToBottom(200);
     }
   }, [messages.length]);
+
+  useEffect(() => {
+    if (isProcessing) {
+      scrollToStatus();
+    }
+  }, [isProcessing]);
 
   const clearMessages = () => {
     setMessages([]);
@@ -64,18 +84,20 @@ export const useSuperAgentChat = () => {
     setShowInlineFeedback(false);
     
     try {
-      // Show status for 2-3 seconds before response
+      // Enhanced status streaming with realistic delays
       const { analysis, statusUpdates, response } = await SuperAgentOrchestrator.processQuery(query);
       
-      // Start status streaming with realistic delays
+      // Start status streaming with enhanced timing
       startStatusStream([
-        { step: 1, message: "Analyzing your request...", delay: 500, type: 'thinking' },
-        { step: 2, message: "Contacting relevant departments...", delay: 1000, type: 'calling' },
-        { step: 3, message: "Coordinating multi-agent response...", delay: 1500, type: 'processing' }
+        { step: 1, message: "🤖 Analyzing your request...", delay: 800, type: 'thinking' },
+        { step: 2, message: "🔍 Coordinating with St. Louis departments...", delay: 1200, type: 'calling' },
+        { step: 3, message: "📞 Accessing multi-system databases...", delay: 1500, type: 'processing' },
+        { step: 4, message: "🔗 Cross-referencing department records...", delay: 1000, type: 'processing' },
+        { step: 5, message: "✅ Generating comprehensive response...", delay: 800, type: 'completing' }
       ]);
       
-      // Wait for status stream to complete
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Wait for minimum processing time (5+ seconds total)
+      await new Promise(resolve => setTimeout(resolve, 5200));
       
       const aiResponse = await response;
       const aiMessage = SuperAgentOrchestrator.generateAIMessage(aiResponse);
@@ -83,7 +105,7 @@ export const useSuperAgentChat = () => {
       setMessages(prev => [...prev, aiMessage]);
       stopStatusStream();
       
-      // Show inline feedback after complex interactions
+      // Show inline feedback for complex interactions
       if (aiResponse.showFeedback) {
         setShowInlineFeedback(true);
         setCurrentInteraction({
@@ -108,16 +130,20 @@ export const useSuperAgentChat = () => {
     setIsProcessing(true);
     setShowInlineFeedback(false);
     
+    // Immediate scroll to status when action is clicked
+    scrollToStatus();
+    
     try {
-      // Show processing status for actions
+      // Enhanced processing status with minimum 3-second delay
       startStatusStream([
-        { step: 1, message: "Processing your request...", delay: 500, type: 'processing' },
-        { step: 2, message: "Accessing department systems...", delay: 1000, type: 'calling' },
-        { step: 3, message: "Generating response...", delay: 1500, type: 'completing' }
+        { step: 1, message: "⚡ Processing your action...", delay: 600, type: 'processing' },
+        { step: 2, message: "🏛️ Accessing department systems...", delay: 1000, type: 'calling' },
+        { step: 3, message: "📋 Coordinating multi-agent response...", delay: 1200, type: 'processing' },
+        { step: 4, message: "🔄 Finalizing action results...", delay: 800, type: 'completing' }
       ]);
       
-      // Wait for realistic processing time
-      await new Promise(resolve => setTimeout(resolve, 2500));
+      // Ensure minimum 3.6 second delay as requested
+      await new Promise(resolve => setTimeout(resolve, 3600));
       
       const actionResponse = await SuperAgentOrchestrator.processAction(action);
       const aiMessage = SuperAgentOrchestrator.generateAIMessage(actionResponse);
@@ -155,7 +181,7 @@ export const useSuperAgentChat = () => {
   const handleFeedbackClose = () => {
     setFeedbackModalOpen(false);
     setShowInlineFeedback(false);
-    setShowClearButton(true); // Highlight clear button after feedback
+    setShowClearButton(true);
   };
 
   return {
@@ -169,6 +195,7 @@ export const useSuperAgentChat = () => {
     showInlineFeedback,
     messagesEndRef,
     inputRef,
+    statusRef,
     currentInteraction,
     feedbackModalOpen,
     handleSubmit,

@@ -43,10 +43,10 @@ export class OpenAIService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-4o', // Using GPT-4o as it's the latest stable model
+          model: 'gpt-4o', // Using GPT-4o as the latest stable model
           messages: fullMessages,
           temperature: 0.7,
-          max_tokens: 1000,
+          max_tokens: 1500,
           top_p: 1,
           frequency_penalty: 0,
           presence_penalty: 0,
@@ -72,9 +72,10 @@ export class OpenAIService {
   }
 
   private static getSystemMessage(agentId?: string): OpenAIMessage {
-    const basePrompt = "You are a helpful AI assistant for St. Louis city services. Provide accurate, helpful responses and offer actionable next steps when appropriate.";
+    const basePrompt = "You are a helpful AI assistant for St. Louis city services. Provide accurate, helpful responses about municipal services, billing, permits, licenses, and city processes. Always be professional and offer actionable next steps.";
     
     const agentPrompts: Record<string, string> = {
+      'super-agent': "You are the St. Louis Super Agent - an advanced AI coordinator that manages all city departments simultaneously. You have access to water, property, business, utilities, and county services. Provide comprehensive multi-department responses and coordinate complex city service requests.",
       water: "You are a St. Louis water department assistant. Help with billing, service issues, and water-related inquiries.",
       trash: "You are a St. Louis waste management assistant. Help with pickup schedules, bulk waste, and recycling information.",
       sewer: "You are a St. Louis sewer and drainage assistant. Help with maintenance, billing, and infrastructure issues.",
@@ -85,7 +86,7 @@ export class OpenAIService {
 
     return {
       role: 'system',
-      content: agentPrompts[agentId || ''] || basePrompt
+      content: agentPrompts[agentId || 'super-agent'] || basePrompt
     };
   }
 
