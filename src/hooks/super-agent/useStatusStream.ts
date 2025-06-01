@@ -1,16 +1,18 @@
 
 import { useState } from 'react';
-import { StatusStreamService } from '@/services/super-agent/statusStreamService';
+import { StatusUpdate } from '@/types/super-agent';
 
 export const useStatusStream = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [showStatus, setShowStatus] = useState(false);
 
-  const startStatusStream = async (statusUpdates: Generator<string, void, unknown>) => {
+  const startStatusStream = async (statusUpdates: StatusUpdate[]) => {
     setShowStatus(true);
-    await StatusStreamService.streamWithDelay(statusUpdates, (message) => {
-      setStatusMessage(message);
-    });
+    
+    for (const update of statusUpdates) {
+      setStatusMessage(update.message);
+      await new Promise(resolve => setTimeout(resolve, update.delay));
+    }
   };
 
   const stopStatusStream = () => {
