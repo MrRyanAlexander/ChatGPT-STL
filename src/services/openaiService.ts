@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY || import.meta.env?.VITE_OPENAI_KEY || ""
+  apiKey: process.env.OPENAI_API_KEY || import.meta.env?.OPENAI_API_KEY || ""
 });
 
 interface OpenAIMessage {
