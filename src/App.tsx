@@ -10,6 +10,10 @@ import ChatPage from "@/pages/ChatPage";
 import SuperAgentPage from "@/pages/SuperAgentPage";
 import GalleryPage from "@/pages/GalleryPage";
 import PublicChatPage from "@/pages/PublicChatPage";
+import SettingsPage from "@/pages/SettingsPage";
+import TermsPage from "@/pages/TermsPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import ExploreFeeds from "@/pages/ExploreFeeds";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +31,10 @@ function App() {
                 <Route path="super-agent" element={<SuperAgentPage />} />
                 <Route path="gallery" element={<GalleryPage />} />
                 <Route path="public-chat" element={<PublicChatPage />} />
+                <Route path="explore" element={<ExploreFeeds />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="terms" element={<TermsPage />} />
+                <Route path="privacy" element={<PrivacyPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -92,7 +92,11 @@ export const useChatState = (chatId?: string): ChatStateHook => {
     execute(async () => {
       setInputValue("");
       
-      if (chatKey && chatKey.startsWith('new-')) {
+      // Always start with blank state for regular agent chats
+      if (location.pathname.startsWith('/chat/') && !location.pathname.includes('/history/')) {
+        setMessages([]);
+        setPromptCards(agentPrompts);
+      } else if (chatKey && chatKey.startsWith('new-')) {
         setMessages([]);
         setPromptCards(agentPrompts);
       } else {

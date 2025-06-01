@@ -13,7 +13,7 @@ import { AgentService } from "@/services/agentService";
 import { useChatState } from "@/hooks/useChatState";
 import { useFeedback } from "@/hooks/useFeedback";
 import { useMessageHandling } from "@/hooks/useMessageHandling";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface ChatAreaProps {
   chatId?: string;
@@ -23,6 +23,7 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
   const location = useLocation();
   const { agentId } = useParams<{ agentId: string }>();
   const [showInlineFeedback, setShowInlineFeedback] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>();
   
   const {
     messages,
@@ -48,20 +49,37 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
 
   const { handleSubmit, handlePromptClick, handleActionClick, isProcessing } = useMessageHandling();
 
-  // Auto-scroll to bottom when messages change - improved timing
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
+  // Improved scroll to bottom with debouncing
+  const scrollToBottom = () => {
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    
+    scrollTimeoutRef.current = setTimeout(() => {
       if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ 
           behavior: "smooth",
-          block: "end",
-          inline: "nearest"
+          block: "end"
         });
       }
-    }, 300); // Increased delay for better stability
+    }, 100);
+  };
 
-    return () => clearTimeout(timeoutId);
-  }, [messages.length]); // Only trigger on message count change
+  // Auto-scroll when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages.length, isProcessing]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,40 +201,44 @@ const ChatArea = ({ chatId }: ChatAreaProps) => {
         </div>
         
         <div className="p-4 border-t border-border">
-          <form onSubmit={onSubmit} className="flex flex-col gap-2">
+          <form onSubmit={onSubmit} className="flex flex-col gap-4">
             <div className="relative max-w-4xl mx-auto w-full">
-              <Input
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={isPublicChat ? "Group chatting is possible here, but not enabled" : "Ask anything..."}
-                className="py-6 pr-12 pl-4 rounded-2xl shadow-sm bg-background border-border text-large"
-                disabled={isInputDisabled}
-              />
-              
-              <div className="absolute left-2 bottom-[-45px] flex gap-2">
-                <Button type="button" variant="ghost" size="sm" className="rounded-full" disabled={isInputDisabled}>
-                  <Attach className="h-5 w-5" />
-                </Button>
-                <Button type="button" variant="ghost" size="sm" className="rounded-full" disabled={isInputDisabled}>
-                  <Globe className="h-5 w-5" />
-                </Button>
-                <Button type="button" variant="ghost" size="sm" className="rounded-full" disabled={isInputDisabled}>
-                  <Mic className="h-5 w-5" />
+              <div className="relative">
+                <Input
+                  ref={inputRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder={isPublicChat ? "Group chatting is possible here, but not enabled" : "Ask anything..."}
+                  className="py-6 pr-16 pl-16 rounded-2xl shadow-sm bg-background border-border text-large resize-none"
+                  disabled={isInputDisabled}
+                />
+                
+                {/* Left side buttons inside input */}
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex gap-1">
+                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                    <Attach className="h-4 w-4" />
+                  </Button>
+                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                  <Button type="button" variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0" disabled={isInputDisabled}>
+                    <Mic className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                {/* Submit button */}
+                <Button
+                  type="submit"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full h-8 w-8 p-0"
+                  size="icon"
+                  disabled={inputValue.trim() === '' || isInputDisabled}
+                >
+                  <ArrowUp className="h-4 w-4" />
                 </Button>
               </div>
-              
-              <Button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full h-8 w-8 p-0"
-                size="icon"
-                disabled={inputValue.trim() === '' || isInputDisabled}
-              >
-                <ArrowUp className="h-4 w-4" />
-              </Button>
             </div>
             
-            <div className="text-xs text-center text-muted-foreground mt-10">
+            <div className="text-xs text-center text-muted-foreground">
               By using this app, you agree to our{" "}
               <Link to="/terms" className="underline hover:text-primary">
                 Terms
