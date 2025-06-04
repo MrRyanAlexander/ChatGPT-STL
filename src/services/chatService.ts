@@ -28,7 +28,7 @@ export class ChatService {
       if (openaiKey) {
         const openaiResponse = await OpenAIService.generateResponse([
           { role: 'user', content: prompt }
-        ], agentId);
+        ]);
         
         return {
           role: "assistant",
@@ -65,7 +65,7 @@ export class ChatService {
         
         const openaiResponse = await OpenAIService.generateResponse([
           { role: 'user', content: contextPrompt }
-        ], agentId);
+        ]);
         
         return {
           role: "assistant",

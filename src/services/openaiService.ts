@@ -5,14 +5,13 @@ const openai = new OpenAI({
 });
 
 interface OpenAIMessage {
-  role: 'user';
+  role: 'user' | 'system' | 'assistant';
   content: string;
 }
 
 export class OpenAIService {
   static async generateResponse(
     messages: OpenAIMessage[],
-    effort: 'low' | 'medium' | 'high' = 'medium',
     model: string = 'gpt-4o'
   ): Promise<string> {
     if (!openai.apiKey) {
@@ -20,15 +19,15 @@ export class OpenAIService {
     }
 
     try {
-      const response = await openai.responses.create({
+      const response = await openai.chat.completions.create({
         model,
-        reasoning: { effort },
-        input: messages
+        messages,
+        temperature: 0.7
       });
 
-      return response.output_text;
+      return response.choices[0]?.message?.content?.trim() || '';
     } catch (error) {
-      console.error("OpenAI Responses API call failed:", error);
+      console.error('OpenAI chat completion failed:', error);
       throw error;
     }
   }
@@ -52,11 +51,9 @@ Classification:`;
 
   static async testApiKey(): Promise<boolean> {
     try {
-      const output = await this.generateResponse(
-        [{ role: 'user', content: 'Say hello if you can hear me.' }],
-        'low',
-        'o4-mini'
-      );
+      const output = await this.generateResponse([
+        { role: 'user', content: 'Say hello if you can hear me.' }
+      ], 'gpt-3.5-turbo');
       return output.toLowerCase().includes('hello');
     } catch {
       return false;

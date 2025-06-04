@@ -6,7 +6,6 @@ import { Toaster } from './components/ui/sonner';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import SuperAgentPage from './pages/SuperAgentPage';
-import ChatHistoryPage from './pages/ChatHistoryPage';
 import PublicChatPage from './pages/PublicChatPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFound from './pages/NotFound';
@@ -59,9 +58,6 @@ function App() {
                 <Route path="chat/dierbergs" element={<Navigate to="/super-agent" replace />} />
                 <Route path="chat/monsanto" element={<Navigate to="/super-agent" replace />} />
                 
-                {/* Chat History Routes */}
-                <Route path="history" element={<ChatHistoryPage />} />
-                <Route path="history/:chatId" element={<ChatHistoryPage />} />
                 
                 {/* Other Pages */}
                 <Route path="public-chat" element={<PublicChatPage />} />

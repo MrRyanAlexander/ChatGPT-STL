@@ -5,6 +5,7 @@ import { AgentRouterService } from './agentRouterService';
 import { StatusStreamService } from './statusStreamService';
 import { SimulationEngine } from './simulationEngine';
 import { OpenAIService } from '../openaiService';
+import { WebSearchService } from '../webSearchService';
 import { SUPER_AGENT_PROMPT_RESPONSES, SUPER_AGENT_ACTION_RESPONSES } from '@/data/superAgentPromptResponses';
 import { RESPONSE_TEMPLATES, AGENT_RESPONSE_TEMPLATES, DEFAULT_ACTION_OPTIONS } from '@/data/superAgentResponses';
 import { MOCK_USER_ACCOUNT } from '@/data/userAccountData';
@@ -49,34 +50,25 @@ export class SuperAgentOrchestrator {
     query: string
   ): Promise<SuperAgentResponse> {
     try {
-      // Step 1: Classification call to determine if within agent scope
-      const classificationPrompt = `Analyze this St. Louis city services query and determine if it relates to: water billing, property records, business licenses, utilities, county services, or general government services.
+      // Determine if this request should be handled locally or via web search
+      const classification = await OpenAIService.classifyScope(query);
 
-Query: "${query}"
-
-Respond with:
-- "IN_SCOPE" if it relates to city services, departments, billing, permits, licenses, property, utilities, or government processes
-- "OUT_OF_SCOPE" if it's about general topics, weather, sports, entertainment, or unrelated subjects
-
-Classification:`;
-
-      const classification = await OpenAIService.generateResponse([
-        { role: 'user', content: classificationPrompt }
-      ]);
-
-      if (classification.includes('IN_SCOPE')) {
+      if (classification === 'IN_SCOPE') {
         // Route to internal simulation logic
         return this.generateSimulatedResponse(analysis, query);
       } else {
-        // Make second API call for general response
+        // Fetch web results and craft a response using the LLM
+        const searchResults = await WebSearchService.search(query);
+        const context = searchResults.map((r, i) => `${i + 1}. ${r}`).join('\n');
+        const webPrompt = `Using the following web results answer the user query.\n${context}\n\nUser question: ${query}`;
         const generalResponse = await OpenAIService.generateResponse([
-          { role: 'user', content: query }
+          { role: 'user', content: webPrompt }
         ]);
 
         return {
-          text: `🤖 **General Information Response**\n\n${generalResponse}\n\n*Note: For St. Louis city services, I can provide more detailed assistance with water billing, property records, business licenses, and other municipal services.*`,
-          sources: ['OpenAI GPT-4.1'],
-          operations: [],
+          text: `🌐 **Web Search Result**\n\n${generalResponse}`,
+          sources: ['DuckDuckGo', 'OpenAI'],
+          operations: [{ type: 'web_search', target: 'Internet', status: 'completed', result: searchResults }],
           options: [
             { text: 'Ask About City Services', action: 'ask_city_services', type: 'primary' },
             { text: 'Contact Support', action: 'contact_support', type: 'secondary' }

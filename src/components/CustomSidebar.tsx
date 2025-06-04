@@ -21,19 +21,15 @@ import {
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { useNavigation } from "@/hooks/useNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import AgentCategoriesList from "@/components/sidebar/AgentCategoriesList";
 import RecentChatsList from "@/components/sidebar/RecentChatsList";
 import UserProfileSection from "@/components/sidebar/UserProfileSection";
-import { AgentService } from "@/services/agentService";
 
 const CustomSidebar = memo(() => {
   const { getAllChats } = useChatHistory();
   const { setOpen, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
   const {
-    activeItem,
     activeChatId,
-    handleAgentClick,
     handleNewChat,
     handleChatHistoryClick,
     handleNavigationClick
@@ -45,11 +41,6 @@ const CustomSidebar = memo(() => {
     [getAllChats]
   );
   
-  // Memoize categories to prevent unnecessary recalculations
-  const categories = useMemo(() => 
-    AgentService.getCategories(), 
-    []
-  );
 
   // Updated sidebar close function to handle both mobile and desktop
   const closeSidebarAndExecute = useCallback((fn: () => void) => {
@@ -61,9 +52,6 @@ const CustomSidebar = memo(() => {
     setTimeout(fn, 100);
   }, [isMobile, setOpen, setOpenMobile]);
   
-  const onAgentClick = useCallback((slug: string) => {
-    closeSidebarAndExecute(() => handleAgentClick(slug));
-  }, [closeSidebarAndExecute, handleAgentClick]);
   
   const onNewChat = useCallback(() => {
     closeSidebarAndExecute(() => handleNewChat());
@@ -130,13 +118,7 @@ const CustomSidebar = memo(() => {
       </SidebarHeader>
       
       <SidebarContent>
-        <AgentCategoriesList 
-          categories={categories}
-          activeItem={activeItem}
-          onAgentClick={onAgentClick}
-        />
-        
-        <RecentChatsList 
+        <RecentChatsList
           chats={recentChats}
           activeChatId={activeChatId}
           onChatClick={onChatHistoryClick}
