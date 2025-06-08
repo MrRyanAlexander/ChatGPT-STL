@@ -1,4 +1,4 @@
-# ⚡️ ChatGPT STL — Your Civic AI Assistant 🤖🌆
+# ⚡️ ChatGPT STL - Your Civic AI Assistant 🤖🌆
 
 [![🚀 Deploy Status – Netlify](https://api.netlify.com/api/v1/badges/caa74073-ae79-4f64-86d1-20943330b821/deploy-status)](https://app.netlify.com/projects/chatgptstl/deploys)
 
