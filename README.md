@@ -6,7 +6,7 @@
 
 ### ❓ What happens when knowing *everything local* is as easy as asking a question?
 
-> 💡 Imagine: City meetings, local policies, permits, alerts — all accessible in real time, in plain language.
+> 💡 Imagine: City meetings, local policies, permits, alerts - all accessible in real time, in plain language.
 
 ---
 
@@ -39,12 +39,12 @@
 ---
 
 ### 🌀 We’re not just building an assistant.
-We’re redesigning how we **listen**, **think**, and **respond** —  
+We’re redesigning how we **listen**, **think**, and **respond** -  
 🔗 Locally. Ethically. Transparently. With purpose.
 
 ---
 
-🔥 Built for **St. Louis** — but inspired by everywhere.  
+🔥 Built for **St. Louis** - but inspired by everywhere.  
 📣 Join the conversation. Shape the future. Ask better questions.
 
 ---
